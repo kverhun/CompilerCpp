@@ -71,6 +71,7 @@
     <ClCompile Include="DFACreationHelpers.cpp" />
     <ClCompile Include="FileIO.cpp" />
     <ClCompile Include="LanguageInfo.cpp" />
+    <ClCompile Include="LexicalAnalyzer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DFA.h" />

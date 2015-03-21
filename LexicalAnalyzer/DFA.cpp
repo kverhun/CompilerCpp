@@ -1,7 +1,7 @@
 #include "DFA.h"
 
 
-using namespace LexicalAnalyzer;
+using namespace LexicalAnalysis;
 
 //------------------------------------------------------------------------------
 DFA::DFA()

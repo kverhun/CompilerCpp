@@ -1,6 +1,6 @@
 #include "DFACreationHelpers.h"
 
-using namespace LexicalAnalyzer;
+using namespace LexicalAnalysis;
 
 //------------------------------------------------------------------------------
 DFA DFACreationHelpers::CreateForString(const std::string& i_string)

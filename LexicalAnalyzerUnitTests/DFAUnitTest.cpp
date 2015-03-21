@@ -8,7 +8,7 @@
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
-using namespace LexicalAnalyzer;
+using namespace LexicalAnalysis;
 
 namespace LexicalAnalyzerUnitTests
 {

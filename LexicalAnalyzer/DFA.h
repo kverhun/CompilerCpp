@@ -4,7 +4,7 @@
 
 #include <map>
 
-namespace LexicalAnalyzer
+namespace LexicalAnalysis
 {
 
 	LEXICALANALYZER_API class DFA

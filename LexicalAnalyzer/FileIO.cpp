@@ -2,10 +2,10 @@
 #include <fstream>
 #include <sstream>
 
-using namespace LexicalAnalyzer;
+using namespace LexicalAnalysis;
 
 //------------------------------------------------------------------------------
-std::string LexicalAnalyzer::FileIO::GetFileString(const std::string& i_filename)
+std::string LexicalAnalysis::FileIO::GetFileString(const std::string& i_filename)
 {
 	std::ifstream t(i_filename);
 	std::stringstream buffer;

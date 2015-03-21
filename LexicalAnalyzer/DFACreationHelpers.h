@@ -5,7 +5,7 @@
 
 #include "DFA.h"
 
-namespace LexicalAnalyzer
+namespace LexicalAnalysis
 {
 	LEXICALANALYZER_API class DFACreationHelpers
 	{
