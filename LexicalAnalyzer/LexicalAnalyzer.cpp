@@ -22,8 +22,8 @@ LexicalAnalyzer::TParsedString LexicalAnalyzer::ParseString(const std::string& i
     while (i < i_string.size())
     {
         m_current_index = i;
-        bool accepted = _UpdateAutomatsState(i_string[i]);
-        if (!accepted)
+        bool should_continue = _UpdateAutomatsState(i_string[i]);
+        if (!should_continue)
         {
             if (isspace(i_string[i]))
             {
@@ -43,8 +43,9 @@ LexicalAnalyzer::TParsedString LexicalAnalyzer::ParseString(const std::string& i
             if (m_best_fit_lenght != 0)
             {
                 parsed_string.push_back(m_last_best_fit);
+                m_current_start_index += m_best_fit_lenght;
                 m_best_fit_lenght = 0;
-                m_current_start_index = i;
+                //m_current_start_index = i;
                 _ResetAutomats();
                 continue;
             }
@@ -64,6 +65,7 @@ LexicalAnalyzer::TParsedString LexicalAnalyzer::ParseString(const std::string& i
 //------------------------------------------------------------------------------
 bool LexicalAnalyzer::_UpdateAutomatsState(DFA::TInput i_input)
 {
+    bool any_has_chance = false;
     bool accepted_any = false;
     for (auto lexeme_type : m_lang_info.GetLexemeClassPriority())
     {
@@ -74,6 +76,10 @@ bool LexicalAnalyzer::_UpdateAutomatsState(DFA::TInput i_input)
             if (state == DFA::ST_TERMINAL_ACCEPTED)
             {
                 accepted = true;
+            }
+            if (lexeme_type != ILanguageInfo::ERROR_LEXEME && state != DFA::ST_TERMINAL_REJECTED)
+            {
+                any_has_chance = true;
             }
         }
         if (accepted)
@@ -88,7 +94,7 @@ bool LexicalAnalyzer::_UpdateAutomatsState(DFA::TInput i_input)
             
         }
     }
-    return accepted_any;
+    return any_has_chance;
 }
 
 //------------------------------------------------------------------------------

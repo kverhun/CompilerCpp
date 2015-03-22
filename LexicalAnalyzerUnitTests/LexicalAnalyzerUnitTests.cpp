@@ -325,6 +325,25 @@ namespace LexicalAnalyzerUnitTests
             Assert::IsTrue(res[0] == LanguageInfoCpp::LC_FLOATING_LITERAL);
         }
 
+        TEST_METHOD(ShouldAcceptFloatingLiteralCase5)
+        {
+            LanguageInfoCpp langinfo;
+            LexicalAnalyzer cpp_analyzer(langinfo);
+
+            auto res = cpp_analyzer.ParseString("3.14159265");
+            Assert::IsTrue(res.size() == 1);
+            Assert::IsTrue(res[0] == LanguageInfoCpp::LC_FLOATING_LITERAL);
+        }
+
+        TEST_METHOD(ShouldAcceptFloatingLiteralCase6)
+        {
+            LanguageInfoCpp langinfo;
+            LexicalAnalyzer cpp_analyzer(langinfo);
+
+            auto res = cpp_analyzer.ParseString("2.34E+22f");
+            Assert::IsTrue(res.size() == 1);
+            Assert::IsTrue(res[0] == LanguageInfoCpp::LC_FLOATING_LITERAL);
+        }
 
         TEST_METHOD(ShouldAcceptFloatingLiteralIntegralCase1)
         {

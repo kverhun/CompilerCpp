@@ -249,7 +249,7 @@ void LanguageInfoCpp::_CreateLexemeAutomataPoolMap()
     floating_literal_dfa
         (0, m_digits, 1)(1, m_digits, 1)(0, '.', 3)(1, '.', 2)(1, { 'e', 'E' }, 4)(2, { 'e', 'E' }, 4)(2, m_digits, 8)(2, { 'f', 'F', 'l', 'L' }, 9)
         (3, m_digits, 8)(8, { 'e', 'E' }, 4)(8, m_digits, 8)(8, { 'f', 'F', 'l', 'L' }, 9)
-        (4, { '+', '-' }, 5)(4, m_digits, 6)(5, m_digits, 6)(6, m_digits, 6);
+        (4, { '+', '-' }, 5)(4, m_digits, 6)(5, m_digits, 6)(6, m_digits, 6)(6, { 'f', 'F', 'l', 'L' }, 9);
     floating_literal_dfa.SetStartState(0);
     m_lexeme_automata_pool_map[LC_FLOATING_LITERAL] = { floating_literal_dfa };
 
