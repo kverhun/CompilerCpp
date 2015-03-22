@@ -19,7 +19,7 @@ DFA DFACreationHelpers::CreateForString(const std::string& i_string)
 
 	return dfa;
 }
-
+ 
 //------------------------------------------------------------------------------
 DFA DFACreationHelpers::CreateAccepingAll()
 {

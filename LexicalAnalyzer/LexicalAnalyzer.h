@@ -13,8 +13,14 @@ namespace LexicalAnalysis
 	LEXICALANALYZER_API class LexicalAnalyzer
 	{
 	public:
-		
-		typedef std::vector<ILanguageInfo::TLexemeClass> TParsedString;
+        struct LexemeInfo
+        {
+            ILanguageInfo::TLexemeClass m_lexeme_class;
+            std::string m_lexeme_value;
+            size_t m_lexeme_position;
+        };
+
+		typedef std::vector<LexemeInfo> TParsedString;
 
 	public:
 		LexicalAnalyzer(const ILanguageInfo& i_lang_info);

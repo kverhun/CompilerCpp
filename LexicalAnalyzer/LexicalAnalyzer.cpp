@@ -12,8 +12,8 @@ LexicalAnalyzer::LexicalAnalyzer(const ILanguageInfo& i_lang_info)
 //------------------------------------------------------------------------------
 LexicalAnalyzer::TParsedString LexicalAnalyzer::ParseString(const std::string& i_string)
 {
-	TParsedString parsed_string;
-    
+    TParsedString parsed_string;
+
     m_best_fit_lenght = 0;
     m_current_index = 0;
     m_current_start_index = 0;
@@ -28,13 +28,20 @@ LexicalAnalyzer::TParsedString LexicalAnalyzer::ParseString(const std::string& i
             if (isspace(i_string[i]))
             {
                 _ResetAutomats();
-                
+
                 if (m_best_fit_lenght > 0)
-                    parsed_string.push_back(m_last_best_fit);
+                {
+                    std::string parsed_lexeme = i_string.substr(m_current_start_index, m_best_fit_lenght);
+                    parsed_string.push_back({ m_last_best_fit, parsed_lexeme, m_current_start_index });
+                }
                 else if (i - m_current_start_index > 0)
-                    parsed_string.push_back(ILanguageInfo::ERROR_LEXEME);
+                {
+                    std::string parsed_lexeme = i_string.substr(m_current_start_index, m_best_fit_lenght);
+                    parsed_string.push_back({ ILanguageInfo::ERROR_LEXEME, parsed_lexeme, m_current_start_index });
+                }
+
                 ++i;
-                
+
                 m_current_start_index = i;
                 m_best_fit_lenght = 0;
                 continue;
@@ -42,7 +49,8 @@ LexicalAnalyzer::TParsedString LexicalAnalyzer::ParseString(const std::string& i
 
             if (m_best_fit_lenght != 0)
             {
-                parsed_string.push_back(m_last_best_fit);
+                std::string parsed_lexeme = i_string.substr(m_current_start_index, m_best_fit_lenght);
+                parsed_string.push_back({ m_last_best_fit, parsed_lexeme, m_current_start_index });
                 m_current_start_index += m_best_fit_lenght;
                 m_best_fit_lenght = 0;
                 //m_current_start_index = i;
@@ -54,10 +62,15 @@ LexicalAnalyzer::TParsedString LexicalAnalyzer::ParseString(const std::string& i
     }
 
     if (m_best_fit_lenght != 0)
-        parsed_string.push_back(m_last_best_fit);
+    {
+        std::string parsed_lexeme = i_string.substr(m_current_start_index, m_best_fit_lenght);
+        parsed_string.push_back({ m_last_best_fit, parsed_lexeme, m_current_start_index });
+    }
     else if (i - m_current_start_index > 0)
-        parsed_string.push_back(ILanguageInfo::ERROR_LEXEME);
-
+    {
+        std::string parsed_lexeme = i_string.substr(m_current_start_index, m_best_fit_lenght);
+        parsed_string.push_back({ ILanguageInfo::ERROR_LEXEME, parsed_lexeme, m_current_start_index });
+    }
 
 	return parsed_string;
 }
