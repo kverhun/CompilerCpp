@@ -6,11 +6,10 @@
 #include <string>
 
 #include "ILanguageInfo.h"
+#include "DFA.h"
 
 namespace LexicalAnalysis
 {
-	class DFA;
-
 	LEXICALANALYZER_API class LexicalAnalyzer
 	{
 	public:
@@ -20,12 +19,26 @@ namespace LexicalAnalysis
 	public:
 		LexicalAnalyzer(const ILanguageInfo& i_lang_info);
 
-		TParsedString ParseString(const std::string& i_string) const;
+		TParsedString ParseString(const std::string& i_string);
 
-	private:
+
+    private:
+
+        // returns false if noone accepted
+        bool _UpdateAutomatsState(DFA::TInput i_input);
+
+        void _ResetAutomats() const;
 
 	private:
 		const ILanguageInfo& m_lang_info;
+
+        std::vector<ILanguageInfo::TLexemeClass> m_should_check;
+        ILanguageInfo::TLexemeClass m_last_best_fit;
+        size_t m_current_start_index;
+        size_t m_best_fit_lenght;
+        
+
+        size_t m_current_index;
 
 	};
 

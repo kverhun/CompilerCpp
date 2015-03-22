@@ -157,5 +157,17 @@ namespace LexicalAnalyzerUnitTests
 			Assert::IsTrue(DFA::ST_TERMINAL_ACCEPTED != dfa.Process("123int1243"));
 			Assert::IsTrue(DFA::ST_TERMINAL_ACCEPTED != dfa.Process(" int \n"));
 		}
+
+        TEST_METHOD(ShouldAcceptStringBySymbols)
+        {
+            auto dfa = DFACreationHelpers::CreateForString("int");
+            auto st1 = dfa.AddInput('i');
+            Assert::IsTrue(DFA::ST_INTERMEDIATE == st1);
+            auto st2 = dfa.AddInput('n');
+            Assert::IsTrue(DFA::ST_INTERMEDIATE == st2);
+            auto st3 = dfa.AddInput('t');
+            Assert::IsTrue(DFA::ST_TERMINAL_ACCEPTED == st3);
+        }
+
 	};
 }

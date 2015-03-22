@@ -11,5 +11,6 @@ namespace LexicalAnalysis
 	{
 	public:
 		static DFA CreateForString(const std::string& i_string);
+        static DFA CreateAccepingAll();
 	};
 }

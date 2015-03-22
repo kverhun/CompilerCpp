@@ -10,6 +10,15 @@ DFA::DFA()
 }
 
 //------------------------------------------------------------------------------
+DFA::DFA(const DFA& i_other)
+{
+    m_current_state = i_other.m_current_state;
+    m_start_state = i_other.m_start_state;
+    m_state_map = i_other.m_state_map;
+    m_transition_map = i_other.m_transition_map;
+}
+
+//------------------------------------------------------------------------------
 void DFA::AddState(TState i_state, EStateType i_type)
 {
 	if (m_state_map.find(i_state) != m_state_map.end())
@@ -37,6 +46,35 @@ void DFA::AddTransition(TState i_from, TInput i_input, TState i_to)
 	else
 		m_transition_map[key] = i_to;
 }
+
+//------------------------------------------------------------------------------
+void LexicalAnalysis::DFA::AddTransition(TState i_from, const TInputSet& i_input, TState i_to)
+{
+    for (auto inp : i_input)
+        AddTransition(i_from, inp, i_to);
+}
+
+//------------------------------------------------------------------------------
+DFA& LexicalAnalysis::DFA::operator()(TState i_state, EStateType i_type)
+{
+    AddState(i_state, i_type);
+    return *this;
+}
+
+//------------------------------------------------------------------------------
+DFA& LexicalAnalysis::DFA::operator()(TState i_from, TInput i_input, TState i_to)
+{
+    AddTransition(i_from, i_input, i_to);
+    return *this;
+}
+
+//------------------------------------------------------------------------------
+DFA& LexicalAnalysis::DFA::operator()(TState i_from, TInputSet i_input, TState i_to)
+{
+    AddTransition(i_from, i_input, i_to);
+    return *this;
+}
+
 
 //------------------------------------------------------------------------------
 void DFA::Reset() const

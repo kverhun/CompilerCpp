@@ -16,10 +16,10 @@
     <ClCompile Include="DFACreationHelpers.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="LanguageInfo.cpp">
+    <ClCompile Include="LexicalAnalyzer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="LexicalAnalyzer.cpp">
+    <ClCompile Include="LanguageInfoCpp.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -39,10 +39,10 @@
     <ClInclude Include="LexicalAnalyzer.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="LanguageInfo.h">
+    <ClInclude Include="ILanguageInfo.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="ILanguageInfo.h">
+    <ClInclude Include="LanguageInfoCpp.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>

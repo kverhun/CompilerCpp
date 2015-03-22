@@ -2,14 +2,18 @@
 
 #include "_LexicalAnalyzerLib.h"
 
+#include <vector>
 #include <map>
 
 namespace LexicalAnalysis
 {
+    class DFACreationHelpers;
 
 	LEXICALANALYZER_API class DFA
 	{
 	public:
+        friend class DFACreationHelpers;
+
 		enum EStateType
 		{
 			ST_TERMINAL_ACCEPTED,
@@ -19,13 +23,20 @@ namespace LexicalAnalysis
 
 		typedef size_t TState;
 		typedef char   TInput;
+        typedef std::vector<TInput> TInputSet;
 
 	public:
 
 		DFA();
+        DFA(const DFA& i_other);
+
+        DFA& operator()(TState i_state, EStateType i_type);
+        DFA& operator()(TState i_from, TInput i_input, TState i_to);
+        DFA& operator()(TState i_from, TInputSet i_input, TState i_to);
 
 		void AddState(TState i_state, EStateType i_type);
 		void AddTransition(TState i_from, TInput i_input, TState i_to);
+        void AddTransition(TState i_from, const TInputSet& i_input, TState i_to);
 		void SetStartState(TState i_state);
 
 		// reset DFA to initial state

@@ -19,3 +19,11 @@ DFA DFACreationHelpers::CreateForString(const std::string& i_string)
 
 	return dfa;
 }
+
+//------------------------------------------------------------------------------
+DFA DFACreationHelpers::CreateAccepingAll()
+{
+    DFA dfa;
+    dfa.m_state_map[DFA::mg_error_state] = DFA::ST_TERMINAL_ACCEPTED;
+    return dfa;
+}

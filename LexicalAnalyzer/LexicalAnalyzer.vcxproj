@@ -70,7 +70,7 @@
     <ClCompile Include="DFA.cpp" />
     <ClCompile Include="DFACreationHelpers.cpp" />
     <ClCompile Include="FileIO.cpp" />
-    <ClCompile Include="LanguageInfo.cpp" />
+    <ClCompile Include="LanguageInfoCpp.cpp" />
     <ClCompile Include="LexicalAnalyzer.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -78,7 +78,7 @@
     <ClInclude Include="DFACreationHelpers.h" />
     <ClInclude Include="FileIO.h" />
     <ClInclude Include="ILanguageInfo.h" />
-    <ClInclude Include="LanguageInfo.h" />
+    <ClInclude Include="LanguageInfoCpp.h" />
     <ClInclude Include="LexicalAnalyzer.h" />
     <ClInclude Include="_LexicalAnalyzerLib.h" />
   </ItemGroup>

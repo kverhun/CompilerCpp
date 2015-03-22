@@ -11,6 +11,8 @@ namespace LexicalAnalysis
 	class ILanguageInfo
 	{
 	public:
+		typedef std::vector<char> TAlphabet;
+		
 		typedef size_t TLexemeClass;
 		typedef std::map<TLexemeClass, std::string> TLexemeClasses;
 
@@ -19,9 +21,12 @@ namespace LexicalAnalysis
 		
 		typedef std::map<TLexemeClass, TAutomataPool> TLexemeAutomataPoolMap;
 
+        enum {ERROR_LEXEME = 1024};
+
 	public:
 		virtual ~ILanguageInfo() = 0 {}
 
+		virtual const TAlphabet&			  GetAlphabet() const = 0;
 		virtual const TLexemeAutomataPoolMap& GetLexemeAutomataPoolMap() const = 0;
 		virtual const TLexemeClassPriority&   GetLexemeClassPriority() const = 0;
 		virtual const TLexemeClasses&		  GetLexemeClasses() const = 0;
