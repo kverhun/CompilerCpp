@@ -10,5 +10,6 @@ std::string LexicalAnalysis::FileIO::GetFileString(const std::string& i_filename
 	std::ifstream t(i_filename);
 	std::stringstream buffer;
 	buffer << t.rdbuf();
-	return buffer.str();
+	auto str = buffer.str();
+    return str;
 }

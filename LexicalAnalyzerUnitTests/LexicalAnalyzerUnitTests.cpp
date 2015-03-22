@@ -384,6 +384,26 @@ namespace LexicalAnalyzerUnitTests
             Assert::IsTrue(res[0].m_lexeme_class == LanguageInfoCpp::LC_STRING_LITERAL);
         }
 
+        TEST_METHOD(ShouldAcceptStringLiteral3)
+        {
+            LanguageInfoCpp langinfo;
+            LexicalAnalyzer cpp_analyzer(langinfo);
+
+            auto res = cpp_analyzer.ParseString("\"hello world\"");
+            Assert::IsTrue(res.size() == 1);
+            Assert::IsTrue(res[0].m_lexeme_class == LanguageInfoCpp::LC_STRING_LITERAL);
+        }
+
+        TEST_METHOD(ShouldAcceptStringLiteral4)
+        {
+            LanguageInfoCpp langinfo;
+            LexicalAnalyzer cpp_analyzer(langinfo);
+
+            auto res = cpp_analyzer.ParseString("\"Please specify file name for parsing\"");
+            Assert::IsTrue(res.size() == 1);
+            Assert::IsTrue(res[0].m_lexeme_class == LanguageInfoCpp::LC_STRING_LITERAL);
+        }
+
         TEST_METHOD(ComplexTest1)
         {
             LanguageInfoCpp langinfo;

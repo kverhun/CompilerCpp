@@ -11,18 +11,18 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{6EB762D0-AA39-4597-B4B8-026895DD0BCC}</ProjectGuid>
-    <RootNamespace>LexicalAnalyzer</RootNamespace>
+    <ProjectGuid>{E3089F22-DBE1-4402-87DB-4EC531FF86A9}</ProjectGuid>
+    <RootNamespace>LexicalAnalysisRunner</RootNamespace>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v120</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v120</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
@@ -44,9 +44,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <PrecompiledHeaderFile>_LexicalAnalyzerPch.h</PrecompiledHeaderFile>
-      <PrecompiledHeader>NotUsing</PrecompiledHeader>
-      <PreprocessorDefinitions>LEXICALANALYZER_DLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>D:\dev\CompilerCpp;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -59,6 +57,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>D:\dev\CompilerCpp;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -67,20 +66,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="DFA.cpp" />
-    <ClCompile Include="DFACreationHelpers.cpp" />
-    <ClCompile Include="FileIO.cpp" />
-    <ClCompile Include="LanguageInfoCpp.cpp" />
-    <ClCompile Include="LexicalAnalyzer.cpp" />
+    <ProjectReference Include="..\LexicalAnalyzer\LexicalAnalyzer.vcxproj">
+      <Project>{6eb762d0-aa39-4597-b4b8-026895dd0bcc}</Project>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="DFA.h" />
-    <ClInclude Include="DFACreationHelpers.h" />
-    <ClInclude Include="FileIO.h" />
-    <ClInclude Include="ILanguageInfo.h" />
-    <ClInclude Include="LanguageInfoCpp.h" />
-    <ClInclude Include="LexicalAnalyzer.h" />
-    <ClInclude Include="_LexicalAnalyzerLib.h" />
+    <ClCompile Include="main.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
