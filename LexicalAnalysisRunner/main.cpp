@@ -1,9 +1,34 @@
 #include <iostream>
+#include <fstream>
+#include <sstream>
 
 #include <string>
 #include <LexicalAnalyzer\FileIO.h>
 #include <LexicalAnalyzer\LanguageInfoCpp.h>
 #include <LexicalAnalyzer\LexicalAnalyzer.h>
+
+namespace
+{
+    std::vector<size_t> _GetNewLinePositions(const std::string& i_str)
+    {
+        std::vector<size_t> new_lines;
+        for (size_t i = 0; i < i_str.size(); ++i)
+        {
+            if (i_str[i] == '\n')
+                new_lines.push_back(i);
+        }
+
+        return new_lines;
+    }
+
+    std::pair<size_t, size_t> _GetLineAndPosNumber(size_t i_pos, const std::vector<size_t> i_new_lines)
+    {
+        size_t line_number = 0;
+        while (line_number < i_new_lines.size() - 1 && i_pos > i_new_lines[line_number+1])
+            ++line_number;
+        return std::make_pair(line_number + 1, i_pos - i_new_lines[line_number]);
+    }
+}
 
 int main(int i_argc, const char** i_argv)
 {
@@ -13,8 +38,12 @@ int main(int i_argc, const char** i_argv)
         return 0;
     }
 
+    std::stringstream out_stream;
+    
     std::string input_fname = i_argv[1];
+    
     auto input_string = LexicalAnalysis::FileIO::GetFileString(input_fname);
+    input_string.insert(0, 1, '\n');
 
     //std::cout << "string to parse: " << std::endl << input_string << std::endl;
     LexicalAnalysis::LanguageInfoCpp langinfo;
@@ -25,15 +54,30 @@ int main(int i_argc, const char** i_argv)
     size_t col2_width = 30;
     size_t col3_widht = 20;
 
+    auto new_lines = _GetNewLinePositions(input_string);
+
     for (auto lexeme : parsed_file)
     {
         std::string lexeme_type = langinfo.GetLexemeClasses().find(lexeme.m_lexeme_class)->second;
         std::string lexeme_value = lexeme.m_lexeme_value;
         size_t lexeme_position = lexeme.m_lexeme_position;
 
+        auto lexeme_file_position = _GetLineAndPosNumber(lexeme_position, new_lines);
+
         std::string first_separator(col1_width > lexeme_value.size() ? col1_width - lexeme_value.size() : 1, ' ');
         std::string second_separator(col2_width > lexeme_type.size() ? col2_width - lexeme_type.size()  : 1, ' ');
-        std::cout << lexeme_value << first_separator << lexeme_type << second_separator << lexeme_position << std::endl;
+        out_stream << lexeme_value << first_separator << lexeme_type << second_separator << "l: " << lexeme_file_position.first << ", c: " << lexeme_file_position.second << std::endl;
+    }
+
+    if (i_argc > 2)
+    {
+        std::string out_file = i_argv[2];
+        std::ofstream out_file_stream(out_file);
+        out_file_stream << out_stream.str();
+    }
+    else
+    {
+        std::cout << out_stream.str();
     }
 
     return 0;

@@ -13,7 +13,7 @@ namespace LexicalAnalysis
             LC_KEYWORD = 1,
             LC_IDENTIFIER = 2,
             //LC_SEPARATOR = 3,
-            LC_PUNCTUATION_OR_OPERATOR = 4,
+            LC_PUNCTUATION_OR_OPERATOR = ILanguageInfo::SEPARATOR_LEXEME,
             LC_INTEGER_LITERAL = 5,
             LC_CHARACTER_LITERAL = 6,
             LC_FLOATING_LITERAL = 7,

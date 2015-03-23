@@ -484,7 +484,7 @@ namespace LexicalAnalyzerUnitTests
             Assert::IsTrue(res[1].m_lexeme_position == 5);
         }
 
-        TEST_METHOD(ShouldPartPointerLiteral)
+        TEST_METHOD(ShouldParsePointerLiteral)
         {
             LanguageInfoCpp langinfo;
             LexicalAnalyzer cpp_analyzer(langinfo);
@@ -497,6 +497,21 @@ namespace LexicalAnalyzerUnitTests
             Assert::IsTrue(res[0].m_lexeme_value == "nullptr");
             Assert::IsTrue(res[0].m_lexeme_position == 0);
         }
+
+        TEST_METHOD(ShouldNotParseIllegalString)
+        {
+            LanguageInfoCpp langinfo;
+            LexicalAnalyzer cpp_analyzer(langinfo);
+
+            auto str = "\"abc\\oabc\"";
+            auto res = cpp_analyzer.ParseString(str);
+            Assert::IsTrue(res.size() == 1);
+
+            Assert::IsTrue(res[0].m_lexeme_class == ILanguageInfo::ERROR_LEXEME);
+            Assert::IsTrue(res[0].m_lexeme_value == "\"abc\\oabc\"");
+            Assert::IsTrue(res[0].m_lexeme_position == 0);
+        }
+
 
     };
 

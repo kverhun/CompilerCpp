@@ -21,7 +21,7 @@ namespace LexicalAnalysis
 		
 		typedef std::map<TLexemeClass, TAutomataPool> TLexemeAutomataPoolMap;
 
-        enum {ERROR_LEXEME = 1024};
+        enum {SEPARATOR_LEXEME = 1023, ERROR_LEXEME = 1024};
 
 	public:
 		virtual ~ILanguageInfo() = 0 {}
