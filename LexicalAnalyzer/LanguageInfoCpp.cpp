@@ -1,5 +1,7 @@
 #include "LanguageInfoCpp.h"
 
+#include <algorithm>
+
 #include "DFA.h"
 #include "DFACreationHelpers.h"
 
@@ -229,40 +231,27 @@ void LanguageInfoCpp::_CreateLexemeAutomataPoolMap()
 
     // 5. LC_INTEGER_LITERAL
     DFA integer_literal_dfa_decimal;
-    integer_literal_dfa_decimal.AddState(0, DFA::ST_INTERMEDIATE);
-    integer_literal_dfa_decimal.AddState(1, DFA::ST_TERMINAL_ACCEPTED);
-    integer_literal_dfa_decimal.AddState(2, DFA::ST_TERMINAL_ACCEPTED);
-    integer_literal_dfa_decimal.AddState(3, DFA::ST_TERMINAL_ACCEPTED);
-    integer_literal_dfa_decimal.AddState(4, DFA::ST_TERMINAL_ACCEPTED);
-    integer_literal_dfa_decimal.AddState(5, DFA::ST_TERMINAL_ACCEPTED);
-    integer_literal_dfa_decimal.AddState(6, DFA::ST_TERMINAL_ACCEPTED);
+    integer_literal_dfa_decimal
+        (0, DFA::ST_INTERMEDIATE)(1, DFA::ST_TERMINAL_ACCEPTED)(2, DFA::ST_TERMINAL_ACCEPTED)(3, DFA::ST_TERMINAL_ACCEPTED)
+        (4, DFA::ST_TERMINAL_ACCEPTED)(5, DFA::ST_TERMINAL_ACCEPTED)(6, DFA::ST_TERMINAL_ACCEPTED);
     integer_literal_dfa_decimal.SetStartState(0);
-    integer_literal_dfa_decimal.AddTransition(0, m_nonzero_digits, 1);
-    integer_literal_dfa_decimal.AddTransition(1, m_digits, 1);
-    integer_literal_dfa_decimal.AddTransition(1, { 'u', 'U' }, 2);
-    integer_literal_dfa_decimal.AddTransition(2, { 'l', 'L' }, 3);
-    integer_literal_dfa_decimal.AddTransition(3, { 'l', 'L' }, 4);
-    integer_literal_dfa_decimal.AddTransition(1, { 'l', 'L' }, 5);
-    integer_literal_dfa_decimal.AddTransition(5, { 'u', 'U' }, 4);
-    integer_literal_dfa_decimal.AddTransition(5, { 'l', 'L' }, 6);
-    integer_literal_dfa_decimal.AddTransition(6, { 'u', 'U' }, 4);
+    integer_literal_dfa_decimal
+        (0, m_nonzero_digits, 1)(1, m_digits, 1)(1, { 'u', 'U' }, 2)(2, { 'l', 'L' }, 3)
+        (3, { 'l', 'L' }, 4)(1, { 'l', 'L' }, 5)(5, { 'u', 'U' }, 4)(5, { 'l', 'L' }, 6)
+        (6, { 'u', 'U' }, 4);
 
     DFA integer_literal_octal;
-    integer_literal_octal.AddState(0, DFA::ST_INTERMEDIATE);
-    integer_literal_octal.AddState(1, DFA::ST_TERMINAL_ACCEPTED);
-    integer_literal_octal.AddTransition(0, '0', 1);
-    integer_literal_octal.AddTransition(1, m_octal_digits, 1);
+    integer_literal_octal    
+        (0, DFA::ST_INTERMEDIATE)(1, DFA::ST_TERMINAL_ACCEPTED);
+    integer_literal_octal
+        (0, '0', 1)(1, m_octal_digits, 1);
     integer_literal_octal.SetStartState(0);
 
     DFA integer_literal_hexadecimal;
-    integer_literal_hexadecimal.AddState(0, DFA::ST_INTERMEDIATE);
-    integer_literal_hexadecimal.AddState(1, DFA::ST_INTERMEDIATE);
-    integer_literal_hexadecimal.AddState(2, DFA::ST_INTERMEDIATE);
-    integer_literal_hexadecimal.AddState(3, DFA::ST_TERMINAL_ACCEPTED);
-    integer_literal_hexadecimal.AddTransition(0, '0', 1);
-    integer_literal_hexadecimal.AddTransition(1, { 'x', 'X' }, 2);
-    integer_literal_hexadecimal.AddTransition(2, m_hexadecimal_digits, 3);
-    integer_literal_hexadecimal.AddTransition(3, m_hexadecimal_digits, 3);
+    integer_literal_hexadecimal
+        (0, DFA::ST_INTERMEDIATE)(1, DFA::ST_INTERMEDIATE)(2, DFA::ST_INTERMEDIATE)(3, DFA::ST_TERMINAL_ACCEPTED);
+    integer_literal_hexadecimal
+        (0, '0', 1)(1, { 'x', 'X' }, 2)(2, m_hexadecimal_digits, 3)(3, m_hexadecimal_digits, 3);
 
     m_lexeme_automata_pool_map[LC_INTEGER_LITERAL] = { integer_literal_dfa_decimal, integer_literal_octal, integer_literal_hexadecimal };
 
@@ -318,6 +307,12 @@ void LanguageInfoCpp::_CreateLexemeAutomataPoolMap()
     // 1024. LC_ERROR
     m_lexeme_automata_pool_map[LC_ERROR] = { DFACreationHelpers::CreateAccepingAll() };
 
+}
+
+//------------------------------------------------------------------------------
+bool LexicalAnalysis::LanguageInfoCpp::IsCharSeparator(char i_char) const
+{
+    return std::find(m_separators.begin(), m_separators.end(), i_char) != m_separators.end();
 }
 
 

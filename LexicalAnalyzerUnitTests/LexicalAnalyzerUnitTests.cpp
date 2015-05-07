@@ -174,6 +174,39 @@ namespace LexicalAnalyzerUnitTests
             Assert::IsTrue(lexeme_type9 == LanguageInfoCpp::LC_PUNCTUATION_OR_OPERATOR);
         }
 
+        TEST_METHOD(ShouldParseWithSpacesCase2)
+        {
+            LanguageInfoCpp langinfo;
+            LexicalAnalyzer cpp_analyzer(langinfo);
+
+            auto res = cpp_analyzer.ParseString("const}");
+            Assert::IsTrue(res.size() == 2);
+
+            auto lexeme_type8 = res[0].m_lexeme_class;
+            Assert::IsTrue(lexeme_type8 == LanguageInfoCpp::LC_KEYWORD);
+
+            auto lexeme_type9 = res[1].m_lexeme_class;
+            Assert::IsTrue(lexeme_type9 == LanguageInfoCpp::LC_PUNCTUATION_OR_OPERATOR);
+        }
+
+        TEST_METHOD(ShouldParseWithSpacesCase3)
+        {
+            LanguageInfoCpp langinfo;
+            LexicalAnalyzer cpp_analyzer(langinfo);
+
+            auto res = cpp_analyzer.ParseString("{const}");
+            Assert::IsTrue(res.size() == 3);
+
+            auto lexeme_type7 = res[0].m_lexeme_class;
+            Assert::IsTrue(lexeme_type7 == LanguageInfoCpp::LC_PUNCTUATION_OR_OPERATOR);
+
+            auto lexeme_type8 = res[1].m_lexeme_class;
+            Assert::IsTrue(lexeme_type8 == LanguageInfoCpp::LC_KEYWORD);
+
+            auto lexeme_type9 = res[2].m_lexeme_class;
+            Assert::IsTrue(lexeme_type9 == LanguageInfoCpp::LC_PUNCTUATION_OR_OPERATOR);
+        }
+
         TEST_METHOD(ShouldParseIntegerCase1)
         {
             LanguageInfoCpp langinfo;
@@ -342,6 +375,42 @@ namespace LexicalAnalyzerUnitTests
             auto res = cpp_analyzer.ParseString("2.34E+22f");
             Assert::IsTrue(res.size() == 1);
             Assert::IsTrue(res[0].m_lexeme_class == LanguageInfoCpp::LC_FLOATING_LITERAL);
+        }
+
+        TEST_METHOD(ShouldNotAcceptInvalidFloatCase1)
+        {
+            LanguageInfoCpp langinfo;
+            LexicalAnalyzer cpp_analyzer(langinfo);
+
+            auto res = cpp_analyzer.ParseString("2.34E+X");
+            Assert::IsTrue(res[0].m_lexeme_class == ILanguageInfo::ERROR_LEXEME);
+        }
+
+        TEST_METHOD(ShouldNotAcceptInvalidFloatCase2)
+        {
+            LanguageInfoCpp langinfo;
+            LexicalAnalyzer cpp_analyzer(langinfo);
+
+            auto res = cpp_analyzer.ParseString("2.34E+X;");
+            Assert::IsTrue(res[0].m_lexeme_class == ILanguageInfo::ERROR_LEXEME);
+        }
+
+        TEST_METHOD(ShouldNotAcceptInvalidIndentifierCase1)
+        {
+            LanguageInfoCpp langinfo;
+            LexicalAnalyzer cpp_analyzer(langinfo);
+
+            auto res = cpp_analyzer.ParseString("2d3d");
+            Assert::IsTrue(res[0].m_lexeme_class == ILanguageInfo::ERROR_LEXEME);
+        }
+
+        TEST_METHOD(ShouldNotAcceptInvalidIndentifierCase2)
+        {
+            LanguageInfoCpp langinfo;
+            LexicalAnalyzer cpp_analyzer(langinfo);
+
+            auto res = cpp_analyzer.ParseString("0dc\n2d3d");
+            Assert::IsTrue(res[0].m_lexeme_class == ILanguageInfo::ERROR_LEXEME);
         }
 
         TEST_METHOD(ShouldAcceptFloatingLiteralIntegralCase1)

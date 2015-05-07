@@ -31,5 +31,6 @@ namespace LexicalAnalysis
 		virtual const TLexemeClassPriority&   GetLexemeClassPriority() const = 0;
 		virtual const TLexemeClasses&		  GetLexemeClasses() const = 0;
 
+        virtual bool IsCharSeparator(char i_char) const = 0;
 	};
 }

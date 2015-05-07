@@ -39,6 +39,8 @@ namespace LexicalAnalysis
 	
 		virtual const TAlphabet& GetAlphabet() const override;
 
+        virtual bool IsCharSeparator(char i_char) const override;
+
 	private:
 		void _CreateAlphabet();
 		void _CreateLexemeClasses();
