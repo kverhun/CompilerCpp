@@ -12,6 +12,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="LexicalAnalyzer\ILanguageInfo.h" />
+    <ClInclude Include="LexicalAnalyzer\LexemeInfo.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{3CC9D834-C025-4184-9D88-9AB3BD5C14B2}</ProjectGuid>

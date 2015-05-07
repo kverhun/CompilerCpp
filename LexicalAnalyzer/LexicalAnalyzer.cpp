@@ -10,7 +10,7 @@ LexicalAnalyzer::LexicalAnalyzer(const ILanguageInfo& i_lang_info)
 }
 
 //------------------------------------------------------------------------------
-LexicalAnalyzer::TParsedString LexicalAnalyzer::ParseString(const std::string& i_string)
+TParsedString LexicalAnalyzer::ParseString(const std::string& i_string)
 {
     TParsedString parsed_string;
 
