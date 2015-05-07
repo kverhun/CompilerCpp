@@ -4,7 +4,7 @@
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
 #include <LexicalAnalyzer\LexicalAnalyzer.h>
-#include <LexicalAnalyzer\ILanguageInfo.h>
+#include <Interfaces\LexicalAnalyzer\ILanguageInfo.h>
 #include <LexicalAnalyzer\LanguageInfoCpp.h>
 
 using namespace LexicalAnalysis;

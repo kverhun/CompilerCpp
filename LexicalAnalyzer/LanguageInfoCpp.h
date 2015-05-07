@@ -1,6 +1,6 @@
 #pragma once
 
-#include "ILanguageInfo.h"
+#include <Interfaces\LexicalAnalyzer\ILanguageInfo.h>
 #include "DFA.h"
 
 namespace LexicalAnalysis

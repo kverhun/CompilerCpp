@@ -39,9 +39,6 @@
     <ClInclude Include="LexicalAnalyzer.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="ILanguageInfo.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="LanguageInfoCpp.h">
       <Filter>Source Files</Filter>
     </ClInclude>

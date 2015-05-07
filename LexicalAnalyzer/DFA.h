@@ -9,7 +9,7 @@ namespace LexicalAnalysis
 {
     class DFACreationHelpers;
 
-	LEXICALANALYZER_API class DFA
+	class DFA
 	{
 	public:
         friend class DFACreationHelpers;

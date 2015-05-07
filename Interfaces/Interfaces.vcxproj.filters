@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Sources">
+      <UniqueIdentifier>{abc3a165-94f9-4d03-bcfe-c2fc06541ce8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\LexicalAnalyzer">
+      <UniqueIdentifier>{fe321040-8baa-440e-aa90-0d329eb478b3}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="LexicalAnalyzer\ILanguageInfo.h">
+      <Filter>Sources\LexicalAnalyzer</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

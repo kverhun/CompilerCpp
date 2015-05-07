@@ -54,7 +54,7 @@ const TAlphabet& LanguageInfoCpp::GetAlphabet() const
 //------------------------------------------------------------------------------
 void LanguageInfoCpp::_CreateAlphabet()
 {
-	// letters
+    // letters
     for (char ch = 'a'; ch <= 'z'; ++ch)
     {
         m_alphabet.push_back(ch);
@@ -66,10 +66,10 @@ void LanguageInfoCpp::_CreateAlphabet()
         m_letters.push_back(ch);
     }
 
-	m_alphabet.push_back('_');
+    m_alphabet.push_back('_');
     m_letters.push_back('_');
 
-	// digits
+    // digits
     for (char ch = '0'; ch <= '9'; ++ch)
     {
         m_alphabet.push_back(ch);
@@ -78,8 +78,8 @@ void LanguageInfoCpp::_CreateAlphabet()
             m_nonzero_digits.push_back(ch);
     }
 
-	// operators and separators
-	
+    // operators and separators
+
     m_alphabet.push_back('(');
     m_alphabet.push_back(')');
     m_alphabet.push_back('{');
@@ -129,9 +129,9 @@ void LanguageInfoCpp::_CreateAlphabet()
     m_separators.push_back('?');
 
     m_octal_digits = { '0', '1', '2', '3', '4', '5', '6', '7' };
-    m_hexadecimal_digits = { 
+    m_hexadecimal_digits = {
         '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
-        'a', 'A', 'b', 'B', 'c', 'C', 'd', 'D', 'e', 'E', 'f', 'F' 
+        'a', 'A', 'b', 'B', 'c', 'C', 'd', 'D', 'e', 'E', 'f', 'F'
     };
 
     m_c_char = {
@@ -149,8 +149,8 @@ void LanguageInfoCpp::_CreateAlphabet()
 //------------------------------------------------------------------------------
 void LanguageInfoCpp::_CreateLexemeClasses()
 {
-	m_lexeme_classes[LC_IDENTIFIER] = "Identifier";
-	m_lexeme_classes[LC_KEYWORD] = "Keyword";
+    m_lexeme_classes[LC_IDENTIFIER] = "Identifier";
+    m_lexeme_classes[LC_KEYWORD] = "Keyword";
     m_lexeme_classes[LC_PUNCTUATION_OR_OPERATOR] = "Punctuation and operator";
     m_lexeme_classes[LC_INTEGER_LITERAL] = "Integer literal";
     m_lexeme_classes[LC_CHARACTER_LITERAL] = "Character literal";
@@ -161,11 +161,11 @@ void LanguageInfoCpp::_CreateLexemeClasses()
 
     m_lexeme_classes[LC_ERROR] = "Error";
 
-    m_lexeme_class_priority = { 
+    m_lexeme_class_priority = {
         LC_BOOLEAN_LITERAL,
         LC_POINTER_LITERAL,
-        LC_KEYWORD, 
-        LC_IDENTIFIER, 
+        LC_KEYWORD,
+        LC_IDENTIFIER,
         LC_PUNCTUATION_OR_OPERATOR,
         LC_INTEGER_LITERAL,
         LC_CHARACTER_LITERAL,
@@ -220,14 +220,14 @@ void LanguageInfoCpp::_CreateLexemeAutomataPoolMap()
         "-=", "*=", "/=", "!=", "==", "%=", "|=", "&=", "||",
         "&&", "++", "--", ">>", "<<", "<<=", ">>=", "->*", "->", "...", "::", "new", "delete"
     };
-    
+
     m_lexeme_automata_pool_map[LC_PUNCTUATION_OR_OPERATOR].reserve(separator_or_op_strings.size() + 1);
     m_lexeme_automata_pool_map[LC_PUNCTUATION_OR_OPERATOR] = { separator_dfa };
     for (auto str : separator_or_op_strings)
         m_lexeme_automata_pool_map[LC_PUNCTUATION_OR_OPERATOR].push_back(DFACreationHelpers::CreateForString(str));
 
     // 4. LC_PUNCTUATION
-    
+
 
     // 5. LC_INTEGER_LITERAL
     DFA integer_literal_dfa_decimal;
@@ -241,7 +241,7 @@ void LanguageInfoCpp::_CreateLexemeAutomataPoolMap()
         (6, { 'u', 'U' }, 4);
 
     DFA integer_literal_octal;
-    integer_literal_octal    
+    integer_literal_octal
         (0, DFA::ST_INTERMEDIATE)(1, DFA::ST_TERMINAL_ACCEPTED);
     integer_literal_octal
         (0, '0', 1)(1, m_octal_digits, 1);
@@ -269,7 +269,7 @@ void LanguageInfoCpp::_CreateLexemeAutomataPoolMap()
         (5, 'x', 9)(9, m_hexadecimal_digits, 10)(10, m_hexadecimal_digits, 10)(10, '\'', 4);
     character_literal_dfa.SetStartState(0);
     m_lexeme_automata_pool_map[LC_CHARACTER_LITERAL] = { character_literal_dfa };
-    
+
 
     // 7. LC_FLOATING_LITERAL
     DFA floating_literal_dfa;

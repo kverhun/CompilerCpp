@@ -7,7 +7,7 @@
 
 namespace LexicalAnalysis
 {
-	LEXICALANALYZER_API class DFACreationHelpers
+	class DFACreationHelpers
 	{
 	public:
 		static DFA CreateForString(const std::string& i_string);
