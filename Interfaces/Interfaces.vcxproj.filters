@@ -15,5 +15,8 @@
     <ClInclude Include="LexicalAnalyzer\LexemeInfo.h">
       <Filter>Sources\LexicalAnalyzer</Filter>
     </ClInclude>
+    <ClInclude Include="LexicalAnalyzer\CppLexemeClasses.h">
+      <Filter>Sources\LexicalAnalyzer</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

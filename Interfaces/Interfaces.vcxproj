@@ -11,6 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="LexicalAnalyzer\CppLexemeClasses.h" />
     <ClInclude Include="LexicalAnalyzer\ILanguageInfo.h" />
     <ClInclude Include="LexicalAnalyzer\LexemeInfo.h" />
   </ItemGroup>
