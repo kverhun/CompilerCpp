@@ -1,0 +1,103 @@
+translation-unit ::= definition-seq-opt
+
+definition-seq-opt ::= definition-seq
+					|  lambda
+definition-seq ::= defintion
+				|  defintion defintion-seq
+definition ::= variable-declaration
+			|  function-defintion
+
+======================================
+======== function definition =========
+======================================
+
+function-definition ::= function-defintion-header expr-block
+function-definition-header ::= type function-name left-paren func-arg-list-opt right-paren
+left-paren ::= '('
+right-paren ::= ')'
+func-arg-list-opt ::= func-arg-list
+					| lambda
+func-arg-list ::= type identifier
+				| type identifier comma-separator func-arg-list
+comma-separator ::= ','
+type ::= const-spec-opt type-name pointer-spec-opt reference-spec-opt
+const-spec-opt ::= const-spec
+				|  lambda
+const-spec ::= 'const'
+pointer-spec-opt ::= point-spec
+				  |  lambda
+pointer-spec ::= '*'
+			  |  '*' pointer-spec
+reference-spec-opt ::= '&'
+					|   lambda
+
+======================================
+============ statements ==============
+======================================
+
+compound-statement ::= left-brace statement-seq-opt right-brace
+left-brace ::= '{'
+right-brace::= '}'
+statement-seq-opt ::= statement-seq
+			  		|  lambda
+statement-seq ::= statement
+		  	   |  statement statement-seq
+
+statement ::= expression-statement
+			| declaration-statement
+			| if-statement
+			| while-statement
+
+expression-statement ::= expression-opt
+expression-opt ::= expression
+				|  lambda
+
+
+postfix_expression:
+                  identifier
+                  postfix_expression ++
+                  postfix_expression --
+unary_expression:
+                  postfix_expression
+                  unary_operator postfix_expression
+multiplicative_expression:
+        multiplicative_expression * unary_expression
+        multiplicative_expression / unary_expression
+        multiplicative_expression % unary_expression
+additive_expression:
+        multiplicative_expression
+        additive_expression + multiplicative_expression
+        additive_expression - multiplicative_expression
+shift_expression:
+        additive_expression
+        shift_expression << additive_expression
+        shift_expression >> additive_expression
+relational_expression:
+        shift_expression
+        relational_expression < shift_expression
+        relational_expression > shift_expression
+        relational_expression <= shift_expression
+        relational_expression >= shift_expression
+equality_expression:
+        relational_expression
+        equality_expression == relational_expression
+        equality_expression != relational_expression
+and_expression:
+        equality_expression
+        and_expression & equality_expression
+exclusive_or_expression:
+        and_expression
+        exclusive_or_expression ^ and_expression
+inclusive_or_expression:
+        exclusive_or_expression
+        inclusive_or_expression | exclusive_or_expression
+logical_and_expression:
+        inclusive_or_expression
+        logical_and_expression && inclusive_or_expression
+logical_or_expression:
+        logical_and_expression
+        logical_or_expression || logical_and_expression
+
+expression ::= assignment-expression
+assignment-expression ::= logical-or-expression assignment-operator assignment-expression
+assignment-operator ::= '=' | '*=' '/=' '%=' '+=' '-=' >>= <<= &= ^= |=
