@@ -54,50 +54,89 @@ expression-opt ::= expression
 
 
 postfix_expression:
-                  identifier
-                  postfix_expression ++
-                  postfix_expression --
-unary_expression:
-                  postfix_expression
-                  unary_operator postfix_expression
-multiplicative_expression:
-        multiplicative_expression * unary_expression
-        multiplicative_expression / unary_expression
-        multiplicative_expression % unary_expression
-additive_expression:
-        multiplicative_expression
-        additive_expression + multiplicative_expression
-        additive_expression - multiplicative_expression
-shift_expression:
-        additive_expression
-        shift_expression << additive_expression
-        shift_expression >> additive_expression
-relational_expression:
-        shift_expression
-        relational_expression < shift_expression
-        relational_expression > shift_expression
-        relational_expression <= shift_expression
-        relational_expression >= shift_expression
-equality_expression:
-        relational_expression
-        equality_expression == relational_expression
-        equality_expression != relational_expression
-and_expression:
-        equality_expression
-        and_expression & equality_expression
-exclusive_or_expression:
-        and_expression
-        exclusive_or_expression ^ and_expression
-inclusive_or_expression:
-        exclusive_or_expression
-        inclusive_or_expression | exclusive_or_expression
-logical_and_expression:
-        inclusive_or_expression
-        logical_and_expression && inclusive_or_expression
-logical_or_expression:
-        logical_and_expression
-        logical_or_expression || logical_and_expression
+        identifier postfix_expression'
+postfix_expression':
+        ++ postfix_expression'
+        -- postfix_expression'
+        lambda
 
-expression ::= assignment-expression
+unary_expression:
+        postfix_expression
+        unary_operator postfix_expression
+
+unary_operator:
+        ! + - * & ~
+
+multiplicative_expression:
+        unary_expression multiplicative_expression'
+multiplicative_expression':
+        * unary_expression multiplicative_expression'
+        / unary_expression multiplicative_expression'
+        % unary_expression multiplicative_expression'
+        lambda
+
+additive_expression:
+        multiplicative_expression additive_expression'
+additive_expression':    
+        + multiplicative_expression additive_expression'
+        - multiplicative_expression additive_expression'
+        lambda
+
+shift_expression:
+        additive_expression shift_expression'
+shift_expression':
+        << additive_expression shift_expression'
+        >> additive_expression shift_expression'
+        lambda
+
+relational_expression:
+        shift_expression relational_expression'
+relational_expression':
+        < shift_expression relational_expression'
+        > shift_expression relational_expression'
+        <= shift_expression relational_expression'
+        >= shift_expression relational_expression'
+        lambda
+
+equality_expression:
+        relational_expression equality_expression'
+equality_expression':
+        == relational_expression equality_expression'
+        != relational_expression equality_expression'
+        lambda
+
+and_expression:
+        equality_expression and_expression'
+and_expression':
+        & equality_expression and_expression'
+        lambda
+
+exclusive_or_expression:
+        and_expression exclusive_or_expression'
+exclusive_or_expression':
+        ^ and_expression exclusive_or_expression'
+        lambda
+
+inclusive_or_expression:
+        exclusive_or_expression inclusive_or_expression'
+inclusive_or_expression'
+        | exclusive_or_expression inclusive_or_expression'
+        lambda
+
+logical_and_expression:
+        inclusive_or_expression logical-and-expression'
+logical-and-expression':
+        && inclusive_or_expression logical-and-expression'
+        lambda 
+
+logical_or_expression:
+        logical_and_expression logical-or-expression'
+logical-or-expression':
+		|| logical_and_expression logical-or-expression'
+		lambda
+
 assignment-expression ::= logical-or-expression assignment-operator assignment-expression
+
 assignment-operator ::= '=' | '*=' '/=' '%=' '+=' '-=' >>= <<= &= ^= |=
+expression ::= assignment-expression
+
