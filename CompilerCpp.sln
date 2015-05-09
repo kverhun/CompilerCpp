@@ -13,6 +13,9 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LexicalAnalysisRunner", "LexicalAnalysisRunner\LexicalAnalysisRunner.vcxproj", "{E3089F22-DBE1-4402-87DB-4EC531FF86A9}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SyntaxAnalyzer", "SyntaxAnalyzer\SyntaxAnalyzer.vcxproj", "{58ABA7E2-18CF-4BE5-A9AB-8E73F5139D65}"
+	ProjectSection(ProjectDependencies) = postProject
+		{3CC9D834-C025-4184-9D88-9AB3BD5C14B2} = {3CC9D834-C025-4184-9D88-9AB3BD5C14B2}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Interfaces", "Interfaces\Interfaces.vcxproj", "{3CC9D834-C025-4184-9D88-9AB3BD5C14B2}"
 EndProject

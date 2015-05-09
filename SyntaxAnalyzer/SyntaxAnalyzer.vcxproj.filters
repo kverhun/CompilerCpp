@@ -5,4 +5,14 @@
       <UniqueIdentifier>{3f0232f4-81cc-43d6-8009-775eb975d00e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="SyntaxAnalyzer.h">
+      <Filter>Sources</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="SyntaxAnalyzer.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+  </ItemGroup>
 </Project>

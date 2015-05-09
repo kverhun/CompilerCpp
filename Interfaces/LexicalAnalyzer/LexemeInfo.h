@@ -1,5 +1,7 @@
 #pragma once
 
+#include "ILanguageInfo.h"
+
 namespace LexicalAnalysis
 {
     struct LexemeInfo

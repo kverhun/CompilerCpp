@@ -4,7 +4,7 @@
 
 namespace LexicalAnalysis
 {
-    enum ECppLexemeClasses : size_t
+    enum ECppLexemeClasses : ILanguageInfo::TLexemeClass
     {
         LC_KEYWORD,
         LC_IDENTIFIER = LC_KEYWORD + 1,
