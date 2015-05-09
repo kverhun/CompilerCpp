@@ -52,9 +52,13 @@ expression-statement ::= expression-opt
 expression-opt ::= expression
 				|  lambda
 
+primary-expression:
+        identifier
+        literal
+        ( expression )
 
 postfix_expression:
-        identifier postfix_expression'
+        primary-expression postfix_expression'
 postfix_expression':
         ++ postfix_expression'
         -- postfix_expression'
