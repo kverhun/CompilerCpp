@@ -140,6 +140,7 @@ logical-or-expression':
 		lambda
 
 assignment-expression ::= logical-or-expression assignment-operator assignment-expression
+    | logical-or-expression
 
 assignment-operator ::= '=' | '*=' '/=' '%=' '+=' '-=' >>= <<= &= ^= |=
 expression ::= assignment-expression

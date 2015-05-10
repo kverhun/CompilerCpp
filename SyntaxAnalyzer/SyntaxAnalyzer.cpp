@@ -36,8 +36,12 @@ bool SyntaxAnalyzer::Analyze(const LexicalAnalysis::TParsedString& i_parsed_stri
     
     auto start_symbol = m_grammar.GetStartSymbol();
     auto start_symbol_productions = m_grammar.GetProduction(start_symbol);
-    
-    return _TryAllProductions(current_index, i_parsed_string, start_symbol_productions);
+
+    bool res = _TryAllProductions(current_index, i_parsed_string, start_symbol_productions);
+    if (current_index != i_parsed_string.size())
+        return false;
+    return res;
+
 }
 
 //------------------------------------------------------------------------------
@@ -58,11 +62,11 @@ bool SyntaxAnalyzer::_TryProduction(size_t& io_next_index, const LexicalAnalysis
         }
         else if (gs.IsLambda())
         {
+            if (io_next_index == i_parsed_string.size())
+                break;
         }
     }
 
-    if (io_next_index != i_parsed_string.size())
-        res = false;
     return res;
 }
 
