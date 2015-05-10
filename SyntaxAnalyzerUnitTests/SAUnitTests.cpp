@@ -683,7 +683,8 @@ namespace SyntaxAnalyzerUnitTests
             TParsedString str13 = { terminal_left_brace_lexeme, terminal_lexeme, terminal_ass_op1_lexeme, terminal_left_paren_lexeme, terminal_lexeme, terminal_add_op1_lexeme, terminal_lexeme, terminal_right_paren_lexeme, terminal_mult_op1_lexeme, terminal_lexeme, terminal_semicolon_lexeme, terminal_right_brace_lexeme };
 
             TParsedString str14 = { terminal_left_brace_lexeme, terminal_right_brace_lexeme };
-
+            TParsedString str15 = { terminal_left_brace_lexeme, terminal_semicolon_lexeme, terminal_right_brace_lexeme };
+            
             SyntaxAnalyzer sa(grammar);
             Assert::IsTrue(sa.Analyze(str2));
             Assert::IsTrue(sa.Analyze(str3));
@@ -698,12 +699,13 @@ namespace SyntaxAnalyzerUnitTests
             Assert::IsTrue(sa.Analyze(str12));
             Assert::IsTrue(sa.Analyze(str13));
             Assert::IsTrue(sa.Analyze(str14));
+            Assert::IsTrue(sa.Analyze(str15));
 
-
-            TParsedString inv_str_1 = { terminal_logical_and_op_lexeme };
-            TParsedString inv_str_2 = { terminal_lexeme, terminal_add_op1_lexeme };
-            TParsedString inv_str_3 = { terminal_lexeme, terminal_add_op1_lexeme, terminal_lexeme, terminal_right_paren_lexeme };
-            TParsedString inv_str_4 = { terminal_lexeme, terminal_left_paren_lexeme, terminal_add_op1_lexeme, terminal_lexeme, terminal_right_paren_lexeme };
+            TParsedString inv_str_1 = { terminal_left_brace_lexeme, terminal_logical_and_op_lexeme, terminal_right_brace_lexeme };
+            TParsedString inv_str_2 = { terminal_left_brace_lexeme, terminal_lexeme, terminal_add_op1_lexeme, terminal_right_brace_lexeme };
+            TParsedString inv_str_3 = { terminal_left_brace_lexeme, terminal_lexeme, terminal_add_op1_lexeme, terminal_lexeme, terminal_right_paren_lexeme, terminal_right_brace_lexeme };
+            TParsedString inv_str_4 = { terminal_left_brace_lexeme, terminal_lexeme, terminal_left_paren_lexeme, terminal_add_op1_lexeme, terminal_lexeme, terminal_right_paren_lexeme, terminal_right_brace_lexeme };
+            TParsedString inv_str_5 = { terminal_lexeme, terminal_ass_op1_lexeme, terminal_lexeme };
             Assert::IsFalse(sa.Analyze(inv_str_1));
             Assert::IsFalse(sa.Analyze(inv_str_2));
             Assert::IsFalse(sa.Analyze(inv_str_3));
