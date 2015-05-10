@@ -1026,7 +1026,51 @@ namespace SyntaxAnalyzerUnitTests
             Assert::IsTrue(sa.Analyze(str_block_2));
             Assert::IsTrue(sa.Analyze(str_block_3));
         }
-            
+
+        TEST_METHOD(ShouldReturnCorrectProductionSequence1)
+        {
+            typedef LexicalAnalysis::TParsedString TParsedString;
+
+            auto start_symbol = GrammarSymbol("S");
+            Grammar g(start_symbol);
+
+            auto terminal_1 = LexemeInfo({ 0, "A", 0 });
+            auto terminal_2 = LexemeInfo({ 0, "B", 0 });
+            auto terminal_3 = LexemeInfo({ 0, "C", 0 });
+
+            g(start_symbol, { { GrammarSymbol(terminal_1) }, { GrammarSymbol(terminal_2) }, { GrammarSymbol(terminal_3) } });
+
+            TParsedString str1 = { LexemeInfo{ 0, "A", 0 } };
+            TParsedString str2 = { LexemeInfo{ 0, "B", 0 } };
+            TParsedString str3 = { LexemeInfo{ 0, "C", 0 } };
+
+            TParsedString str4 = { LexemeInfo{ 0, "D", 0 } };
+            TParsedString str5 = { LexemeInfo{ 0, "AB", 0 } };
+            TParsedString str6 = { LexemeInfo{ 0, "A", 0 }, LexemeInfo{ 0, "B", 0 } };
+
+            std::vector<size_t> v1, v2, v3;
+
+            SyntaxAnalyzer sa(g);
+            bool res1 = sa.Analyze(v1, str1);
+            bool res2 = sa.Analyze(v2, str2);
+            bool res3 = sa.Analyze(v3, str3);
+
+            Assert::IsTrue(res1);
+            Assert::IsTrue(res2);
+            Assert::IsTrue(res3);
+
+            Assert::IsTrue(1 == v1.size());
+            Assert::IsTrue(1 == v1[0]);
+            Assert::IsTrue(1 == v2.size());
+            Assert::IsTrue(2 == v2[0]);
+            Assert::IsTrue(1 == v3.size());
+            Assert::IsTrue(3 == v3[0]);
+
+            Assert::IsFalse(sa.Analyze(str4));
+            Assert::IsFalse(sa.Analyze(str5));
+            Assert::IsFalse(sa.Analyze(str6));
+        }
+
 
 	};
 }
