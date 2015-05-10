@@ -28,6 +28,15 @@ GrammarSymbol::GrammarSymbol(const std::string& i_nonterm_info)
 }
 
 //------------------------------------------------------------------------------
+GrammarSymbol::GrammarSymbol(const GrammarSymbol& i_other)
+: m_type(i_other.m_type)
+, m_terminal_info(i_other.m_terminal_info)
+, m_nonterminal_info(i_other.m_nonterminal_info)
+{
+
+}
+
+//------------------------------------------------------------------------------
 GrammarSymbol::EGrammarSymbolType GrammarSymbol::GetType() const
 {
     return m_type;
@@ -70,4 +79,22 @@ bool GrammarSymbol::operator<(const GrammarSymbol& i_other) const
     default:
         throw std::logic_error("Invalid Grammar symbol type");
     }
+}
+
+//------------------------------------------------------------------------------
+bool GrammarSymbol::operator==(const GrammarSymbol& i_other) const
+{
+    return !(*this < i_other) && !(i_other < *this);
+}
+
+//------------------------------------------------------------------------------
+bool GrammarSymbol::IsTerminal() const
+{
+    return m_type == GrammarSymbol::GST_TERMINAL;
+}
+
+//------------------------------------------------------------------------------
+bool GrammarSymbol::IsNonTerminal() const
+{
+    return m_type == GrammarSymbol::GST_NONTERMINAL;
 }

@@ -7,10 +7,10 @@
 
 namespace SyntaxAnalysis
 {
-    typedef std::vector<GrammarSymbol>                TGrammarSymbolSequence;
-    typedef GrammarSymbol                             TProductionLHS;
-    typedef TGrammarSymbolSequence                    TProductionRHS;
-    typedef std::map<TProductionLHS, TProductionRHS>  TProductionSet;
+    typedef std::vector<GrammarSymbol>               TGrammarSymbolSequence;
+    typedef GrammarSymbol                            TProductionLHS;
+    typedef std::vector<TGrammarSymbolSequence>      TProductionRHS;
+    typedef std::map<TProductionLHS, TProductionRHS> TProductionSet;
 
     class Grammar
     {
@@ -23,7 +23,7 @@ namespace SyntaxAnalysis
     private:
         
         TProductionSet m_productions;
-        const GrammarSymbol& m_start_symbol;
+        GrammarSymbol m_start_symbol;
     };
 
 }

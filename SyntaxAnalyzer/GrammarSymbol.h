@@ -20,14 +20,21 @@ namespace SyntaxAnalysis
         GrammarSymbol(EGrammarSymbolType i_type);
         GrammarSymbol(LexicalAnalysis::LexemeInfo i_term_info);
         GrammarSymbol(const std::string& i_nonterm_info);
+
+        GrammarSymbol(const GrammarSymbol& i_other);
+
         EGrammarSymbolType GetType() const;
 
         LexicalAnalysis::LexemeInfo GetTerminalInfo() const;
         const std::string&          GetNonterminalInfo() const;
         bool IsLambda() const;
+        bool IsTerminal() const;
+        bool IsNonTerminal() const;
 
         // for usage in std containers
         bool operator < (const GrammarSymbol& i_other) const;
+
+        bool operator == (const GrammarSymbol& i_other) const;
 
     private:
         EGrammarSymbolType m_type;
