@@ -15,6 +15,9 @@
     <ClInclude Include="GrammarSymbol.h">
       <Filter>Sources</Filter>
     </ClInclude>
+    <ClInclude Include="GrammarGenerators.h">
+      <Filter>Sources</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="SyntaxAnalyzer.cpp">
@@ -24,6 +27,9 @@
       <Filter>Sources</Filter>
     </ClCompile>
     <ClCompile Include="GrammarSymbol.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="GrammarGenerators.cpp">
       <Filter>Sources</Filter>
     </ClCompile>
   </ItemGroup>
