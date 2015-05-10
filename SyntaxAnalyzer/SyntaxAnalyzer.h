@@ -4,26 +4,18 @@
 
 namespace SyntaxAnalysis
 {
+    class Grammar;
+
     class SyntaxAnalyzer
     {
     public:
-        SyntaxAnalyzer();
-
-        bool Analyze(LexicalAnalysis::TParsedString);
+        SyntaxAnalyzer(const Grammar& i_grammar);
+        bool Analyze(const LexicalAnalysis::TParsedString& i_parsed_string);
 
     private:
-        bool TERM(const std::string& i_str);
 
-        bool E1();
-        bool E2();
-        bool E();
+        const Grammar& m_grammar;
 
-        bool T1();
-        bool T2();
-        bool T3();
-        bool T();
-
-        size_t m_next;
-        LexicalAnalysis::TParsedString m_parsed_string;
     };
 }
+

@@ -9,9 +9,21 @@
     <ClInclude Include="SyntaxAnalyzer.h">
       <Filter>Sources</Filter>
     </ClInclude>
+    <ClInclude Include="Grammar.h">
+      <Filter>Sources</Filter>
+    </ClInclude>
+    <ClInclude Include="GrammarSymbol.h">
+      <Filter>Sources</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="SyntaxAnalyzer.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Grammar.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="GrammarSymbol.cpp">
       <Filter>Sources</Filter>
     </ClCompile>
   </ItemGroup>
