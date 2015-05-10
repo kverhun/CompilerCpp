@@ -87,6 +87,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GrammarUnitTests.cpp" />
+    <ClCompile Include="SA-LA-InteractionUnitTests.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
@@ -96,6 +97,9 @@
   <ItemGroup>
     <ProjectReference Include="..\Interfaces\Interfaces.vcxproj">
       <Project>{3cc9d834-c025-4184-9d88-9ab3bd5c14b2}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\LexicalAnalyzer\LexicalAnalyzer.vcxproj">
+      <Project>{6eb762d0-aa39-4597-b4b8-026895dd0bcc}</Project>
     </ProjectReference>
     <ProjectReference Include="..\SyntaxAnalyzer\SyntaxAnalyzer.vcxproj">
       <Project>{58aba7e2-18cf-4be5-a9ab-8e73f5139d65}</Project>

@@ -945,12 +945,14 @@ namespace SyntaxAnalyzerUnitTests
             TParsedString str15 = { terminal_left_brace_lexeme, terminal_semicolon_lexeme, terminal_right_brace_lexeme };
             TParsedString str16 = { terminal_left_brace_lexeme, terminal_left_brace_lexeme, terminal_right_brace_lexeme, terminal_right_brace_lexeme };
 
+            
             // if statement
             TParsedString str17 = { terminal_if_lexeme, terminal_left_paren_lexeme, terminal_lexeme, terminal_right_paren_lexeme, terminal_lexeme, terminal_semicolon_lexeme };
             TParsedString str18 = { terminal_if_lexeme, terminal_left_paren_lexeme, terminal_lexeme, terminal_right_paren_lexeme, terminal_lexeme, terminal_semicolon_lexeme, terminal_else_lexeme, terminal_lexeme, terminal_semicolon_lexeme };
 
             // while statement
             TParsedString str19 = { terminal_while_lexeme, terminal_left_paren_lexeme, terminal_lexeme, terminal_right_paren_lexeme, terminal_left_brace_lexeme, terminal_lexeme, terminal_semicolon_lexeme, terminal_right_brace_lexeme };
+            TParsedString str20 = { terminal_while_lexeme, terminal_left_paren_lexeme, terminal_lexeme, terminal_right_paren_lexeme, terminal_left_brace_lexeme, terminal_lexeme, terminal_semicolon_lexeme, terminal_lexeme, terminal_semicolon_lexeme, terminal_right_brace_lexeme };
 
             SyntaxAnalyzer sa(*p_grammar);
             Assert::IsTrue(sa.Analyze(str2));
@@ -982,6 +984,49 @@ namespace SyntaxAnalyzerUnitTests
             Assert::IsFalse(sa.Analyze(inv_str_3));
             Assert::IsFalse(sa.Analyze(inv_str_4));
         }
+
+        TEST_METHOD(ShouldWorkWithBlockCorrectly)
+        {
+            typedef LexicalAnalysis::TParsedString TParsedString;
+
+            auto p_grammar = GenerateGrammarCpp();
+
+            auto terminal_lexeme = LexemeInfo{ 0, "ID", 0 };
+            auto terminal_ass_op1_lexeme = LexemeInfo{ 0, "=", 0 };
+            auto terminal_ass_op2_lexeme = LexemeInfo{ 0, "+=", 0 };
+            auto terminal_or_op_lexeme = LexemeInfo{ 0, "||", 0 };
+            auto terminal_logical_and_op_lexeme = LexemeInfo{ 0, "&&", 0 };
+            auto terminal_inclusive_or_op_lexeme = LexemeInfo{ 0, "|", 0 };
+            auto terminal_exclusive_or_op_lexeme = LexemeInfo{ 0, "^", 0 };
+            auto terminal_bitwise_and_op_lexeme = LexemeInfo{ 0, "&", 0 };
+            auto terminal_equality_op1_lexeme = LexemeInfo{ 0, "==", 0 };
+            auto terminal_equality_op2_lexeme = LexemeInfo{ 0, "!=", 0 };
+            auto terminal_add_op1_lexeme = LexemeInfo{ 0, "+", 0 };
+            auto terminal_add_op2_lexeme = LexemeInfo{ 0, "-", 0 };
+            auto terminal_mult_op1_lexeme = LexemeInfo{ 0, "*", 0 };
+            auto terminal_mult_op2_lexeme = LexemeInfo{ 0, "/", 0 };
+            auto terminal_mult_op3_lexeme = LexemeInfo{ 0, "%", 0 };
+            auto terminal_left_paren_lexeme = LexemeInfo{ 0, "(", 0 };
+            auto terminal_right_paren_lexeme = LexemeInfo{ 0, ")", 0 };
+            auto terminal_left_brace_lexeme = LexemeInfo{ 0, "{", 0 };
+            auto terminal_right_brace_lexeme = LexemeInfo{ 0, "}", 0 };
+            auto terminal_semicolon_lexeme = LexemeInfo{ 0, ";", 0 };
+            auto terminal_if_lexeme = LexemeInfo{ 0, "if", 0 };
+            auto terminal_else_lexeme = LexemeInfo{ 0, "else", 0 };
+            auto terminal_while_lexeme = LexemeInfo{ 0, "while", 0 };
+
+            // block test
+            TParsedString str_block_1 = { terminal_left_brace_lexeme, terminal_lexeme, terminal_semicolon_lexeme, terminal_right_brace_lexeme };
+            TParsedString str_block_2 = { terminal_left_brace_lexeme, terminal_lexeme, terminal_semicolon_lexeme, terminal_lexeme, terminal_semicolon_lexeme, terminal_right_brace_lexeme };
+            TParsedString str_block_3 = { terminal_left_brace_lexeme, terminal_lexeme, terminal_semicolon_lexeme, terminal_lexeme, terminal_semicolon_lexeme, terminal_lexeme, terminal_semicolon_lexeme, terminal_right_brace_lexeme };
+
+            SyntaxAnalysis::SyntaxAnalyzer sa(*p_grammar);
+
+            Assert::IsTrue(sa.Analyze(str_block_1));
+            Assert::IsTrue(sa.Analyze(str_block_2));
+            Assert::IsTrue(sa.Analyze(str_block_3));
+        }
+            
 
 	};
 }

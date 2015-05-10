@@ -99,7 +99,7 @@ std::unique_ptr<Grammar> SyntaxAnalysis::GenerateGrammarCpp()
         (compound_statement, { { terminal_left_brace, statement_sequence_optional, terminal_right_brace } })
 
         (statement_sequence_optional, { { statement_sequence }, { lambda_symbol } })
-        (statement_sequence, { { statement }, { statement, statement_sequence } })
+        (statement_sequence, { { statement, statement_sequence }, { statement } })
 
         (expression_statement, { { expression_optional, terminal_semicolon } })
         (expression_optional, { { expression }, { lambda_symbol } })
