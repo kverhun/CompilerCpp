@@ -798,17 +798,19 @@ namespace SyntaxAnalyzerUnitTests
             Grammar grammar(statement);
 
             grammar
-                (statement, { { expression_statement }, { if_statement }, /*{ while_statement },*/ { compound_statement } })
+                (statement, { { expression_statement }, { if_statement }, { while_statement }, { compound_statement } })
 
                 (compound_statement, { { terminal_left_brace, statement_sequence_optional, terminal_right_brace } })
 
                 (statement_sequence_optional, { { statement_sequence }, { lambda_symbol } })
                 (statement_sequence, { { statement }, { statement, statement_sequence } })
-                
+
                 (expression_statement, { { expression_optional, terminal_semicolon } })
                 (expression_optional, { { expression }, { lambda_symbol } })
 
                 (if_statement, { { terminal_if, terminal_left_paren, expression, terminal_right_paren, statement, terminal_else, statement }, { terminal_if, terminal_left_paren, expression, terminal_right_paren, statement } })
+
+                (while_statement, { { terminal_while, terminal_left_paren, expression, terminal_right_paren, statement } })
 
                 (primary_expression, { { terminal }, { terminal_left_paren, expression, terminal_right_paren } })
 
@@ -856,8 +858,12 @@ namespace SyntaxAnalyzerUnitTests
             TParsedString str15 = { terminal_left_brace_lexeme, terminal_semicolon_lexeme, terminal_right_brace_lexeme };
             TParsedString str16 = { terminal_left_brace_lexeme, terminal_left_brace_lexeme, terminal_right_brace_lexeme, terminal_right_brace_lexeme };
 
+            // if statement
             TParsedString str17 = { terminal_if_lexeme, terminal_left_paren_lexeme, terminal_lexeme, terminal_right_paren_lexeme, terminal_lexeme, terminal_semicolon_lexeme };
             TParsedString str18 = { terminal_if_lexeme, terminal_left_paren_lexeme, terminal_lexeme, terminal_right_paren_lexeme, terminal_lexeme, terminal_semicolon_lexeme, terminal_else_lexeme, terminal_lexeme, terminal_semicolon_lexeme};
+
+            // while statement
+            TParsedString str19 = { terminal_while_lexeme, terminal_left_paren_lexeme, terminal_lexeme, terminal_right_paren_lexeme, terminal_left_brace_lexeme, terminal_lexeme, terminal_semicolon_lexeme, terminal_right_brace_lexeme };
 
             SyntaxAnalyzer sa(grammar);
             Assert::IsTrue(sa.Analyze(str2));
@@ -877,6 +883,7 @@ namespace SyntaxAnalyzerUnitTests
             Assert::IsTrue(sa.Analyze(str16));
             Assert::IsTrue(sa.Analyze(str17));
             Assert::IsTrue(sa.Analyze(str18));
+            Assert::IsTrue(sa.Analyze(str19));
 
             TParsedString inv_str_1 = { terminal_left_brace_lexeme, terminal_logical_and_op_lexeme, terminal_right_brace_lexeme };
             TParsedString inv_str_2 = { terminal_left_brace_lexeme, terminal_lexeme, terminal_add_op1_lexeme, terminal_right_brace_lexeme };
