@@ -48,7 +48,7 @@ statement ::= expression-statement
 			| if-statement
 			| while-statement
 
-expression-statement ::= expression-opt
+expression-statement ::= expression-opt ;
 expression-opt ::= expression
 				|  lambda
 
