@@ -71,6 +71,31 @@ namespace SyntaxAnalyzerUnitTests
             g(start_symbol, { {GrammarSymbol(terminal_1)}, {GrammarSymbol(terminal_1), GrammarSymbol(terminal_2), start_symbol} });
 
             TParsedString str1 = { LexemeInfo{ 0, "INT", 0 } };
+            TParsedString str2 = { LexemeInfo{ 0, "INT", 0 }, LexemeInfo{ 0, "+", 0 }, LexemeInfo{ 0, "INT", 0 } };
+            TParsedString str3 = { LexemeInfo{ 0, "INT", 0 }, LexemeInfo{ 0, "+", 0 }, LexemeInfo{ 0, "INT", 0 }, LexemeInfo{ 0, "+", 0 }, LexemeInfo{ 0, "INT", 0 } };
+
+            TParsedString str4 = { LexemeInfo{ 0, "INT", 0 }, LexemeInfo{ 0, "INT", 0 }, LexemeInfo{ 0, "INT", 0 } };
+            TParsedString str5 = { LexemeInfo{ 0, "INT", 0 }, LexemeInfo{ 0, "INT", 0 }, LexemeInfo{ 0, "+", 0 } };
+            TParsedString str6 = { LexemeInfo{ 0, "+", 0 }, LexemeInfo{ 0, "INT", 0 }, LexemeInfo{ 0, "INT", 0 } };
+            TParsedString str7 = { LexemeInfo{ 0, "+", 0 }, LexemeInfo{ 0, "+", 0 }, LexemeInfo{ 0, "INT", 0 } };
+            TParsedString str8 = { LexemeInfo{ 0, "INT", 0 }, LexemeInfo{ 0, "+", 0 }, LexemeInfo{ 0, "+", 0 } };
+            TParsedString str9 = { LexemeInfo{ 0, "+", 0 }, LexemeInfo{ 0, "+", 0 }, LexemeInfo{ 0, "+", 0 } };
+            TParsedString str10 = { LexemeInfo{ 0, "+", 0 } };
+
+            SyntaxAnalyzer sa(g);
+
+            Assert::IsTrue(sa.Analyze(str1));
+            Assert::IsTrue(sa.Analyze(str2));
+            Assert::IsTrue(sa.Analyze(str3));
+
+            Assert::IsFalse(sa.Analyze(str4));
+            Assert::IsFalse(sa.Analyze(str5));
+            Assert::IsFalse(sa.Analyze(str6));
+            Assert::IsFalse(sa.Analyze(str7));
+            Assert::IsFalse(sa.Analyze(str8));
+            Assert::IsFalse(sa.Analyze(str9));
+            Assert::IsFalse(sa.Analyze(str10));
+
         }
 	};
 }
