@@ -2,17 +2,15 @@
 
 using namespace SyntaxAnalysis;
 
-Grammar::Grammar()
-{
+Grammar::Grammar(GrammarSymbol i_grammar_symbol)
+: m_start_symbol(i_grammar_symbol)
+{ 
 
 }
 
 Grammar& Grammar::operator()(const TProductionLHS& i_lhs, const TProductionRHS& i_rhs)
 {
     m_productions[i_lhs] = i_rhs;
-
-    if (!m_start_symbol)
-        m_start_symbol = i_lhs;
 
     return *this;
 }
@@ -24,4 +22,9 @@ const TProductionRHS& Grammar::GetProduction(const TProductionLHS& i_lhs) const
         throw std::logic_error("No such production");
         
     return it_res->second;
+}
+
+const GrammarSymbol& SyntaxAnalysis::Grammar::GetStartSymbol() const
+{
+    return m_start_symbol;
 }

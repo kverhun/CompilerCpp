@@ -18,6 +18,8 @@ namespace SyntaxAnalysis
 
     public:
         GrammarSymbol(EGrammarSymbolType i_type);
+        GrammarSymbol(LexicalAnalysis::LexemeInfo i_term_info);
+        GrammarSymbol(const std::string& i_nonterm_info);
         EGrammarSymbolType GetType() const;
 
         LexicalAnalysis::LexemeInfo GetTerminalInfo() const;

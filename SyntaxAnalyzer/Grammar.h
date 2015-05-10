@@ -15,14 +15,15 @@ namespace SyntaxAnalysis
     class Grammar
     {
     public:
-        Grammar();
+        Grammar(GrammarSymbol i_start_symbol);
         Grammar& operator()(const TProductionLHS& i_lhs, const TProductionRHS& i_rhs);
 
         const TProductionRHS& GetProduction(const TProductionLHS& i_lhs) const;
+        const GrammarSymbol& GetStartSymbol() const;
     private:
         
         TProductionSet m_productions;
-        boost::optional<GrammarSymbol> m_start_symbol;
+        const GrammarSymbol& m_start_symbol;
     };
 
 }

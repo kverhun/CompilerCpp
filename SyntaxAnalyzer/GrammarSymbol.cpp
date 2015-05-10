@@ -4,29 +4,50 @@
 
 using namespace SyntaxAnalysis;
 
+//------------------------------------------------------------------------------
 GrammarSymbol::GrammarSymbol(EGrammarSymbolType i_type)
 : m_type(i_type)
 {
 
 }
 
+//------------------------------------------------------------------------------
+GrammarSymbol::GrammarSymbol(LexicalAnalysis::LexemeInfo i_term_info)
+: m_type(GST_TERMINAL)
+, m_terminal_info(i_term_info)
+{
+
+}
+
+//------------------------------------------------------------------------------
+GrammarSymbol::GrammarSymbol(const std::string& i_nonterm_info)
+: m_type(GST_NONTERMINAL)
+, m_nonterminal_info(i_nonterm_info)
+{
+
+}
+
+//------------------------------------------------------------------------------
 GrammarSymbol::EGrammarSymbolType GrammarSymbol::GetType() const
 {
     return m_type;
 }
 
+//------------------------------------------------------------------------------
 LexicalAnalysis::LexemeInfo GrammarSymbol::GetTerminalInfo() const
 {
     assert(m_terminal_info);
     return *m_terminal_info;
 }
 
+//------------------------------------------------------------------------------
 const std::string& GrammarSymbol::GetNonterminalInfo() const
 {
     assert(m_nonterminal_info);
     return *m_nonterminal_info;
 }
 
+//------------------------------------------------------------------------------
 bool GrammarSymbol::IsLambda() const
 {
     return m_type == GST_LAMBDA;
