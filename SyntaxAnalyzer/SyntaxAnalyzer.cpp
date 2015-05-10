@@ -12,6 +12,9 @@ namespace
 
     bool _Terminal(size_t& io_next_index, const LexicalAnalysis::TParsedString& i_parsed_string, const GrammarSymbol& i_grammar_symbol)
     {
+        if (io_next_index >= i_parsed_string.size())
+            return false;
+
         bool res = i_parsed_string[io_next_index].m_lexeme_value == i_grammar_symbol.GetTerminalInfo().m_lexeme_value;
         ++io_next_index;
         return res;

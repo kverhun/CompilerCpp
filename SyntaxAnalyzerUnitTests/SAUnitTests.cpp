@@ -95,7 +95,50 @@ namespace SyntaxAnalyzerUnitTests
             Assert::IsFalse(sa.Analyze(str8));
             Assert::IsFalse(sa.Analyze(str9));
             Assert::IsFalse(sa.Analyze(str10));
+        }
+
+        TEST_METHOD(SAShouldWorkCorrectWithEmptyStrings)
+        {
+            typedef LexicalAnalysis::TParsedString TParsedString;
+
+            auto start_symbol = GrammarSymbol("E");
+            Grammar g(start_symbol);
+
+            auto terminal_1 = LexemeInfo{ 0, "INT", 0 };
+            auto terminal_2 = LexemeInfo{ 0, "+", 0 };
+
+            g(start_symbol, { { GrammarSymbol(terminal_1) }, { GrammarSymbol(terminal_1), GrammarSymbol(terminal_2), start_symbol } });
+
+            TParsedString empty_str = { };
+
+            SyntaxAnalyzer sa(g);
+
+            Assert::IsFalse(sa.Analyze(empty_str));
 
         }
+
+        //////////////////////////////////////////////////////////////////////////
+        // Test lambda-productions
+        //////////////////////////////////////////////////////////////////////////
+        TEST_METHOD(SATest03)
+        {
+            typedef LexicalAnalysis::TParsedString TParsedString;
+
+            auto start_symbol = GrammarSymbol("E");
+            Grammar g(start_symbol);
+
+            g(start_symbol, { { GrammarSymbol(GrammarSymbol::GST_LAMBDA) } });
+
+            TParsedString str1 = {};
+            TParsedString str2 = { LexemeInfo{ 0, "E", 0 } };
+
+            SyntaxAnalyzer sa(g);
+
+            Assert::IsTrue(sa.Analyze(str1));
+            Assert::IsFalse(sa.Analyze(str2));
+
+        }
+
+
 	};
 }
