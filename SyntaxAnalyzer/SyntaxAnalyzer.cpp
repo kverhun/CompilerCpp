@@ -56,6 +56,9 @@ bool SyntaxAnalyzer::_TryProduction(size_t& io_next_index, const LexicalAnalysis
             res = false;
             break;
         }
+        else if (gs.IsLambda())
+        {
+        }
     }
 
     if (io_next_index != i_parsed_string.size())
