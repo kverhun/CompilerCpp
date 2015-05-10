@@ -22,7 +22,7 @@ namespace SyntaxAnalysis
     private:
         
         TProductionSet m_productions;
-
+        boost::optional<GrammarSymbol> m_start_symbol;
     };
 
 }

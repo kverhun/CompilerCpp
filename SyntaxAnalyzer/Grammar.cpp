@@ -10,6 +10,10 @@ Grammar::Grammar()
 Grammar& Grammar::operator()(const TProductionLHS& i_lhs, const TProductionRHS& i_rhs)
 {
     m_productions[i_lhs] = i_rhs;
+
+    if (!m_start_symbol)
+        m_start_symbol = i_lhs;
+
     return *this;
 }
 
