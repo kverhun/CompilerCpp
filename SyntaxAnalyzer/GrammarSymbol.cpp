@@ -12,21 +12,6 @@ GrammarSymbol::GrammarSymbol(EGrammarSymbolType i_type)
 }
 
 //------------------------------------------------------------------------------
-GrammarSymbol::GrammarSymbol(LexicalAnalysis::LexemeInfo i_term_info)
-: GrammarSymbol(Terminal(i_term_info.m_lexeme_value))
-{
-
-}
-
-//------------------------------------------------------------------------------
-GrammarSymbol::GrammarSymbol(const std::string& i_nonterm_info)
-: m_type(GST_NONTERMINAL)
-, m_nonterminal_info(NonTerminal(i_nonterm_info))
-{
-
-}
-
-//------------------------------------------------------------------------------
 GrammarSymbol::GrammarSymbol(const GrammarSymbol& i_other)
 : m_type(i_other.m_type)
 , m_terminal_info(i_other.m_terminal_info)

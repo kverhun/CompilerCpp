@@ -47,10 +47,6 @@ namespace SyntaxAnalysis
         GrammarSymbol(NonTerminal i_nonterminal);
         GrammarSymbol(const GrammarSymbol& i_other);
 
-        // deprecated API
-        GrammarSymbol(LexicalAnalysis::LexemeInfo i_term_info);
-        GrammarSymbol(const std::string& i_nonterm_info);
-
         EGrammarSymbolType GetType() const;
 
         Terminal GetTerminalInfo() const;

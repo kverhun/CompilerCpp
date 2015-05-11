@@ -19,9 +19,9 @@ namespace SyntaxAnalyzerUnitTests
 		
 		TEST_METHOD(ShouldCreateGrammarSymbol)
 		{
-            auto lambda_symbol = GrammarSymbol(GrammarSymbol::GST_LAMBDA);
-            auto term_symbol = GrammarSymbol(LexicalAnalysis::LexemeInfo({ 0, "terminal", 0 }));
-            auto nonterm_symbol = GrammarSymbol("nonterm");
+            GrammarSymbol lambda_symbol = GrammarSymbol(GrammarSymbol::GST_LAMBDA);
+            GrammarSymbol term_symbol = Terminal("terminal");
+            GrammarSymbol nonterm_symbol = NonTerminal("nonterm");
 
             Assert::IsTrue(GrammarSymbol::GST_LAMBDA == lambda_symbol.GetType());
             Assert::IsTrue(GrammarSymbol::GST_TERMINAL == term_symbol.GetType());
@@ -31,12 +31,12 @@ namespace SyntaxAnalyzerUnitTests
 
         TEST_METHOD(ShouldCreateGrammar)
         {
-            auto lambda_symbol = GrammarSymbol(GrammarSymbol::GST_LAMBDA);
-            auto term_symbol = GrammarSymbol(LexicalAnalysis::LexemeInfo({ 0, "terminal", 0 }));
-            auto nonterm_symbol = GrammarSymbol("nonterm");
+            GrammarSymbol lambda_symbol = GrammarSymbol(GrammarSymbol::GST_LAMBDA);
+            GrammarSymbol term_symbol = Terminal("terminal");
+            GrammarSymbol nonterm_symbol = NonTerminal("nonterm");
 
             Grammar g(nonterm_symbol);
-            g(nonterm_symbol, { { GrammarSymbol("+") }, { GrammarSymbol("-") } });
+            g(nonterm_symbol, { { Terminal("+") }, { Terminal("-") } });
 
             Assert::IsTrue(nonterm_symbol == g.GetStartSymbol());
             Assert::IsTrue(2 == g.GetProduction(nonterm_symbol).size());

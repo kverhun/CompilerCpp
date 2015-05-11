@@ -31,31 +31,6 @@ namespace SyntaxAnalyzerUnitTests
             auto res = cpp_analyzer.ParseString(string);
             auto p_grammar = SyntaxAnalysis::GenerateGrammarCpp();
 
-            auto terminal_lexeme = LexemeInfo{ 0, "ID", 0 };
-            auto terminal_ass_op1_lexeme = LexemeInfo{ 0, "=", 0 };
-            auto terminal_ass_op2_lexeme = LexemeInfo{ 0, "+=", 0 };
-            auto terminal_or_op_lexeme = LexemeInfo{ 0, "||", 0 };
-            auto terminal_logical_and_op_lexeme = LexemeInfo{ 0, "&&", 0 };
-            auto terminal_inclusive_or_op_lexeme = LexemeInfo{ 0, "|", 0 };
-            auto terminal_exclusive_or_op_lexeme = LexemeInfo{ 0, "^", 0 };
-            auto terminal_bitwise_and_op_lexeme = LexemeInfo{ 0, "&", 0 };
-            auto terminal_equality_op1_lexeme = LexemeInfo{ 0, "==", 0 };
-            auto terminal_equality_op2_lexeme = LexemeInfo{ 0, "!=", 0 };
-            auto terminal_add_op1_lexeme = LexemeInfo{ 0, "+", 0 };
-            auto terminal_add_op2_lexeme = LexemeInfo{ 0, "-", 0 };
-            auto terminal_mult_op1_lexeme = LexemeInfo{ 0, "*", 0 };
-            auto terminal_mult_op2_lexeme = LexemeInfo{ 0, "/", 0 };
-            auto terminal_mult_op3_lexeme = LexemeInfo{ 0, "%", 0 };
-            auto terminal_left_paren_lexeme = LexemeInfo{ 0, "(", 0 };
-            auto terminal_right_paren_lexeme = LexemeInfo{ 0, ")", 0 };
-            auto terminal_left_brace_lexeme = LexemeInfo{ 0, "{", 0 };
-            auto terminal_right_brace_lexeme = LexemeInfo{ 0, "}", 0 };
-            auto terminal_semicolon_lexeme = LexemeInfo{ 0, ";", 0 };
-            auto terminal_if_lexeme = LexemeInfo{ 0, "if", 0 };
-            auto terminal_else_lexeme = LexemeInfo{ 0, "else", 0 };
-            auto terminal_while_lexeme = LexemeInfo{ 0, "while", 0 };
-
-            //TParsedString actual = { terminal_if_lexeme, terminal_lexeme, terminal_left_brace_lexeme, terminal_lexeme, terminal_add_op1_lexeme, terminal_lexeme, terminal_semicolon_lexeme, terminal_right_brace_lexeme, terminal_else_lexeme, terminal_lexeme, terminal_add_op1_lexeme, terminal_lexeme, terminal_semicolon_lexeme };
             SyntaxAnalysis::SyntaxAnalyzer sa(*p_grammar);
             Assert::IsTrue(sa.Analyze(res));
 
@@ -88,30 +63,6 @@ namespace SyntaxAnalyzerUnitTests
             auto res = cpp_analyzer.ParseString(string);
             auto p_grammar = SyntaxAnalysis::GenerateGrammarCpp();
 
-            auto terminal_lexeme = LexemeInfo{ 0, "ID", 0 };
-            auto terminal_ass_op1_lexeme = LexemeInfo{ 0, "=", 0 };
-            auto terminal_ass_op2_lexeme = LexemeInfo{ 0, "+=", 0 };
-            auto terminal_or_op_lexeme = LexemeInfo{ 0, "||", 0 };
-            auto terminal_logical_and_op_lexeme = LexemeInfo{ 0, "&&", 0 };
-            auto terminal_inclusive_or_op_lexeme = LexemeInfo{ 0, "|", 0 };
-            auto terminal_exclusive_or_op_lexeme = LexemeInfo{ 0, "^", 0 };
-            auto terminal_bitwise_and_op_lexeme = LexemeInfo{ 0, "&", 0 };
-            auto terminal_equality_op1_lexeme = LexemeInfo{ 0, "==", 0 };
-            auto terminal_equality_op2_lexeme = LexemeInfo{ 0, "!=", 0 };
-            auto terminal_add_op1_lexeme = LexemeInfo{ 0, "+", 0 };
-            auto terminal_add_op2_lexeme = LexemeInfo{ 0, "-", 0 };
-            auto terminal_mult_op1_lexeme = LexemeInfo{ 0, "*", 0 };
-            auto terminal_mult_op2_lexeme = LexemeInfo{ 0, "/", 0 };
-            auto terminal_mult_op3_lexeme = LexemeInfo{ 0, "%", 0 };
-            auto terminal_left_paren_lexeme = LexemeInfo{ 0, "(", 0 };
-            auto terminal_right_paren_lexeme = LexemeInfo{ 0, ")", 0 };
-            auto terminal_left_brace_lexeme = LexemeInfo{ 0, "{", 0 };
-            auto terminal_right_brace_lexeme = LexemeInfo{ 0, "}", 0 };
-            auto terminal_semicolon_lexeme = LexemeInfo{ 0, ";", 0 };
-            auto terminal_if_lexeme = LexemeInfo{ 0, "if", 0 };
-            auto terminal_else_lexeme = LexemeInfo{ 0, "else", 0 };
-            auto terminal_while_lexeme = LexemeInfo{ 0, "while", 0 };
-
             SyntaxAnalysis::SyntaxAnalyzer sa(*p_grammar);
             Assert::IsTrue(sa.Analyze(res));
 
@@ -124,6 +75,8 @@ namespace SyntaxAnalyzerUnitTests
             using LexicalAnalysis::LanguageInfoCpp;
             using LexicalAnalysis::LexicalAnalyzer;
             using SyntaxAnalysis::GrammarSymbol;
+            using SyntaxAnalysis::Terminal;
+            using SyntaxAnalysis::NonTerminal;
             using SyntaxAnalysis::Grammar;
 
             LanguageInfoCpp langinfo;
@@ -132,89 +85,64 @@ namespace SyntaxAnalyzerUnitTests
             auto string = "ID;";
 
             auto res = cpp_analyzer.ParseString(string);
-            auto assingment_operator = GrammarSymbol("assignment-operator");
-            auto assingment_expression = GrammarSymbol("assignment-expression");
-            auto logical_or_expression = GrammarSymbol("logical-or-expression");
-            auto logical_or_expression_ex = GrammarSymbol("logical-or-expression-ex");
-            auto logical_and_expression = GrammarSymbol("logical-and-expression");
-            auto logical_and_expression_ex = GrammarSymbol("logical-and-expression-ex");
-            auto inclusive_or_expression = GrammarSymbol("inclusive-or-expression");
-            auto inclusive_or_expression_ex = GrammarSymbol("inclusive-or-expression-ex");
-            auto exclusive_or_expression = GrammarSymbol("exlusive-or-expression");
-            auto exclusive_or_expression_ex = GrammarSymbol("exclusive-or-expression-ex");
-            auto and_expression = GrammarSymbol("and-expression");
-            auto and_expression_ex = GrammarSymbol("and-expression-ex");
-            auto equality_expression = GrammarSymbol("equality-expression");
-            auto equality_expression_ex = GrammarSymbol("equality-expression-ex");
-            auto additive_expression = GrammarSymbol("additive-expression");
-            auto additive_expression_ex = GrammarSymbol("additive-expression-ex");
-            auto multiplicative_expression = GrammarSymbol("multiplicative-expression");
-            auto multiplicative_expression_ex = GrammarSymbol("multiplicative-expression-ex");
-            auto primary_expression = GrammarSymbol("primary-expression");
-            auto expression = GrammarSymbol("expression");
-            auto expression_optional = GrammarSymbol("expression-opt");
-            auto expression_statement = GrammarSymbol("expression-statement");
-            auto if_statement = GrammarSymbol("if-statement");
-            auto while_statement = GrammarSymbol("while-statement");
-            auto statement = GrammarSymbol("statement");
-            auto statement_sequence = GrammarSymbol("statement-sequence");
-            auto statement_sequence_optional = GrammarSymbol("statement-sequence-opt");
-            auto compound_statement = GrammarSymbol("compound-statement");
+            auto assingment_operator = NonTerminal("assignment-operator");
+            auto assingment_expression = NonTerminal("assignment-expression");
+            auto logical_or_expression = NonTerminal("logical-or-expression");
+            auto logical_or_expression_ex = NonTerminal("logical-or-expression-ex");
+            auto logical_and_expression = NonTerminal("logical-and-expression");
+            auto logical_and_expression_ex = NonTerminal("logical-and-expression-ex");
+            auto inclusive_or_expression = NonTerminal("inclusive-or-expression");
+            auto inclusive_or_expression_ex = NonTerminal("inclusive-or-expression-ex");
+            auto exclusive_or_expression = NonTerminal("exlusive-or-expression");
+            auto exclusive_or_expression_ex = NonTerminal("exclusive-or-expression-ex");
+            auto and_expression = NonTerminal("and-expression");
+            auto and_expression_ex = NonTerminal("and-expression-ex");
+            auto equality_expression = NonTerminal("equality-expression");
+            auto equality_expression_ex = NonTerminal("equality-expression-ex");
+            auto additive_expression = NonTerminal("additive-expression");
+            auto additive_expression_ex = NonTerminal("additive-expression-ex");
+            auto multiplicative_expression = NonTerminal("multiplicative-expression");
+            auto multiplicative_expression_ex = NonTerminal("multiplicative-expression-ex");
+            auto primary_expression = NonTerminal("primary-expression");
+            auto expression = NonTerminal("expression");
+            auto expression_optional = NonTerminal("expression-opt");
+            auto expression_statement = NonTerminal("expression-statement");
+            auto if_statement = NonTerminal("if-statement");
+            auto while_statement = NonTerminal("while-statement");
+            auto statement = NonTerminal("statement");
+            auto statement_sequence = NonTerminal("statement-sequence");
+            auto statement_sequence_optional = NonTerminal("statement-sequence-opt");
+            auto compound_statement = NonTerminal("compound-statement");
 
-
-            auto terminal_lexeme = LexemeInfo{ 0, "ID", 0 };
-            auto terminal_ass_op1_lexeme = LexemeInfo{ 0, "=", 0 };
-            auto terminal_ass_op2_lexeme = LexemeInfo{ 0, "+=", 0 };
-            auto terminal_or_op_lexeme = LexemeInfo{ 0, "||", 0 };
-            auto terminal_logical_and_op_lexeme = LexemeInfo{ 0, "&&", 0 };
-            auto terminal_inclusive_or_op_lexeme = LexemeInfo{ 0, "|", 0 };
-            auto terminal_exclusive_or_op_lexeme = LexemeInfo{ 0, "^", 0 };
-            auto terminal_bitwise_and_op_lexeme = LexemeInfo{ 0, "&", 0 };
-            auto terminal_equality_op1_lexeme = LexemeInfo{ 0, "==", 0 };
-            auto terminal_equality_op2_lexeme = LexemeInfo{ 0, "!=", 0 };
-            auto terminal_add_op1_lexeme = LexemeInfo{ 0, "+", 0 };
-            auto terminal_add_op2_lexeme = LexemeInfo{ 0, "-", 0 };
-            auto terminal_mult_op1_lexeme = LexemeInfo{ 0, "*", 0 };
-            auto terminal_mult_op2_lexeme = LexemeInfo{ 0, "/", 0 };
-            auto terminal_mult_op3_lexeme = LexemeInfo{ 0, "%", 0 };
-            auto terminal_left_paren_lexeme = LexemeInfo{ 0, "(", 0 };
-            auto terminal_right_paren_lexeme = LexemeInfo{ 0, ")", 0 };
-            auto terminal_left_brace_lexeme = LexemeInfo{ 0, "{", 0 };
-            auto terminal_right_brace_lexeme = LexemeInfo{ 0, "}", 0 };
-            auto terminal_semicolon_lexeme = LexemeInfo{ 0, ";", 0 };
-            auto terminal_if_lexeme = LexemeInfo{ 0, "if", 0 };
-            auto terminal_else_lexeme = LexemeInfo{ 0, "else", 0 };
-            auto terminal_while_lexeme = LexemeInfo{ 0, "while", 0 };
-
-            auto terminal = GrammarSymbol(terminal_lexeme);
-            auto terminal_ass_op1 = GrammarSymbol(terminal_ass_op1_lexeme);
-            auto terminal_ass_op2 = GrammarSymbol(LexemeInfo{ terminal_ass_op2_lexeme });
-            auto terminal_logical_or_op = GrammarSymbol(terminal_or_op_lexeme);
-            auto terminal_logical_and_op = GrammarSymbol(terminal_logical_and_op_lexeme);
-            auto terminal_inclusive_or_op = GrammarSymbol(terminal_inclusive_or_op_lexeme);
-            auto terminal_exclusive_or_op = GrammarSymbol(terminal_exclusive_or_op_lexeme);
-            auto terminal_bitwise_and_op = GrammarSymbol(terminal_bitwise_and_op_lexeme);
-            auto terminal_equality_op1 = GrammarSymbol(terminal_equality_op1_lexeme);
-            auto terminal_equality_op2 = GrammarSymbol(terminal_equality_op2_lexeme);
-            auto terminal_add_op1 = GrammarSymbol(terminal_add_op1_lexeme);
-            auto terminal_add_op2 = GrammarSymbol(terminal_add_op2_lexeme);
-            auto terminal_mult_op1 = GrammarSymbol(terminal_mult_op1_lexeme);
-            auto terminal_mult_op2 = GrammarSymbol(terminal_mult_op2_lexeme);
-            auto terminal_mult_op3 = GrammarSymbol(terminal_mult_op3_lexeme);
-            auto terminal_left_paren = GrammarSymbol(terminal_left_paren_lexeme);
-            auto terminal_right_paren = GrammarSymbol(terminal_right_paren_lexeme);
-            auto terminal_left_brace = GrammarSymbol(terminal_left_brace_lexeme);
-            auto terminal_right_brace = GrammarSymbol(terminal_right_brace_lexeme);
-            auto terminal_semicolon = GrammarSymbol(terminal_semicolon_lexeme);
-            auto terminal_if = GrammarSymbol(terminal_if_lexeme);
-            auto terminal_else = GrammarSymbol(terminal_else_lexeme);
-            auto terminal_while = GrammarSymbol(terminal_while_lexeme);
+            auto terminal = Terminal("ID");
+            auto terminal_ass_op1 = Terminal("=");
+            auto terminal_ass_op2 = Terminal("+=");
+            auto terminal_logical_or_op = Terminal("||");
+            auto terminal_logical_and_op = Terminal("&&");
+            auto terminal_inclusive_or_op = Terminal("|");
+            auto terminal_exclusive_or_op = Terminal("^");
+            auto terminal_bitwise_and_op = Terminal("&");
+            auto terminal_equality_op1 = Terminal("==");
+            auto terminal_equality_op2 = Terminal("!=");
+            auto terminal_add_op1 = Terminal("+");
+            auto terminal_add_op2 = Terminal("-");
+            auto terminal_mult_op1 = Terminal("*");
+            auto terminal_mult_op2 = Terminal("/");
+            auto terminal_mult_op3 = Terminal("%");
+            auto terminal_left_paren = Terminal("(");
+            auto terminal_right_paren = Terminal(")");
+            auto terminal_left_brace = Terminal("{");
+            auto terminal_right_brace = Terminal("}");
+            auto terminal_semicolon = Terminal(";");
+            auto terminal_if = Terminal("if");
+            auto terminal_else = Terminal("else");
+            auto terminal_while = Terminal("while");
 
             auto lambda_symbol = GrammarSymbol(GrammarSymbol::GST_LAMBDA);
 
-            Grammar grammar(statement);
+            std::unique_ptr<Grammar> p_grammar(new Grammar(statement));
 
-            grammar
+            (*p_grammar)
                 (statement, { { expression_statement }, { if_statement }, { while_statement }, { compound_statement } })
 
                 (compound_statement, { { terminal_left_brace, statement_sequence_optional, terminal_right_brace } })
@@ -258,7 +186,7 @@ namespace SyntaxAnalyzerUnitTests
                 (expression, { { assingment_expression } })
                 ;
 
-            SyntaxAnalysis::SyntaxAnalyzer sa(grammar);
+            SyntaxAnalysis::SyntaxAnalyzer sa(*p_grammar);
             std::vector<size_t> v;
             bool sa_res = sa.Analyze(v, res);
 

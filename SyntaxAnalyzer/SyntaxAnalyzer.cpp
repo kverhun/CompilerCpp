@@ -48,6 +48,13 @@ bool SyntaxAnalyzer::Analyze(const LexicalAnalysis::TParsedString& i_parsed_stri
 }
 
 //------------------------------------------------------------------------------
+bool SyntaxAnalyzer::Analyze(const TSyntaxAnalyzerInput& i_input)
+{
+    std::vector<size_t> v;
+    return Analyze(v, i_input);
+}
+
+//------------------------------------------------------------------------------
 bool SyntaxAnalyzer::Analyze(std::vector<size_t>& o_productions_used, const TSyntaxAnalyzerInput& i_input)
 {
     size_t current_index = 0;
@@ -106,5 +113,6 @@ bool SyntaxAnalysis::SyntaxAnalyzer::_TryAllProductions(size_t& io_next_index, s
     }
     return false;
 }
+
 
 

@@ -26,24 +26,21 @@ namespace SyntaxAnalyzerUnitTests
         //////////////////////////////////////////////////////////////////////////
 		TEST_METHOD(SATest01)
         {
-            typedef LexicalAnalysis::TParsedString TParsedString;
-
-            auto start_symbol = GrammarSymbol("S");
+            auto start_symbol = NonTerminal("S");
             Grammar g(start_symbol);
 
-            auto terminal_1 = LexemeInfo({ 0, "A", 0 });
-            auto terminal_2 = LexemeInfo({ 0, "B", 0 });
-            auto terminal_3 = LexemeInfo({ 0, "C", 0 });
+            auto terminal_1 = Terminal("A");
+            auto terminal_2 = Terminal("B");
+            auto terminal_3 = Terminal("C");
 
-            g(start_symbol, { { GrammarSymbol(terminal_1) }, { GrammarSymbol(terminal_2) }, {GrammarSymbol(terminal_3)} });
+            g(start_symbol, { { terminal_1 }, { terminal_2 }, { terminal_3} });
 
-            TParsedString str1 = { LexemeInfo{ 0, "A", 0 } };
-            TParsedString str2 = { LexemeInfo{ 0, "B", 0 } };
-            TParsedString str3 = { LexemeInfo{ 0, "C", 0 } };
-                                             
-            TParsedString str4 = { LexemeInfo{ 0, "D", 0 } };
-            TParsedString str5 = { LexemeInfo{ 0, "AB", 0 } };
-            TParsedString str6 = { LexemeInfo{ 0, "A", 0 }, LexemeInfo{ 0, "B", 0 } };
+            TSyntaxAnalyzerInput str1 = { Terminal("A"), };
+            TSyntaxAnalyzerInput str2 = { Terminal("B"), };
+            TSyntaxAnalyzerInput str3 = { Terminal("C"), };
+            TSyntaxAnalyzerInput str4 = { Terminal("D"), };
+            TSyntaxAnalyzerInput str5 = { Terminal("AB"), };
+            TSyntaxAnalyzerInput str6 = { Terminal("A") ,Terminal("B") };
 
             SyntaxAnalyzer sa(g);
             Assert::IsTrue(sa.Analyze(str1));
@@ -62,27 +59,24 @@ namespace SyntaxAnalyzerUnitTests
         //////////////////////////////////////////////////////////////////////////
         TEST_METHOD(SATest02)
         {
-            typedef LexicalAnalysis::TParsedString TParsedString;
-
-            auto start_symbol = GrammarSymbol("E");
+            auto start_symbol = NonTerminal("E");
             Grammar g(start_symbol);
 
-            auto terminal_1 = LexemeInfo{ 0, "INT", 0 };
-            auto terminal_2 = LexemeInfo{ 0, "+", 0 };
+            auto terminal_1 = Terminal("INT");
+            auto terminal_2 = Terminal("+");
 
-            g(start_symbol, { { GrammarSymbol(terminal_1), GrammarSymbol(terminal_2), start_symbol }, { GrammarSymbol(terminal_1) } });
+            g(start_symbol, { { terminal_1, terminal_2, start_symbol }, { terminal_1 } });
 
-            TParsedString str1 = { LexemeInfo{ 0, "INT", 0 } };
-            TParsedString str2 = { LexemeInfo{ 0, "INT", 0 }, LexemeInfo{ 0, "+", 0 }, LexemeInfo{ 0, "INT", 0 } };
-            TParsedString str3 = { LexemeInfo{ 0, "INT", 0 }, LexemeInfo{ 0, "+", 0 }, LexemeInfo{ 0, "INT", 0 }, LexemeInfo{ 0, "+", 0 }, LexemeInfo{ 0, "INT", 0 } };
-
-            TParsedString str4 = { LexemeInfo{ 0, "INT", 0 }, LexemeInfo{ 0, "INT", 0 }, LexemeInfo{ 0, "INT", 0 } };
-            TParsedString str5 = { LexemeInfo{ 0, "INT", 0 }, LexemeInfo{ 0, "INT", 0 }, LexemeInfo{ 0, "+", 0 } };
-            TParsedString str6 = { LexemeInfo{ 0, "+", 0 }, LexemeInfo{ 0, "INT", 0 }, LexemeInfo{ 0, "INT", 0 } };
-            TParsedString str7 = { LexemeInfo{ 0, "+", 0 }, LexemeInfo{ 0, "+", 0 }, LexemeInfo{ 0, "INT", 0 } };
-            TParsedString str8 = { LexemeInfo{ 0, "INT", 0 }, LexemeInfo{ 0, "+", 0 }, LexemeInfo{ 0, "+", 0 } };
-            TParsedString str9 = { LexemeInfo{ 0, "+", 0 }, LexemeInfo{ 0, "+", 0 }, LexemeInfo{ 0, "+", 0 } };
-            TParsedString str10 = { LexemeInfo{ 0, "+", 0 } };
+            TSyntaxAnalyzerInput str1 = { terminal_1 };
+            TSyntaxAnalyzerInput str2 = { terminal_1, terminal_2, terminal_1};
+            TSyntaxAnalyzerInput str3 = { Terminal("INT"), Terminal("+"), Terminal("INT"), Terminal("+"), Terminal("INT")};
+            TSyntaxAnalyzerInput str4 = { terminal_1, terminal_1, terminal_1 };
+            TSyntaxAnalyzerInput str5 = { terminal_1, terminal_1, terminal_2 };
+            TSyntaxAnalyzerInput str6 = { terminal_2, terminal_1, terminal_1 };
+            TSyntaxAnalyzerInput str7 = { terminal_2, terminal_2, terminal_1 };
+            TSyntaxAnalyzerInput str8 = { terminal_1, terminal_2, terminal_2 };
+            TSyntaxAnalyzerInput str9 = { terminal_2, terminal_2, terminal_2 };
+            TSyntaxAnalyzerInput str10 = { terminal_2 };
 
             SyntaxAnalyzer sa(g);
 
@@ -101,17 +95,15 @@ namespace SyntaxAnalyzerUnitTests
 
         TEST_METHOD(SAShouldWorkCorrectWithEmptyStrings)
         {
-            typedef LexicalAnalysis::TParsedString TParsedString;
-
-            auto start_symbol = GrammarSymbol("E");
+            auto start_symbol = NonTerminal("E");
             Grammar g(start_symbol);
 
-            auto terminal_1 = LexemeInfo{ 0, "INT", 0 };
-            auto terminal_2 = LexemeInfo{ 0, "+", 0 };
+            auto terminal_1 = Terminal("INT");
+            auto terminal_2 = Terminal("+");
 
-            g(start_symbol, { { GrammarSymbol(terminal_1) }, { GrammarSymbol(terminal_1), GrammarSymbol(terminal_2), start_symbol } });
+            g(start_symbol, { { terminal_1 }, { terminal_1, terminal_2, start_symbol } });
 
-            TParsedString empty_str = { };
+            TSyntaxAnalyzerInput empty_str = { };
 
             SyntaxAnalyzer sa(g);
 
@@ -124,15 +116,13 @@ namespace SyntaxAnalyzerUnitTests
         //////////////////////////////////////////////////////////////////////////
         TEST_METHOD(SATest03)
         {
-            typedef LexicalAnalysis::TParsedString TParsedString;
-
-            auto start_symbol = GrammarSymbol("E");
+            auto start_symbol = NonTerminal("E");
             Grammar g(start_symbol);
 
             g(start_symbol, { { GrammarSymbol(GrammarSymbol::GST_LAMBDA) } });
 
-            TParsedString str1 = {};
-            TParsedString str2 = { LexemeInfo{ 0, "E", 0 } };
+            TSyntaxAnalyzerInput str1 = {};
+            TSyntaxAnalyzerInput str2 = { Terminal("E") };
 
             SyntaxAnalyzer sa(g);
 
@@ -143,33 +133,31 @@ namespace SyntaxAnalyzerUnitTests
 
         TEST_METHOD(SAShouldWorkCorrectWithLambdaProductions)
         {
-            typedef LexicalAnalysis::TParsedString TParsedString;
-
-            auto start_symbol = GrammarSymbol("E");
+            auto start_symbol = NonTerminal("E");
             Grammar g(start_symbol);
 
-            auto terminal_1 = LexemeInfo{ 0, "INT", 0 };
-            auto terminal_2 = LexemeInfo{ 0, "+", 0 };
+            auto terminal_1 = Terminal("INT");
+            auto terminal_2 = Terminal("+");
 
-            g(start_symbol, { { GrammarSymbol(terminal_1), GrammarSymbol(terminal_2), start_symbol }, { GrammarSymbol(terminal_1) }, { GrammarSymbol(GrammarSymbol::GST_LAMBDA) } });
+            g(start_symbol, { { terminal_1, terminal_2, start_symbol }, { terminal_1 }, { GrammarSymbol(GrammarSymbol::GST_LAMBDA) } });
 
-            TParsedString empty_str = {};
+            TSyntaxAnalyzerInput empty_str = {};
 
             SyntaxAnalyzer sa(g);
 
             Assert::IsTrue(sa.Analyze(empty_str));
 
-            TParsedString str1 = { LexemeInfo{ 0, "INT", 0 } };
-            TParsedString str2 = { LexemeInfo{ 0, "INT", 0 }, LexemeInfo{ 0, "+", 0 }, LexemeInfo{ 0, "INT", 0 } };
-            TParsedString str3 = { LexemeInfo{ 0, "INT", 0 }, LexemeInfo{ 0, "+", 0 }, LexemeInfo{ 0, "INT", 0 }, LexemeInfo{ 0, "+", 0 }, LexemeInfo{ 0, "INT", 0 } };
+            TSyntaxAnalyzerInput str1 = { terminal_1 };
+            TSyntaxAnalyzerInput str2 = { terminal_1, terminal_2, terminal_1};
+            TSyntaxAnalyzerInput str3 = { terminal_1, terminal_2, terminal_1, terminal_2, terminal_1 };
 
-            TParsedString str4 = { LexemeInfo{ 0, "INT", 0 }, LexemeInfo{ 0, "INT", 0 }, LexemeInfo{ 0, "INT", 0 } };
-            TParsedString str5 = { LexemeInfo{ 0, "INT", 0 }, LexemeInfo{ 0, "INT", 0 }, LexemeInfo{ 0, "+", 0 } };
-            TParsedString str6 = { LexemeInfo{ 0, "+", 0 }, LexemeInfo{ 0, "INT", 0 }, LexemeInfo{ 0, "INT", 0 } };
-            TParsedString str7 = { LexemeInfo{ 0, "+", 0 }, LexemeInfo{ 0, "+", 0 }, LexemeInfo{ 0, "INT", 0 } };
-            TParsedString str8 = { LexemeInfo{ 0, "INT", 0 }, LexemeInfo{ 0, "+", 0 }, LexemeInfo{ 0, "+", 0 } };
-            TParsedString str9 = { LexemeInfo{ 0, "+", 0 }, LexemeInfo{ 0, "+", 0 }, LexemeInfo{ 0, "+", 0 } };
-            TParsedString str10 = { LexemeInfo{ 0, "+", 0 } };
+            TSyntaxAnalyzerInput str4 = { terminal_1, terminal_1, terminal_1 };
+            TSyntaxAnalyzerInput str5 = { terminal_1, terminal_1, terminal_2 };
+            TSyntaxAnalyzerInput str6 = { terminal_2, terminal_1, terminal_1 };
+            TSyntaxAnalyzerInput str7 = { terminal_2, terminal_2, terminal_1 };
+            TSyntaxAnalyzerInput str8 = { terminal_1, terminal_2, terminal_2 };
+            TSyntaxAnalyzerInput str9 = { terminal_2, terminal_2, terminal_2 };
+            TSyntaxAnalyzerInput str10 = { terminal_2 };
 
             Assert::IsTrue(sa.Analyze(str1));
             Assert::IsTrue(sa.Analyze(str2));
@@ -186,21 +174,19 @@ namespace SyntaxAnalyzerUnitTests
 
         TEST_METHOD(SAShouldWorkWithOptional)
         {
-            typedef LexicalAnalysis::TParsedString TParsedString;
-
-            auto start_symbol = GrammarSymbol("int-seq-opt");
+            auto start_symbol = NonTerminal("int-seq-opt");
             Grammar g(start_symbol);
 
-            auto int_seq = GrammarSymbol("int-seq");
-            auto terminal_1 = LexemeInfo{ 0, "INT", 0 };
+            auto int_seq = NonTerminal("int-seq");
+            auto terminal_1 = Terminal("INT");
 
             g(start_symbol, { { int_seq }, { GrammarSymbol(GrammarSymbol::GST_LAMBDA) } });
-            g(int_seq, { { GrammarSymbol(terminal_1), int_seq }, { GrammarSymbol(terminal_1) } });
+            g(int_seq, { { terminal_1, int_seq }, { terminal_1 } });
 
-            TParsedString str1 = {};
-            TParsedString str2 = { LexemeInfo{ 0, "INT", 0 } };
-            TParsedString str3 = { LexemeInfo{ 0, "INT", 0 }, LexemeInfo{ 0, "INT", 0 } };
-            TParsedString str4 = { LexemeInfo{ 0, "INT", 0 }, LexemeInfo{ 0, "INT", 0 }, LexemeInfo{ 0, "INT", 0 } };
+            TSyntaxAnalyzerInput str1 = {};
+            TSyntaxAnalyzerInput str2 = { terminal_1 };
+            TSyntaxAnalyzerInput str3 = { terminal_1, terminal_1};
+            TSyntaxAnalyzerInput str4 = { terminal_1, terminal_1, terminal_1 };
 
             SyntaxAnalyzer sa(g);
 
@@ -213,26 +199,19 @@ namespace SyntaxAnalyzerUnitTests
 
         TEST_METHOD(SACppTest01)
         {
-            typedef LexicalAnalysis::TParsedString TParsedString;
+            auto assingment_operator =   NonTerminal("assignment-operator");
+            auto assingment_expression = NonTerminal("assignment-expression");
+            auto logical_or_expression = NonTerminal("logical-or-expression");
 
-            auto assingment_operator = GrammarSymbol("assignment-operator");
-            auto assingment_expression = GrammarSymbol("assignment-expression");
-            auto logical_or_expression = GrammarSymbol("logical-or-expression");
-
-            auto terminal_lexeme = LexemeInfo{ 0, "ID", 0 };
-            auto terminal_or_op_lexeme = LexemeInfo{ 0, "||", 0 };
-            auto terminal_ass_op1_lexeme = LexemeInfo{ 0, "=", 0 };
-            auto terminal_ass_op2_lexeme = LexemeInfo{ 0, "+=", 0 };
-
-            auto terminal = GrammarSymbol(terminal_lexeme);
-            auto terminal_or_op = GrammarSymbol(terminal_or_op_lexeme);
-            auto terminal_ass_op1 = GrammarSymbol(terminal_ass_op1_lexeme);
-            auto terminal_ass_op2 = GrammarSymbol(LexemeInfo{ terminal_ass_op2_lexeme});
+            auto terminal =         Terminal("ID");
+            auto terminal_or_op =   Terminal("||");
+            auto terminal_ass_op1 = Terminal("=");
+            auto terminal_ass_op2 = Terminal("+=");
 
             auto lambda_symbol = GrammarSymbol(GrammarSymbol::GST_LAMBDA);
 
             Grammar grammar(assingment_expression);
-            auto logical_or_expression_ex = GrammarSymbol("logical-or-expression-ex");
+            auto logical_or_expression_ex = NonTerminal("logical-or-expression-ex");
 
             grammar
                 (logical_or_expression, { { terminal, logical_or_expression_ex } })
@@ -241,9 +220,9 @@ namespace SyntaxAnalyzerUnitTests
                 (assingment_operator, { { terminal_ass_op1 }, { terminal_ass_op2 } })
                 ;
 
-            TParsedString str2 = { terminal_lexeme, terminal_ass_op1_lexeme, terminal_lexeme };
-            TParsedString str3 = { terminal_lexeme, terminal_ass_op2_lexeme, terminal_lexeme };
-            TParsedString str4 = { terminal_lexeme, terminal_ass_op2_lexeme, terminal_lexeme, terminal_or_op_lexeme, terminal_lexeme };
+            TSyntaxAnalyzerInput str2 = { terminal, terminal_ass_op1, terminal };
+            TSyntaxAnalyzerInput str3 = { terminal, terminal_ass_op2, terminal };
+            TSyntaxAnalyzerInput str4 = { terminal, terminal_ass_op2, terminal, terminal_or_op, terminal};
 
             SyntaxAnalyzer sa(grammar);
             Assert::IsTrue(sa.Analyze(str2));
@@ -253,58 +232,40 @@ namespace SyntaxAnalyzerUnitTests
 
         TEST_METHOD(SACppTest02)
         {
-            typedef LexicalAnalysis::TParsedString TParsedString;
+            auto assingment_operator = NonTerminal("assignment-operator");
+            auto assingment_expression = NonTerminal("assignment-expression");
+            auto logical_or_expression = NonTerminal("logical-or-expression");
+            auto logical_or_expression_ex = NonTerminal("logical-or-expression-ex");
+            auto logical_and_expression = NonTerminal("logical-and-expression");
+            auto logical_and_expression_ex = NonTerminal("logical-and-expression-ex");
+            auto inclusive_or_expression = NonTerminal("inclusive-or-expression");
+            auto inclusive_or_expression_ex = NonTerminal("inclusive-or-expression-ex");
+            auto exclusive_or_expression = NonTerminal("exlusive-or-expression");
+            auto exclusive_or_expression_ex = NonTerminal("exclusive-or-expression-ex");
+            auto and_expression = NonTerminal("and-expression");
+            auto and_expression_ex = NonTerminal("and-expression-ex");
+            auto equality_expression = NonTerminal("equality-expression");
+            auto equality_expression_ex = NonTerminal("equality-expression-ex");
+            auto additive_expression = NonTerminal("additive-expression");
+            auto additive_expression_ex = NonTerminal("additive-expression-ex");
+            auto multiplicative_expression = NonTerminal("multiplicative-expression");
+            auto multiplicative_expression_ex = NonTerminal("multiplicative-expression-ex");
 
-            auto assingment_operator = GrammarSymbol("assignment-operator");
-            auto assingment_expression = GrammarSymbol("assignment-expression");
-            auto logical_or_expression = GrammarSymbol("logical-or-expression");
-            auto logical_or_expression_ex = GrammarSymbol("logical-or-expression-ex");
-            auto logical_and_expression = GrammarSymbol("logical-and-expression");
-            auto logical_and_expression_ex = GrammarSymbol("logical-and-expression-ex");
-            auto inclusive_or_expression = GrammarSymbol("inclusive-or-expression");
-            auto inclusive_or_expression_ex = GrammarSymbol("inclusive-or-expression-ex");
-            auto exclusive_or_expression = GrammarSymbol("exlusive-or-expression");
-            auto exclusive_or_expression_ex = GrammarSymbol("exclusive-or-expression-ex");
-            auto and_expression = GrammarSymbol("and-expression");
-            auto and_expression_ex = GrammarSymbol("and-expression-ex");
-            auto equality_expression = GrammarSymbol("equality-expression");
-            auto equality_expression_ex = GrammarSymbol("equality-expression-ex");
-            auto additive_expression = GrammarSymbol("additive-expression");
-            auto additive_expression_ex = GrammarSymbol("additive-expression-ex");
-            auto multiplicative_expression = GrammarSymbol("multiplicative-expression");
-            auto multiplicative_expression_ex = GrammarSymbol("multiplicative-expression-ex");            
-
-            auto terminal_ass_op1_lexeme = LexemeInfo{ 0, "=", 0 };
-            auto terminal_ass_op2_lexeme = LexemeInfo{ 0, "+=", 0 };
-            auto terminal_lexeme = LexemeInfo{ 0, "ID", 0 };
-            auto terminal_or_op_lexeme = LexemeInfo{ 0, "||", 0 };
-            auto terminal_logical_and_op_lexeme = LexemeInfo{ 0, "&&", 0 };
-            auto terminal_inclusive_or_op_lexeme = LexemeInfo{ 0, "|", 0 };
-            auto terminal_exclusive_or_op_lexeme = LexemeInfo{ 0, "^", 0 };
-            auto terminal_bitwise_and_op_lexeme = LexemeInfo{ 0, "&", 0 };
-            auto terminal_equality_op1_lexeme = LexemeInfo{ 0, "==", 0 };
-            auto terminal_equality_op2_lexeme = LexemeInfo{ 0, "!=", 0 };
-            auto terminal_add_op1_lexeme = LexemeInfo{ 0, "+", 0 };
-            auto terminal_add_op2_lexeme = LexemeInfo{ 0, "-", 0 };
-            auto terminal_mult_op1_lexeme = LexemeInfo{ 0, "*", 0 };
-            auto terminal_mult_op2_lexeme = LexemeInfo{ 0, "/", 0 };
-            auto terminal_mult_op3_lexeme = LexemeInfo{ 0, "%", 0 };
-
-            auto terminal_ass_op1 = GrammarSymbol(terminal_ass_op1_lexeme);
-            auto terminal_ass_op2 = GrammarSymbol(LexemeInfo{ terminal_ass_op2_lexeme });
-            auto terminal = GrammarSymbol(terminal_lexeme);
-            auto terminal_logical_or_op = GrammarSymbol(terminal_or_op_lexeme);
-            auto terminal_logical_and_op = GrammarSymbol(terminal_logical_and_op_lexeme);
-            auto terminal_inclusive_or_op = GrammarSymbol(terminal_inclusive_or_op_lexeme);
-            auto terminal_exclusive_or_op = GrammarSymbol(terminal_exclusive_or_op_lexeme);
-            auto terminal_bitwise_and_op = GrammarSymbol(terminal_bitwise_and_op_lexeme);
-            auto terminal_equality_op1 = GrammarSymbol(terminal_equality_op1_lexeme);
-            auto terminal_equality_op2 = GrammarSymbol(terminal_equality_op2_lexeme);
-            auto terminal_add_op1 = GrammarSymbol(terminal_add_op1_lexeme);
-            auto terminal_add_op2 = GrammarSymbol(terminal_add_op2_lexeme);
-            auto terminal_mult_op1 = GrammarSymbol(terminal_mult_op1_lexeme);
-            auto terminal_mult_op2 = GrammarSymbol(terminal_mult_op2_lexeme);
-            auto terminal_mult_op3 = GrammarSymbol(terminal_mult_op3_lexeme);
+            auto terminal_ass_op1 =         Terminal("=");
+            auto terminal_ass_op2 =         Terminal("+=");
+            auto terminal =                 Terminal("ID");
+            auto terminal_logical_or_op =   Terminal("||");
+            auto terminal_logical_and_op =  Terminal("&&");
+            auto terminal_inclusive_or_op = Terminal("|");
+            auto terminal_exclusive_or_op = Terminal("^");
+            auto terminal_bitwise_and_op =  Terminal("&");
+            auto terminal_equality_op1 =    Terminal("==");
+            auto terminal_equality_op2 =    Terminal("!=");
+            auto terminal_add_op1 =         Terminal("+");
+            auto terminal_add_op2 =         Terminal("-");
+            auto terminal_mult_op1 =        Terminal("*");
+            auto terminal_mult_op2 =        Terminal("/");
+            auto terminal_mult_op3 =        Terminal("&");
 
             auto lambda_symbol = GrammarSymbol(GrammarSymbol::GST_LAMBDA);
 
@@ -338,15 +299,15 @@ namespace SyntaxAnalyzerUnitTests
                 (assingment_operator, { { terminal_ass_op1 }, { terminal_ass_op2 } })
                 ;
 
-            TParsedString str2 = { terminal_lexeme, terminal_ass_op1_lexeme, terminal_lexeme };
-            TParsedString str3 = { terminal_lexeme, terminal_ass_op2_lexeme, terminal_lexeme };
-            TParsedString str4 = { terminal_lexeme, terminal_ass_op2_lexeme, terminal_lexeme, terminal_or_op_lexeme, terminal_lexeme };
-            TParsedString str5 = { terminal_lexeme, terminal_ass_op2_lexeme, terminal_lexeme, terminal_logical_and_op_lexeme, terminal_lexeme };
-            TParsedString str6 = { terminal_lexeme, terminal_ass_op1_lexeme, terminal_lexeme, terminal_exclusive_or_op_lexeme, terminal_lexeme };
-            TParsedString str7 = { terminal_lexeme, terminal_ass_op1_lexeme, terminal_lexeme, terminal_inclusive_or_op_lexeme, terminal_lexeme, terminal_inclusive_or_op_lexeme, terminal_lexeme };
-            TParsedString str8 = { terminal_lexeme, terminal_ass_op1_lexeme, terminal_lexeme, terminal_mult_op1_lexeme, terminal_lexeme};
-            TParsedString str9 = { terminal_lexeme, terminal_ass_op1_lexeme, terminal_lexeme, terminal_mult_op1_lexeme, terminal_lexeme, terminal_add_op2_lexeme, terminal_lexeme };
-            TParsedString str10 = { terminal_lexeme, terminal_ass_op1_lexeme, terminal_lexeme, terminal_add_op1_lexeme, terminal_lexeme, terminal_mult_op2_lexeme, terminal_lexeme };
+            TSyntaxAnalyzerInput str2 = { terminal, terminal_ass_op1, terminal };
+            TSyntaxAnalyzerInput str3 = { terminal, terminal_ass_op2, terminal };
+            TSyntaxAnalyzerInput str4 = { terminal, terminal_ass_op2, terminal, terminal_logical_or_op, terminal};
+            TSyntaxAnalyzerInput str5 = { terminal, terminal_ass_op2, terminal, terminal_logical_and_op, terminal};
+            TSyntaxAnalyzerInput str6 = { terminal, terminal_ass_op1, terminal, terminal_exclusive_or_op, terminal };
+            TSyntaxAnalyzerInput str7 = { terminal, terminal_ass_op1, terminal, terminal_inclusive_or_op, terminal, terminal_inclusive_or_op, terminal};
+            TSyntaxAnalyzerInput str8 = { terminal, terminal_ass_op1, terminal, terminal_mult_op1, terminal};
+            TSyntaxAnalyzerInput str9 = { terminal, terminal_ass_op1, terminal, terminal_mult_op1, terminal, terminal_add_op2, terminal};
+            TSyntaxAnalyzerInput str10 = { terminal, terminal_ass_op1, terminal, terminal_add_op1, terminal, terminal_mult_op2, terminal};
             
             
             SyntaxAnalyzer sa(grammar); 
@@ -361,41 +322,30 @@ namespace SyntaxAnalyzerUnitTests
             Assert::IsTrue(sa.Analyze(str10));
             
 
-            TParsedString inv_str_1 = { terminal_logical_and_op_lexeme };
-            TParsedString inv_str_2 = { terminal_lexeme, terminal_add_op1_lexeme };
+            TSyntaxAnalyzerInput inv_str_1 = { terminal_logical_and_op};
+            TSyntaxAnalyzerInput inv_str_2 = { terminal, terminal_add_op1};
             Assert::IsFalse(sa.Analyze(inv_str_1));
             Assert::IsFalse(sa.Analyze(inv_str_2));
         }
 
         TEST_METHOD(SACppTest03)
         {
-            typedef LexicalAnalysis::TParsedString TParsedString;
+            auto expression = NonTerminal("expression");
 
-            auto expression = GrammarSymbol("expression");
+            auto additive_expression = NonTerminal("additive-expression");
+            auto additive_expression_ex = NonTerminal("additive-expression-ex");
+            auto multiplicative_expression = NonTerminal("multiplicative-expression");
+            auto multiplicative_expression_ex = NonTerminal("multiplicative-expression-ex");
+            auto primary_expression = NonTerminal("primary-expression");
 
-            auto additive_expression = GrammarSymbol("additive-expression");
-            auto additive_expression_ex = GrammarSymbol("additive-expression-ex");
-            auto multiplicative_expression = GrammarSymbol("multiplicative-expression");
-            auto multiplicative_expression_ex = GrammarSymbol("multiplicative-expression-ex");
-            auto primary_expression = GrammarSymbol("primary-expression");
-
-            auto terminal_lexeme = LexemeInfo{ 0, "ID", 0 };
-            auto terminal_add_op1_lexeme = LexemeInfo{ 0, "+", 0 };
-            auto terminal_add_op2_lexeme = LexemeInfo{ 0, "-", 0 };
-            auto terminal_mult_op1_lexeme = LexemeInfo{ 0, "*", 0 };
-            auto terminal_mult_op2_lexeme = LexemeInfo{ 0, "/", 0 };
-            auto terminal_mult_op3_lexeme = LexemeInfo{ 0, "%", 0 };
-            auto terminal_left_paren_lexeme = LexemeInfo{ 0, "(", 0 };
-            auto terminal_right_paren_lexeme = LexemeInfo{ 0, ")", 0 };
-
-            auto terminal = GrammarSymbol(terminal_lexeme);
-            auto terminal_add_op1 = GrammarSymbol(terminal_add_op1_lexeme);
-            auto terminal_add_op2 = GrammarSymbol(terminal_add_op2_lexeme);
-            auto terminal_mult_op1 = GrammarSymbol(terminal_mult_op1_lexeme);
-            auto terminal_mult_op2 = GrammarSymbol(terminal_mult_op2_lexeme);
-            auto terminal_mult_op3 = GrammarSymbol(terminal_mult_op3_lexeme);
-            auto terminal_left_paren = GrammarSymbol(terminal_left_paren_lexeme);
-            auto terminal_right_paren = GrammarSymbol(terminal_right_paren_lexeme);
+            auto terminal =             Terminal("ID");
+            auto terminal_add_op1 =     Terminal("+");
+            auto terminal_add_op2 =     Terminal("-");
+            auto terminal_mult_op1 =    Terminal("*");
+            auto terminal_mult_op2 =    Terminal("/");
+            auto terminal_mult_op3 =    Terminal("%");
+            auto terminal_left_paren =  Terminal("(");
+            auto terminal_right_paren = Terminal(")");
 
             auto lambda_symbol = GrammarSymbol(GrammarSymbol::GST_LAMBDA);
 
@@ -413,8 +363,8 @@ namespace SyntaxAnalyzerUnitTests
                 (expression, { { additive_expression } })
                 ;
 
-            TParsedString str1 = { terminal_lexeme, terminal_mult_op1_lexeme, terminal_lexeme, terminal_add_op1_lexeme, terminal_lexeme };
-            TParsedString str2 = { terminal_lexeme, terminal_add_op1_lexeme, terminal_lexeme, terminal_mult_op1_lexeme, terminal_lexeme };
+            TSyntaxAnalyzerInput str1 = { terminal, terminal_mult_op1, terminal, terminal_add_op1, terminal};
+            TSyntaxAnalyzerInput str2 = { terminal, terminal_add_op1, terminal, terminal_mult_op1, terminal};
 
             SyntaxAnalyzer sa(grammar);
             Assert::IsTrue(sa.Analyze(str1));
@@ -423,64 +373,44 @@ namespace SyntaxAnalyzerUnitTests
 
         TEST_METHOD(SACppTest04)
         {
-            typedef LexicalAnalysis::TParsedString TParsedString;
+            auto assingment_operator = NonTerminal("assignment-operator");
+            auto assingment_expression = NonTerminal("assignment-expression");
+            auto logical_or_expression = NonTerminal("logical-or-expression");
+            auto logical_or_expression_ex = NonTerminal("logical-or-expression-ex");
+            auto logical_and_expression = NonTerminal("logical-and-expression");
+            auto logical_and_expression_ex = NonTerminal("logical-and-expression-ex");
+            auto inclusive_or_expression = NonTerminal("inclusive-or-expression");
+            auto inclusive_or_expression_ex = NonTerminal("inclusive-or-expression-ex");
+            auto exclusive_or_expression = NonTerminal("exlusive-or-expression");
+            auto exclusive_or_expression_ex = NonTerminal("exclusive-or-expression-ex");
+            auto and_expression = NonTerminal("and-expression");
+            auto and_expression_ex = NonTerminal("and-expression-ex");
+            auto equality_expression = NonTerminal("equality-expression");
+            auto equality_expression_ex = NonTerminal("equality-expression-ex");
+            auto additive_expression = NonTerminal("additive-expression");
+            auto additive_expression_ex = NonTerminal("additive-expression-ex");
+            auto multiplicative_expression = NonTerminal("multiplicative-expression");
+            auto multiplicative_expression_ex = NonTerminal("multiplicative-expression-ex");
+            auto primary_expression = NonTerminal("primary-expression");
+            auto expression = NonTerminal("expression");
 
-            auto assingment_operator = GrammarSymbol("assignment-operator");
-            auto assingment_expression = GrammarSymbol("assignment-expression");
-            auto logical_or_expression = GrammarSymbol("logical-or-expression");
-            auto logical_or_expression_ex = GrammarSymbol("logical-or-expression-ex");
-            auto logical_and_expression = GrammarSymbol("logical-and-expression");
-            auto logical_and_expression_ex = GrammarSymbol("logical-and-expression-ex");
-            auto inclusive_or_expression = GrammarSymbol("inclusive-or-expression");
-            auto inclusive_or_expression_ex = GrammarSymbol("inclusive-or-expression-ex");
-            auto exclusive_or_expression = GrammarSymbol("exlusive-or-expression");
-            auto exclusive_or_expression_ex = GrammarSymbol("exclusive-or-expression-ex");
-            auto and_expression = GrammarSymbol("and-expression");
-            auto and_expression_ex = GrammarSymbol("and-expression-ex");
-            auto equality_expression = GrammarSymbol("equality-expression");
-            auto equality_expression_ex = GrammarSymbol("equality-expression-ex");
-            auto additive_expression = GrammarSymbol("additive-expression");
-            auto additive_expression_ex = GrammarSymbol("additive-expression-ex");
-            auto multiplicative_expression = GrammarSymbol("multiplicative-expression");
-            auto multiplicative_expression_ex = GrammarSymbol("multiplicative-expression-ex");
-            auto primary_expression = GrammarSymbol("primary-expression");
-            auto expression = GrammarSymbol("expression");
-
-            auto terminal_lexeme = LexemeInfo{ 0, "ID", 0 };
-            auto terminal_ass_op1_lexeme = LexemeInfo{ 0, "=", 0 };
-            auto terminal_ass_op2_lexeme = LexemeInfo{ 0, "+=", 0 };
-            auto terminal_or_op_lexeme = LexemeInfo{ 0, "||", 0 };
-            auto terminal_logical_and_op_lexeme = LexemeInfo{ 0, "&&", 0 };
-            auto terminal_inclusive_or_op_lexeme = LexemeInfo{ 0, "|", 0 };
-            auto terminal_exclusive_or_op_lexeme = LexemeInfo{ 0, "^", 0 };
-            auto terminal_bitwise_and_op_lexeme = LexemeInfo{ 0, "&", 0 };
-            auto terminal_equality_op1_lexeme = LexemeInfo{ 0, "==", 0 };
-            auto terminal_equality_op2_lexeme = LexemeInfo{ 0, "!=", 0 };
-            auto terminal_add_op1_lexeme = LexemeInfo{ 0, "+", 0 };
-            auto terminal_add_op2_lexeme = LexemeInfo{ 0, "-", 0 };
-            auto terminal_mult_op1_lexeme = LexemeInfo{ 0, "*", 0 };
-            auto terminal_mult_op2_lexeme = LexemeInfo{ 0, "/", 0 };
-            auto terminal_mult_op3_lexeme = LexemeInfo{ 0, "%", 0 };
-            auto terminal_left_paren_lexeme = LexemeInfo{ 0, "(", 0 };
-            auto terminal_right_paren_lexeme = LexemeInfo{ 0, ")", 0 };
-
-            auto terminal = GrammarSymbol(terminal_lexeme);
-            auto terminal_ass_op1 = GrammarSymbol(terminal_ass_op1_lexeme);
-            auto terminal_ass_op2 = GrammarSymbol(LexemeInfo{ terminal_ass_op2_lexeme });
-            auto terminal_logical_or_op = GrammarSymbol(terminal_or_op_lexeme);
-            auto terminal_logical_and_op = GrammarSymbol(terminal_logical_and_op_lexeme);
-            auto terminal_inclusive_or_op = GrammarSymbol(terminal_inclusive_or_op_lexeme);
-            auto terminal_exclusive_or_op = GrammarSymbol(terminal_exclusive_or_op_lexeme);
-            auto terminal_bitwise_and_op = GrammarSymbol(terminal_bitwise_and_op_lexeme);
-            auto terminal_equality_op1 = GrammarSymbol(terminal_equality_op1_lexeme);
-            auto terminal_equality_op2 = GrammarSymbol(terminal_equality_op2_lexeme);
-            auto terminal_add_op1 = GrammarSymbol(terminal_add_op1_lexeme);
-            auto terminal_add_op2 = GrammarSymbol(terminal_add_op2_lexeme);
-            auto terminal_mult_op1 = GrammarSymbol(terminal_mult_op1_lexeme);
-            auto terminal_mult_op2 = GrammarSymbol(terminal_mult_op2_lexeme);
-            auto terminal_mult_op3 = GrammarSymbol(terminal_mult_op3_lexeme);
-            auto terminal_left_paren = GrammarSymbol(terminal_left_paren_lexeme);
-            auto terminal_right_paren = GrammarSymbol(terminal_right_paren_lexeme);
+            auto terminal = Terminal("ID");
+            auto terminal_ass_op1 = Terminal("=");
+            auto terminal_ass_op2 = Terminal("+=");
+            auto terminal_logical_or_op = Terminal("||");
+            auto terminal_logical_and_op = Terminal("&&");
+            auto terminal_inclusive_or_op = Terminal("|");
+            auto terminal_exclusive_or_op = Terminal("^");
+            auto terminal_bitwise_and_op = Terminal("&");
+            auto terminal_equality_op1 = Terminal("==");
+            auto terminal_equality_op2 = Terminal("!=");
+            auto terminal_add_op1 = Terminal("+");
+            auto terminal_add_op2 = Terminal("-");
+            auto terminal_mult_op1 = Terminal("*");
+            auto terminal_mult_op2 = Terminal("/");
+            auto terminal_mult_op3 = Terminal("%");
+            auto terminal_left_paren = Terminal("(");
+            auto terminal_right_paren = Terminal(")");
 
             auto lambda_symbol = GrammarSymbol(GrammarSymbol::GST_LAMBDA);
 
@@ -516,18 +446,18 @@ namespace SyntaxAnalyzerUnitTests
                 (expression, { { assingment_expression } })
                 ;
 
-            TParsedString str2 = { terminal_lexeme, terminal_ass_op1_lexeme, terminal_lexeme };
-            TParsedString str3 = { terminal_lexeme, terminal_ass_op2_lexeme, terminal_lexeme };
-            TParsedString str4 = { terminal_lexeme, terminal_ass_op2_lexeme, terminal_lexeme, terminal_or_op_lexeme, terminal_lexeme };
-            TParsedString str5 = { terminal_lexeme, terminal_ass_op2_lexeme, terminal_lexeme, terminal_logical_and_op_lexeme, terminal_lexeme };
-            TParsedString str6 = { terminal_lexeme, terminal_ass_op1_lexeme, terminal_lexeme, terminal_exclusive_or_op_lexeme, terminal_lexeme };
-            TParsedString str7 = { terminal_lexeme, terminal_ass_op1_lexeme, terminal_lexeme, terminal_inclusive_or_op_lexeme, terminal_lexeme, terminal_inclusive_or_op_lexeme, terminal_lexeme };
-            TParsedString str8 = { terminal_lexeme, terminal_ass_op1_lexeme, terminal_lexeme, terminal_mult_op1_lexeme, terminal_lexeme };
-            TParsedString str9 = { terminal_lexeme, terminal_ass_op1_lexeme, terminal_lexeme, terminal_mult_op1_lexeme, terminal_lexeme, terminal_add_op2_lexeme, terminal_lexeme };
-            TParsedString str10 = { terminal_lexeme, terminal_ass_op1_lexeme, terminal_lexeme, terminal_add_op1_lexeme, terminal_lexeme, terminal_mult_op2_lexeme, terminal_lexeme };
-            TParsedString str11 = { terminal_lexeme, terminal_mult_op1_lexeme, terminal_lexeme, terminal_add_op1_lexeme, terminal_lexeme };
-            TParsedString str12 = { terminal_lexeme, terminal_add_op1_lexeme, terminal_lexeme, terminal_mult_op1_lexeme, terminal_lexeme };
-            TParsedString str13 = {terminal_lexeme, terminal_ass_op1_lexeme, terminal_left_paren_lexeme, terminal_lexeme, terminal_add_op1_lexeme, terminal_lexeme, terminal_right_paren_lexeme, terminal_mult_op1_lexeme, terminal_lexeme };
+            TSyntaxAnalyzerInput str2 = { terminal, terminal_ass_op1, terminal };
+            TSyntaxAnalyzerInput str3 = { terminal, terminal_ass_op2, terminal };
+            TSyntaxAnalyzerInput str4 = { terminal, terminal_ass_op2, terminal, terminal_logical_or_op, terminal };
+            TSyntaxAnalyzerInput str5 = { terminal, terminal_ass_op2, terminal, terminal_logical_and_op, terminal };
+            TSyntaxAnalyzerInput str6 = { terminal, terminal_ass_op1, terminal, terminal_exclusive_or_op, terminal};
+            TSyntaxAnalyzerInput str7 = { terminal, terminal_ass_op1, terminal, terminal_inclusive_or_op, terminal, terminal_inclusive_or_op, terminal};
+            TSyntaxAnalyzerInput str8 = { terminal, terminal_ass_op1, terminal, terminal_mult_op1, terminal };
+            TSyntaxAnalyzerInput str9 = { terminal, terminal_ass_op1, terminal, terminal_mult_op1, terminal, terminal_add_op2, terminal };
+            TSyntaxAnalyzerInput str10 = { terminal, terminal_ass_op1, terminal, terminal_add_op1, terminal, terminal_mult_op2, terminal };
+            TSyntaxAnalyzerInput str11 = { terminal, terminal_mult_op1, terminal, terminal_add_op1, terminal };
+            TSyntaxAnalyzerInput str12 = { terminal, terminal_add_op1, terminal, terminal_mult_op1, terminal };
+            TSyntaxAnalyzerInput str13 = {terminal, terminal_ass_op1, terminal_left_paren, terminal, terminal_add_op1, terminal, terminal_right_paren, terminal_mult_op1, terminal };
 
             SyntaxAnalyzer sa(grammar);
             Assert::IsTrue(sa.Analyze(str2));
@@ -544,10 +474,10 @@ namespace SyntaxAnalyzerUnitTests
             Assert::IsTrue(sa.Analyze(str13));
 
 
-            TParsedString inv_str_1 = { terminal_logical_and_op_lexeme };
-            TParsedString inv_str_2 = { terminal_lexeme, terminal_add_op1_lexeme };
-            TParsedString inv_str_3 = { terminal_lexeme, terminal_add_op1_lexeme, terminal_lexeme, terminal_right_paren_lexeme };
-            TParsedString inv_str_4 = { terminal_lexeme, terminal_left_paren_lexeme, terminal_add_op1_lexeme, terminal_lexeme, terminal_right_paren_lexeme };
+            TSyntaxAnalyzerInput inv_str_1 = { terminal_logical_and_op };
+            TSyntaxAnalyzerInput inv_str_2 = { terminal, terminal_add_op1 };
+            TSyntaxAnalyzerInput inv_str_3 = { terminal, terminal_add_op1, terminal, terminal_right_paren };
+            TSyntaxAnalyzerInput inv_str_4 = { terminal, terminal_left_paren, terminal_add_op1, terminal, terminal_right_paren };
             Assert::IsFalse(sa.Analyze(inv_str_1));
             Assert::IsFalse(sa.Analyze(inv_str_2));
             Assert::IsFalse(sa.Analyze(inv_str_3));
@@ -556,77 +486,75 @@ namespace SyntaxAnalyzerUnitTests
 
         TEST_METHOD(SACppTest05)
         {
-            typedef LexicalAnalysis::TParsedString TParsedString;
-
-            auto assingment_operator = GrammarSymbol("assignment-operator");
-            auto assingment_expression = GrammarSymbol("assignment-expression");
-            auto logical_or_expression = GrammarSymbol("logical-or-expression");
-            auto logical_or_expression_ex = GrammarSymbol("logical-or-expression-ex");
-            auto logical_and_expression = GrammarSymbol("logical-and-expression");
-            auto logical_and_expression_ex = GrammarSymbol("logical-and-expression-ex");
-            auto inclusive_or_expression = GrammarSymbol("inclusive-or-expression");
-            auto inclusive_or_expression_ex = GrammarSymbol("inclusive-or-expression-ex");
-            auto exclusive_or_expression = GrammarSymbol("exlusive-or-expression");
-            auto exclusive_or_expression_ex = GrammarSymbol("exclusive-or-expression-ex");
-            auto and_expression = GrammarSymbol("and-expression");
-            auto and_expression_ex = GrammarSymbol("and-expression-ex");
-            auto equality_expression = GrammarSymbol("equality-expression");
-            auto equality_expression_ex = GrammarSymbol("equality-expression-ex");
-            auto additive_expression = GrammarSymbol("additive-expression");
-            auto additive_expression_ex = GrammarSymbol("additive-expression-ex");
-            auto multiplicative_expression = GrammarSymbol("multiplicative-expression");
-            auto multiplicative_expression_ex = GrammarSymbol("multiplicative-expression-ex");
-            auto primary_expression = GrammarSymbol("primary-expression");
-            auto expression = GrammarSymbol("expression");
-            auto expression_optional = GrammarSymbol("expression-opt");
-            auto expression_statement = GrammarSymbol("expression-statement");
-            auto statement = GrammarSymbol("statement");
-            auto statement_sequence = GrammarSymbol("statement-sequence");
-            auto statement_sequence_optional = GrammarSymbol("statement-sequence-opt");
-            auto compound_statement = GrammarSymbol("compound-statement");
+            auto assingment_operator = NonTerminal("assignment-operator");
+            auto assingment_expression = NonTerminal("assignment-expression");
+            auto logical_or_expression = NonTerminal("logical-or-expression");
+            auto logical_or_expression_ex = NonTerminal("logical-or-expression-ex");
+            auto logical_and_expression = NonTerminal("logical-and-expression");
+            auto logical_and_expression_ex = NonTerminal("logical-and-expression-ex");
+            auto inclusive_or_expression = NonTerminal("inclusive-or-expression");
+            auto inclusive_or_expression_ex = NonTerminal("inclusive-or-expression-ex");
+            auto exclusive_or_expression = NonTerminal("exlusive-or-expression");
+            auto exclusive_or_expression_ex = NonTerminal("exclusive-or-expression-ex");
+            auto and_expression = NonTerminal("and-expression");
+            auto and_expression_ex = NonTerminal("and-expression-ex");
+            auto equality_expression = NonTerminal("equality-expression");
+            auto equality_expression_ex = NonTerminal("equality-expression-ex");
+            auto additive_expression = NonTerminal("additive-expression");
+            auto additive_expression_ex = NonTerminal("additive-expression-ex");
+            auto multiplicative_expression = NonTerminal("multiplicative-expression");
+            auto multiplicative_expression_ex = NonTerminal("multiplicative-expression-ex");
+            auto primary_expression = NonTerminal("primary-expression");
+            auto expression = NonTerminal("expression");
+            auto expression_optional = NonTerminal("expression-opt");
+            auto expression_statement = NonTerminal("expression-statement");
+            auto statement = NonTerminal("statement");
+            auto statement_sequence = NonTerminal("statement-sequence");
+            auto statement_sequence_optional = NonTerminal("statement-sequence-opt");
+            auto compound_statement = NonTerminal("compound-statement");
             
 
-            auto terminal_lexeme = LexemeInfo{ 0, "ID", 0 };
-            auto terminal_ass_op1_lexeme = LexemeInfo{ 0, "=", 0 };
-            auto terminal_ass_op2_lexeme = LexemeInfo{ 0, "+=", 0 };
-            auto terminal_or_op_lexeme = LexemeInfo{ 0, "||", 0 };
-            auto terminal_logical_and_op_lexeme = LexemeInfo{ 0, "&&", 0 };
-            auto terminal_inclusive_or_op_lexeme = LexemeInfo{ 0, "|", 0 };
-            auto terminal_exclusive_or_op_lexeme = LexemeInfo{ 0, "^", 0 };
-            auto terminal_bitwise_and_op_lexeme = LexemeInfo{ 0, "&", 0 };
-            auto terminal_equality_op1_lexeme = LexemeInfo{ 0, "==", 0 };
-            auto terminal_equality_op2_lexeme = LexemeInfo{ 0, "!=", 0 };
-            auto terminal_add_op1_lexeme = LexemeInfo{ 0, "+", 0 };
-            auto terminal_add_op2_lexeme = LexemeInfo{ 0, "-", 0 };
-            auto terminal_mult_op1_lexeme = LexemeInfo{ 0, "*", 0 };
-            auto terminal_mult_op2_lexeme = LexemeInfo{ 0, "/", 0 };
-            auto terminal_mult_op3_lexeme = LexemeInfo{ 0, "%", 0 };
-            auto terminal_left_paren_lexeme = LexemeInfo{ 0, "(", 0 };
-            auto terminal_right_paren_lexeme = LexemeInfo{ 0, ")", 0 };
-            auto terminal_left_brace_lexeme = LexemeInfo{ 0, "{", 0 };
-            auto terminal_right_brace_lexeme = LexemeInfo{ 0, "}", 0 };
-            auto terminal_semicolon_lexeme = LexemeInfo{ 0, ";", 0 };
+            auto terminal_lexeme =                  LexemeInfo{ 0, "ID"  , 0 };
+            auto terminal_ass_op1_lexeme =          LexemeInfo{ 0, "="  , 0 };
+            auto terminal_ass_op2_lexeme =          LexemeInfo{ 0, "+=" , 0 };
+            auto terminal_or_op_lexeme =            LexemeInfo{ 0, "||" , 0 };
+            auto terminal_logical_and_op_lexeme =   LexemeInfo{ 0, "&&" , 0 };
+            auto terminal_inclusive_or_op_lexeme =  LexemeInfo{ 0, "|"  , 0 };
+            auto terminal_exclusive_or_op_lexeme =  LexemeInfo{ 0, "^"  , 0 };
+            auto terminal_bitwise_and_op_lexeme =   LexemeInfo{ 0, "&"  , 0 };
+            auto terminal_equality_op1_lexeme =     LexemeInfo{ 0, "==" , 0 };
+            auto terminal_equality_op2_lexeme =     LexemeInfo{ 0, "!=" , 0 };
+            auto terminal_add_op1_lexeme =          LexemeInfo{ 0, "+"  , 0 };
+            auto terminal_add_op2_lexeme =          LexemeInfo{ 0, "-"  , 0 };
+            auto terminal_mult_op1_lexeme =         LexemeInfo{ 0, "*"  , 0 };
+            auto terminal_mult_op2_lexeme =         LexemeInfo{ 0, "/"  , 0 };
+            auto terminal_mult_op3_lexeme =         LexemeInfo{ 0, "%"  , 0 };
+            auto terminal_left_paren_lexeme =       LexemeInfo{ 0, "("  , 0 };
+            auto terminal_right_paren_lexeme =      LexemeInfo{ 0, ")"  , 0 };
+            auto terminal_left_brace_lexeme =       LexemeInfo{ 0, "{"  , 0 };
+            auto terminal_right_brace_lexeme =      LexemeInfo{ 0, "}"  , 0 };
+            auto terminal_semicolon_lexeme =        LexemeInfo{ 0, ";"  , 0 };
 
-            auto terminal = GrammarSymbol(terminal_lexeme);
-            auto terminal_ass_op1 = GrammarSymbol(terminal_ass_op1_lexeme);
-            auto terminal_ass_op2 = GrammarSymbol(LexemeInfo{ terminal_ass_op2_lexeme });
-            auto terminal_logical_or_op = GrammarSymbol(terminal_or_op_lexeme);
-            auto terminal_logical_and_op = GrammarSymbol(terminal_logical_and_op_lexeme);
-            auto terminal_inclusive_or_op = GrammarSymbol(terminal_inclusive_or_op_lexeme);
-            auto terminal_exclusive_or_op = GrammarSymbol(terminal_exclusive_or_op_lexeme);
-            auto terminal_bitwise_and_op = GrammarSymbol(terminal_bitwise_and_op_lexeme);
-            auto terminal_equality_op1 = GrammarSymbol(terminal_equality_op1_lexeme);
-            auto terminal_equality_op2 = GrammarSymbol(terminal_equality_op2_lexeme);
-            auto terminal_add_op1 = GrammarSymbol(terminal_add_op1_lexeme);
-            auto terminal_add_op2 = GrammarSymbol(terminal_add_op2_lexeme);
-            auto terminal_mult_op1 = GrammarSymbol(terminal_mult_op1_lexeme);
-            auto terminal_mult_op2 = GrammarSymbol(terminal_mult_op2_lexeme);
-            auto terminal_mult_op3 = GrammarSymbol(terminal_mult_op3_lexeme);
-            auto terminal_left_paren = GrammarSymbol(terminal_left_paren_lexeme);
-            auto terminal_right_paren = GrammarSymbol(terminal_right_paren_lexeme);
-            auto terminal_left_brace = GrammarSymbol(terminal_left_brace_lexeme);
-            auto terminal_right_brace = GrammarSymbol(terminal_right_brace_lexeme);
-            auto terminal_semicolon = GrammarSymbol(terminal_semicolon_lexeme);
+            auto terminal = Terminal("ID");
+            auto terminal_ass_op1 = Terminal("=");
+            auto terminal_ass_op2 = Terminal("+=");
+            auto terminal_logical_or_op = Terminal("||");
+            auto terminal_logical_and_op = Terminal("&&");
+            auto terminal_inclusive_or_op = Terminal("|");
+            auto terminal_exclusive_or_op = Terminal("^");
+            auto terminal_bitwise_and_op = Terminal("&");
+            auto terminal_equality_op1 = Terminal("==");
+            auto terminal_equality_op2 = Terminal("!=");
+            auto terminal_add_op1 = Terminal("+");
+            auto terminal_add_op2 = Terminal("-");
+            auto terminal_mult_op1 = Terminal("*");
+            auto terminal_mult_op2 = Terminal("/");
+            auto terminal_mult_op3 = Terminal("%");
+            auto terminal_left_paren = Terminal("(");
+            auto terminal_right_paren = Terminal(")");
+            auto terminal_left_brace = Terminal("{");
+            auto terminal_right_brace = Terminal("}");
+            auto terminal_semicolon = Terminal(";");
 
             auto lambda_symbol = GrammarSymbol(GrammarSymbol::GST_LAMBDA);
 
@@ -670,21 +598,21 @@ namespace SyntaxAnalyzerUnitTests
                 (expression, { { assingment_expression } })
                 ;
 
-            TParsedString str2 = { terminal_left_brace_lexeme, terminal_lexeme, terminal_ass_op1_lexeme, terminal_lexeme, terminal_semicolon_lexeme, terminal_right_brace_lexeme };
-            TParsedString str3 = { terminal_left_brace_lexeme, terminal_lexeme, terminal_ass_op2_lexeme, terminal_lexeme, terminal_semicolon_lexeme, terminal_right_brace_lexeme };
-            TParsedString str4 = { terminal_left_brace_lexeme, terminal_lexeme, terminal_ass_op2_lexeme, terminal_lexeme, terminal_or_op_lexeme, terminal_lexeme, terminal_semicolon_lexeme, terminal_right_brace_lexeme };
-            TParsedString str5 = { terminal_left_brace_lexeme, terminal_lexeme, terminal_ass_op2_lexeme, terminal_lexeme, terminal_logical_and_op_lexeme, terminal_lexeme, terminal_semicolon_lexeme, terminal_right_brace_lexeme };
-            TParsedString str6 = { terminal_left_brace_lexeme, terminal_lexeme, terminal_ass_op1_lexeme, terminal_lexeme, terminal_exclusive_or_op_lexeme, terminal_lexeme, terminal_semicolon_lexeme, terminal_right_brace_lexeme };
-            TParsedString str7 = { terminal_left_brace_lexeme, terminal_lexeme, terminal_ass_op1_lexeme, terminal_lexeme, terminal_inclusive_or_op_lexeme, terminal_lexeme, terminal_inclusive_or_op_lexeme, terminal_lexeme, terminal_semicolon_lexeme, terminal_right_brace_lexeme };
-            TParsedString str8 = { terminal_left_brace_lexeme, terminal_lexeme, terminal_ass_op1_lexeme, terminal_lexeme, terminal_mult_op1_lexeme, terminal_lexeme, terminal_semicolon_lexeme, terminal_right_brace_lexeme };
-            TParsedString str9 = { terminal_left_brace_lexeme, terminal_lexeme, terminal_ass_op1_lexeme, terminal_lexeme, terminal_mult_op1_lexeme, terminal_lexeme, terminal_add_op2_lexeme, terminal_lexeme, terminal_semicolon_lexeme, terminal_right_brace_lexeme };
-            TParsedString str10 = { terminal_left_brace_lexeme, terminal_lexeme, terminal_ass_op1_lexeme, terminal_lexeme, terminal_add_op1_lexeme, terminal_lexeme, terminal_mult_op2_lexeme, terminal_lexeme, terminal_semicolon_lexeme, terminal_right_brace_lexeme };
-            TParsedString str11 = { terminal_left_brace_lexeme, terminal_lexeme, terminal_mult_op1_lexeme, terminal_lexeme, terminal_add_op1_lexeme, terminal_lexeme, terminal_semicolon_lexeme, terminal_right_brace_lexeme };
-            TParsedString str12 = { terminal_left_brace_lexeme, terminal_lexeme, terminal_add_op1_lexeme, terminal_lexeme, terminal_mult_op1_lexeme, terminal_lexeme, terminal_semicolon_lexeme, terminal_right_brace_lexeme };
-            TParsedString str13 = { terminal_left_brace_lexeme, terminal_lexeme, terminal_ass_op1_lexeme, terminal_left_paren_lexeme, terminal_lexeme, terminal_add_op1_lexeme, terminal_lexeme, terminal_right_paren_lexeme, terminal_mult_op1_lexeme, terminal_lexeme, terminal_semicolon_lexeme, terminal_right_brace_lexeme };
+            TSyntaxAnalyzerInput str2 = { terminal_left_brace, terminal, terminal_ass_op1, terminal, terminal_semicolon, terminal_right_brace };
+            TSyntaxAnalyzerInput str3 = { terminal_left_brace, terminal, terminal_ass_op2, terminal, terminal_semicolon, terminal_right_brace };
+            TSyntaxAnalyzerInput str4 = { terminal_left_brace, terminal, terminal_ass_op2, terminal, terminal_logical_or_op, terminal, terminal_semicolon, terminal_right_brace };
+            TSyntaxAnalyzerInput str5 = { terminal_left_brace, terminal, terminal_ass_op2, terminal, terminal_logical_and_op, terminal, terminal_semicolon, terminal_right_brace };
+            TSyntaxAnalyzerInput str6 = { terminal_left_brace, terminal, terminal_ass_op1, terminal, terminal_exclusive_or_op, terminal, terminal_semicolon, terminal_right_brace };
+            TSyntaxAnalyzerInput str7 = { terminal_left_brace, terminal, terminal_ass_op1, terminal, terminal_inclusive_or_op, terminal, terminal_inclusive_or_op, terminal, terminal_semicolon, terminal_right_brace };
+            TSyntaxAnalyzerInput str8 = { terminal_left_brace, terminal, terminal_ass_op1, terminal, terminal_mult_op1, terminal, terminal_semicolon, terminal_right_brace };
+            TSyntaxAnalyzerInput str9 = { terminal_left_brace, terminal, terminal_ass_op1, terminal, terminal_mult_op1, terminal, terminal_add_op2, terminal, terminal_semicolon, terminal_right_brace };
+            TSyntaxAnalyzerInput str10 = { terminal_left_brace, terminal, terminal_ass_op1, terminal, terminal_add_op1, terminal, terminal_mult_op2, terminal, terminal_semicolon, terminal_right_brace };
+            TSyntaxAnalyzerInput str11 = { terminal_left_brace, terminal, terminal_mult_op1, terminal, terminal_add_op1, terminal, terminal_semicolon, terminal_right_brace };
+            TSyntaxAnalyzerInput str12 = { terminal_left_brace, terminal, terminal_add_op1, terminal, terminal_mult_op1, terminal, terminal_semicolon, terminal_right_brace };
+            TSyntaxAnalyzerInput str13 = { terminal_left_brace, terminal, terminal_ass_op1, terminal_left_paren, terminal, terminal_add_op1, terminal, terminal_right_paren, terminal_mult_op1, terminal, terminal_semicolon, terminal_right_brace };
 
-            TParsedString str14 = { terminal_left_brace_lexeme, terminal_right_brace_lexeme };
-            TParsedString str15 = { terminal_left_brace_lexeme, terminal_semicolon_lexeme, terminal_right_brace_lexeme };
+            TSyntaxAnalyzerInput str14 = { terminal_left_brace, terminal_right_brace };
+            TSyntaxAnalyzerInput str15 = { terminal_left_brace, terminal_semicolon, terminal_right_brace };
             
             SyntaxAnalyzer sa(grammar);
             Assert::IsTrue(sa.Analyze(str2));
@@ -702,11 +630,11 @@ namespace SyntaxAnalyzerUnitTests
             Assert::IsTrue(sa.Analyze(str14));
             Assert::IsTrue(sa.Analyze(str15));
 
-            TParsedString inv_str_1 = { terminal_left_brace_lexeme, terminal_logical_and_op_lexeme, terminal_right_brace_lexeme };
-            TParsedString inv_str_2 = { terminal_left_brace_lexeme, terminal_lexeme, terminal_add_op1_lexeme, terminal_right_brace_lexeme };
-            TParsedString inv_str_3 = { terminal_left_brace_lexeme, terminal_lexeme, terminal_add_op1_lexeme, terminal_lexeme, terminal_right_paren_lexeme, terminal_right_brace_lexeme };
-            TParsedString inv_str_4 = { terminal_left_brace_lexeme, terminal_lexeme, terminal_left_paren_lexeme, terminal_add_op1_lexeme, terminal_lexeme, terminal_right_paren_lexeme, terminal_right_brace_lexeme };
-            TParsedString inv_str_5 = { terminal_lexeme, terminal_ass_op1_lexeme, terminal_lexeme };
+            TSyntaxAnalyzerInput inv_str_1 = { terminal_left_brace, terminal_logical_and_op, terminal_right_brace };
+            TSyntaxAnalyzerInput inv_str_2 = { terminal_left_brace, terminal, terminal_add_op1, terminal_right_brace };
+            TSyntaxAnalyzerInput inv_str_3 = { terminal_left_brace, terminal, terminal_add_op1, terminal, terminal_right_paren, terminal_right_brace };
+            TSyntaxAnalyzerInput inv_str_4 = { terminal_left_brace, terminal, terminal_left_paren, terminal_add_op1, terminal, terminal_right_paren, terminal_right_brace };
+            TSyntaxAnalyzerInput inv_str_5 = { terminal, terminal_ass_op1, terminal };
             Assert::IsFalse(sa.Analyze(inv_str_1));
             Assert::IsFalse(sa.Analyze(inv_str_2));
             Assert::IsFalse(sa.Analyze(inv_str_3));
@@ -715,85 +643,83 @@ namespace SyntaxAnalyzerUnitTests
 
         TEST_METHOD(SACppTest06)
         {
-            typedef LexicalAnalysis::TParsedString TParsedString;
-
-            auto assingment_operator = GrammarSymbol("assignment-operator");
-            auto assingment_expression = GrammarSymbol("assignment-expression");
-            auto logical_or_expression = GrammarSymbol("logical-or-expression");
-            auto logical_or_expression_ex = GrammarSymbol("logical-or-expression-ex");
-            auto logical_and_expression = GrammarSymbol("logical-and-expression");
-            auto logical_and_expression_ex = GrammarSymbol("logical-and-expression-ex");
-            auto inclusive_or_expression = GrammarSymbol("inclusive-or-expression");
-            auto inclusive_or_expression_ex = GrammarSymbol("inclusive-or-expression-ex");
-            auto exclusive_or_expression = GrammarSymbol("exlusive-or-expression");
-            auto exclusive_or_expression_ex = GrammarSymbol("exclusive-or-expression-ex");
-            auto and_expression = GrammarSymbol("and-expression");
-            auto and_expression_ex = GrammarSymbol("and-expression-ex");
-            auto equality_expression = GrammarSymbol("equality-expression");
-            auto equality_expression_ex = GrammarSymbol("equality-expression-ex");
-            auto additive_expression = GrammarSymbol("additive-expression");
-            auto additive_expression_ex = GrammarSymbol("additive-expression-ex");
-            auto multiplicative_expression = GrammarSymbol("multiplicative-expression");
-            auto multiplicative_expression_ex = GrammarSymbol("multiplicative-expression-ex");
-            auto primary_expression = GrammarSymbol("primary-expression");
-            auto expression = GrammarSymbol("expression");
-            auto expression_optional = GrammarSymbol("expression-opt");
-            auto expression_statement = GrammarSymbol("expression-statement");
-            auto if_statement = GrammarSymbol("if-statement");
-            auto while_statement = GrammarSymbol("while-statement");
-            auto statement = GrammarSymbol("statement");
-            auto statement_sequence = GrammarSymbol("statement-sequence");
-            auto statement_sequence_optional = GrammarSymbol("statement-sequence-opt");
-            auto compound_statement = GrammarSymbol("compound-statement");
+            auto assingment_operator = NonTerminal("assignment-operator");
+            auto assingment_expression = NonTerminal("assignment-expression");
+            auto logical_or_expression = NonTerminal("logical-or-expression");
+            auto logical_or_expression_ex = NonTerminal("logical-or-expression-ex");
+            auto logical_and_expression = NonTerminal("logical-and-expression");
+            auto logical_and_expression_ex = NonTerminal("logical-and-expression-ex");
+            auto inclusive_or_expression = NonTerminal("inclusive-or-expression");
+            auto inclusive_or_expression_ex = NonTerminal("inclusive-or-expression-ex");
+            auto exclusive_or_expression = NonTerminal("exlusive-or-expression");
+            auto exclusive_or_expression_ex = NonTerminal("exclusive-or-expression-ex");
+            auto and_expression = NonTerminal("and-expression");
+            auto and_expression_ex = NonTerminal("and-expression-ex");
+            auto equality_expression = NonTerminal("equality-expression");
+            auto equality_expression_ex = NonTerminal("equality-expression-ex");
+            auto additive_expression = NonTerminal("additive-expression");
+            auto additive_expression_ex = NonTerminal("additive-expression-ex");
+            auto multiplicative_expression = NonTerminal("multiplicative-expression");
+            auto multiplicative_expression_ex = NonTerminal("multiplicative-expression-ex");
+            auto primary_expression = NonTerminal("primary-expression");
+            auto expression = NonTerminal("expression");
+            auto expression_optional = NonTerminal("expression-opt");
+            auto expression_statement = NonTerminal("expression-statement");
+            auto if_statement = NonTerminal("if-statement");
+            auto while_statement = NonTerminal("while-statement");
+            auto statement = NonTerminal("statement");
+            auto statement_sequence = NonTerminal("statement-sequence");
+            auto statement_sequence_optional = NonTerminal("statement-sequence-opt");
+            auto compound_statement = NonTerminal("compound-statement");
 
 
-            auto terminal_lexeme = LexemeInfo{ 0, "ID", 0 };
-            auto terminal_ass_op1_lexeme = LexemeInfo{ 0, "=", 0 };
-            auto terminal_ass_op2_lexeme = LexemeInfo{ 0, "+=", 0 };
-            auto terminal_or_op_lexeme = LexemeInfo{ 0, "||", 0 };
-            auto terminal_logical_and_op_lexeme = LexemeInfo{ 0, "&&", 0 };
-            auto terminal_inclusive_or_op_lexeme = LexemeInfo{ 0, "|", 0 };
-            auto terminal_exclusive_or_op_lexeme = LexemeInfo{ 0, "^", 0 };
-            auto terminal_bitwise_and_op_lexeme = LexemeInfo{ 0, "&", 0 };
-            auto terminal_equality_op1_lexeme = LexemeInfo{ 0, "==", 0 };
-            auto terminal_equality_op2_lexeme = LexemeInfo{ 0, "!=", 0 };
-            auto terminal_add_op1_lexeme = LexemeInfo{ 0, "+", 0 };
-            auto terminal_add_op2_lexeme = LexemeInfo{ 0, "-", 0 };
-            auto terminal_mult_op1_lexeme = LexemeInfo{ 0, "*", 0 };
-            auto terminal_mult_op2_lexeme = LexemeInfo{ 0, "/", 0 };
-            auto terminal_mult_op3_lexeme = LexemeInfo{ 0, "%", 0 };
-            auto terminal_left_paren_lexeme = LexemeInfo{ 0, "(", 0 };
-            auto terminal_right_paren_lexeme = LexemeInfo{ 0, ")", 0 };
-            auto terminal_left_brace_lexeme = LexemeInfo{ 0, "{", 0 };
-            auto terminal_right_brace_lexeme = LexemeInfo{ 0, "}", 0 };
-            auto terminal_semicolon_lexeme = LexemeInfo{ 0, ";", 0 };
-            auto terminal_if_lexeme = LexemeInfo{ 0, "if", 0 };
-            auto terminal_else_lexeme = LexemeInfo{ 0, "else", 0 };
-            auto terminal_while_lexeme = LexemeInfo{ 0, "while", 0 };
+            auto terminal_lexeme =                  LexemeInfo{ 0, "ID"     , 0 };
+            auto terminal_ass_op1_lexeme =          LexemeInfo{ 0, "="      , 0 };
+            auto terminal_ass_op2_lexeme =          LexemeInfo{ 0, "+="     , 0 };
+            auto terminal_or_op_lexeme =            LexemeInfo{ 0, "||"    , 0 };
+            auto terminal_logical_and_op_lexeme =   LexemeInfo{ 0, "&&"    , 0 };
+            auto terminal_inclusive_or_op_lexeme =  LexemeInfo{ 0, "|"     ,  0 };
+            auto terminal_exclusive_or_op_lexeme =  LexemeInfo{ 0, "^"     , 0 };
+            auto terminal_bitwise_and_op_lexeme =   LexemeInfo{ 0, "&"     , 0 };
+            auto terminal_equality_op1_lexeme =     LexemeInfo{ 0, "=="    , 0 };
+            auto terminal_equality_op2_lexeme =     LexemeInfo{ 0, "!="    , 0 };
+            auto terminal_add_op1_lexeme =          LexemeInfo{ 0, "+"     , 0 };
+            auto terminal_add_op2_lexeme =          LexemeInfo{ 0, "-"     , 0 };
+            auto terminal_mult_op1_lexeme =         LexemeInfo{ 0, "*"     , 0 };
+            auto terminal_mult_op2_lexeme =         LexemeInfo{ 0, "/"     , 0 };
+            auto terminal_mult_op3_lexeme =         LexemeInfo{ 0, "%"     , 0 };
+            auto terminal_left_paren_lexeme =       LexemeInfo{ 0, "("     , 0 };
+            auto terminal_right_paren_lexeme =      LexemeInfo{ 0, ")"     , 0 };
+            auto terminal_left_brace_lexeme =       LexemeInfo{ 0, "{"     , 0 };
+            auto terminal_right_brace_lexeme =      LexemeInfo{ 0, "}"     , 0 };
+            auto terminal_semicolon_lexeme =        LexemeInfo{ 0, ";"     , 0 };
+            auto terminal_if_lexeme =               LexemeInfo{ 0, "if"    , 0 };
+            auto terminal_else_lexeme =             LexemeInfo{ 0, "else"  , 0 };
+            auto terminal_while_lexeme =            LexemeInfo{ 0, "while", 0 };
 
-            auto terminal = GrammarSymbol(terminal_lexeme);
-            auto terminal_ass_op1 = GrammarSymbol(terminal_ass_op1_lexeme);
-            auto terminal_ass_op2 = GrammarSymbol(LexemeInfo{ terminal_ass_op2_lexeme });
-            auto terminal_logical_or_op = GrammarSymbol(terminal_or_op_lexeme);
-            auto terminal_logical_and_op = GrammarSymbol(terminal_logical_and_op_lexeme);
-            auto terminal_inclusive_or_op = GrammarSymbol(terminal_inclusive_or_op_lexeme);
-            auto terminal_exclusive_or_op = GrammarSymbol(terminal_exclusive_or_op_lexeme);
-            auto terminal_bitwise_and_op = GrammarSymbol(terminal_bitwise_and_op_lexeme);
-            auto terminal_equality_op1 = GrammarSymbol(terminal_equality_op1_lexeme);
-            auto terminal_equality_op2 = GrammarSymbol(terminal_equality_op2_lexeme);
-            auto terminal_add_op1 = GrammarSymbol(terminal_add_op1_lexeme);
-            auto terminal_add_op2 = GrammarSymbol(terminal_add_op2_lexeme);
-            auto terminal_mult_op1 = GrammarSymbol(terminal_mult_op1_lexeme);
-            auto terminal_mult_op2 = GrammarSymbol(terminal_mult_op2_lexeme);
-            auto terminal_mult_op3 = GrammarSymbol(terminal_mult_op3_lexeme);
-            auto terminal_left_paren = GrammarSymbol(terminal_left_paren_lexeme);
-            auto terminal_right_paren = GrammarSymbol(terminal_right_paren_lexeme);
-            auto terminal_left_brace = GrammarSymbol(terminal_left_brace_lexeme);
-            auto terminal_right_brace = GrammarSymbol(terminal_right_brace_lexeme);
-            auto terminal_semicolon = GrammarSymbol(terminal_semicolon_lexeme);
-            auto terminal_if = GrammarSymbol(terminal_if_lexeme);
-            auto terminal_else = GrammarSymbol(terminal_else_lexeme);
-            auto terminal_while = GrammarSymbol(terminal_while_lexeme);
+            auto terminal = Terminal("ID");
+            auto terminal_ass_op1 = Terminal("=");
+            auto terminal_ass_op2 = Terminal("+=");
+            auto terminal_logical_or_op = Terminal("||");
+            auto terminal_logical_and_op = Terminal("&&");
+            auto terminal_inclusive_or_op = Terminal("|");
+            auto terminal_exclusive_or_op = Terminal("^");
+            auto terminal_bitwise_and_op = Terminal("&");
+            auto terminal_equality_op1 = Terminal("==");
+            auto terminal_equality_op2 = Terminal("!=");
+            auto terminal_add_op1 = Terminal("+");
+            auto terminal_add_op2 = Terminal("-");
+            auto terminal_mult_op1 = Terminal("*");
+            auto terminal_mult_op2 = Terminal("/");
+            auto terminal_mult_op3 = Terminal("%");
+            auto terminal_left_paren = Terminal("(");
+            auto terminal_right_paren = Terminal(")");
+            auto terminal_left_brace = Terminal("{");
+            auto terminal_right_brace = Terminal("}");
+            auto terminal_semicolon = Terminal(";");
+            auto terminal_if = Terminal("if");
+            auto terminal_else = Terminal("else");
+            auto terminal_while = Terminal("while");
 
             auto lambda_symbol = GrammarSymbol(GrammarSymbol::GST_LAMBDA);
 
@@ -843,29 +769,29 @@ namespace SyntaxAnalyzerUnitTests
                 (expression, { { assingment_expression } })
                 ;
 
-            TParsedString str2 = { terminal_left_brace_lexeme, terminal_lexeme, terminal_ass_op1_lexeme, terminal_lexeme, terminal_semicolon_lexeme, terminal_right_brace_lexeme };
-            TParsedString str3 = { terminal_left_brace_lexeme, terminal_lexeme, terminal_ass_op2_lexeme, terminal_lexeme, terminal_semicolon_lexeme, terminal_right_brace_lexeme };
-            TParsedString str4 = { terminal_left_brace_lexeme, terminal_lexeme, terminal_ass_op2_lexeme, terminal_lexeme, terminal_or_op_lexeme, terminal_lexeme, terminal_semicolon_lexeme, terminal_right_brace_lexeme };
-            TParsedString str5 = { terminal_left_brace_lexeme, terminal_lexeme, terminal_ass_op2_lexeme, terminal_lexeme, terminal_logical_and_op_lexeme, terminal_lexeme, terminal_semicolon_lexeme, terminal_right_brace_lexeme };
-            TParsedString str6 = { terminal_left_brace_lexeme, terminal_lexeme, terminal_ass_op1_lexeme, terminal_lexeme, terminal_exclusive_or_op_lexeme, terminal_lexeme, terminal_semicolon_lexeme, terminal_right_brace_lexeme };
-            TParsedString str7 = { terminal_left_brace_lexeme, terminal_lexeme, terminal_ass_op1_lexeme, terminal_lexeme, terminal_inclusive_or_op_lexeme, terminal_lexeme, terminal_inclusive_or_op_lexeme, terminal_lexeme, terminal_semicolon_lexeme, terminal_right_brace_lexeme };
-            TParsedString str8 = { terminal_left_brace_lexeme, terminal_lexeme, terminal_ass_op1_lexeme, terminal_lexeme, terminal_mult_op1_lexeme, terminal_lexeme, terminal_semicolon_lexeme, terminal_right_brace_lexeme };
-            TParsedString str9 = { terminal_left_brace_lexeme, terminal_lexeme, terminal_ass_op1_lexeme, terminal_lexeme, terminal_mult_op1_lexeme, terminal_lexeme, terminal_add_op2_lexeme, terminal_lexeme, terminal_semicolon_lexeme, terminal_right_brace_lexeme };
-            TParsedString str10 = { terminal_left_brace_lexeme, terminal_lexeme, terminal_ass_op1_lexeme, terminal_lexeme, terminal_add_op1_lexeme, terminal_lexeme, terminal_mult_op2_lexeme, terminal_lexeme, terminal_semicolon_lexeme, terminal_right_brace_lexeme };
-            TParsedString str11 = { terminal_left_brace_lexeme, terminal_lexeme, terminal_mult_op1_lexeme, terminal_lexeme, terminal_add_op1_lexeme, terminal_lexeme, terminal_semicolon_lexeme, terminal_right_brace_lexeme };
-            TParsedString str12 = { terminal_left_brace_lexeme, terminal_lexeme, terminal_add_op1_lexeme, terminal_lexeme, terminal_mult_op1_lexeme, terminal_lexeme, terminal_semicolon_lexeme, terminal_right_brace_lexeme };
-            TParsedString str13 = { terminal_left_brace_lexeme, terminal_lexeme, terminal_ass_op1_lexeme, terminal_left_paren_lexeme, terminal_lexeme, terminal_add_op1_lexeme, terminal_lexeme, terminal_right_paren_lexeme, terminal_mult_op1_lexeme, terminal_lexeme, terminal_semicolon_lexeme, terminal_right_brace_lexeme };
+            TSyntaxAnalyzerInput str2 = { terminal_left_brace, terminal, terminal_ass_op1, terminal, terminal_semicolon, terminal_right_brace };
+            TSyntaxAnalyzerInput str3 = { terminal_left_brace, terminal, terminal_ass_op2, terminal, terminal_semicolon, terminal_right_brace };
+            TSyntaxAnalyzerInput str4 = { terminal_left_brace, terminal, terminal_ass_op2, terminal, terminal_logical_or_op, terminal, terminal_semicolon, terminal_right_brace };
+            TSyntaxAnalyzerInput str5 = { terminal_left_brace, terminal, terminal_ass_op2, terminal, terminal_logical_and_op, terminal, terminal_semicolon, terminal_right_brace };
+            TSyntaxAnalyzerInput str6 = { terminal_left_brace, terminal, terminal_ass_op1, terminal, terminal_exclusive_or_op, terminal, terminal_semicolon, terminal_right_brace };
+            TSyntaxAnalyzerInput str7 = { terminal_left_brace, terminal, terminal_ass_op1, terminal, terminal_inclusive_or_op, terminal, terminal_inclusive_or_op, terminal, terminal_semicolon, terminal_right_brace };
+            TSyntaxAnalyzerInput str8 = { terminal_left_brace, terminal, terminal_ass_op1, terminal, terminal_mult_op1, terminal, terminal_semicolon, terminal_right_brace };
+            TSyntaxAnalyzerInput str9 = { terminal_left_brace, terminal, terminal_ass_op1, terminal, terminal_mult_op1, terminal, terminal_add_op2, terminal, terminal_semicolon, terminal_right_brace };
+            TSyntaxAnalyzerInput str10 = { terminal_left_brace, terminal, terminal_ass_op1, terminal, terminal_add_op1, terminal, terminal_mult_op2, terminal, terminal_semicolon, terminal_right_brace };
+            TSyntaxAnalyzerInput str11 = { terminal_left_brace, terminal, terminal_mult_op1, terminal, terminal_add_op1, terminal, terminal_semicolon, terminal_right_brace };
+            TSyntaxAnalyzerInput str12 = { terminal_left_brace, terminal, terminal_add_op1, terminal, terminal_mult_op1, terminal, terminal_semicolon, terminal_right_brace };
+            TSyntaxAnalyzerInput str13 = { terminal_left_brace, terminal, terminal_ass_op1, terminal_left_paren, terminal, terminal_add_op1, terminal, terminal_right_paren, terminal_mult_op1, terminal, terminal_semicolon, terminal_right_brace };
 
-            TParsedString str14 = { terminal_left_brace_lexeme, terminal_right_brace_lexeme };
-            TParsedString str15 = { terminal_left_brace_lexeme, terminal_semicolon_lexeme, terminal_right_brace_lexeme };
-            TParsedString str16 = { terminal_left_brace_lexeme, terminal_left_brace_lexeme, terminal_right_brace_lexeme, terminal_right_brace_lexeme };
+            TSyntaxAnalyzerInput str14 = { terminal_left_brace, terminal_right_brace };
+            TSyntaxAnalyzerInput str15 = { terminal_left_brace, terminal_semicolon, terminal_right_brace };
+            TSyntaxAnalyzerInput str16 = { terminal_left_brace, terminal_left_brace, terminal_right_brace, terminal_right_brace };
 
             // if statement
-            TParsedString str17 = { terminal_if_lexeme, terminal_left_paren_lexeme, terminal_lexeme, terminal_right_paren_lexeme, terminal_lexeme, terminal_semicolon_lexeme };
-            TParsedString str18 = { terminal_if_lexeme, terminal_left_paren_lexeme, terminal_lexeme, terminal_right_paren_lexeme, terminal_lexeme, terminal_semicolon_lexeme, terminal_else_lexeme, terminal_lexeme, terminal_semicolon_lexeme};
+            TSyntaxAnalyzerInput str17 = { terminal_if, terminal_left_paren, terminal, terminal_right_paren, terminal, terminal_semicolon };
+            TSyntaxAnalyzerInput str18 = { terminal_if, terminal_left_paren, terminal, terminal_right_paren, terminal, terminal_semicolon, terminal_else, terminal, terminal_semicolon};
 
             // while statement
-            TParsedString str19 = { terminal_while_lexeme, terminal_left_paren_lexeme, terminal_lexeme, terminal_right_paren_lexeme, terminal_left_brace_lexeme, terminal_lexeme, terminal_semicolon_lexeme, terminal_right_brace_lexeme };
+            TSyntaxAnalyzerInput str19 = { terminal_while, terminal_left_paren, terminal, terminal_right_paren, terminal_left_brace, terminal, terminal_semicolon, terminal_right_brace };
 
             SyntaxAnalyzer sa(grammar);
             Assert::IsTrue(sa.Analyze(str2));
@@ -887,11 +813,11 @@ namespace SyntaxAnalyzerUnitTests
             Assert::IsTrue(sa.Analyze(str18));
             Assert::IsTrue(sa.Analyze(str19));
 
-            TParsedString inv_str_1 = { terminal_left_brace_lexeme, terminal_logical_and_op_lexeme, terminal_right_brace_lexeme };
-            TParsedString inv_str_2 = { terminal_left_brace_lexeme, terminal_lexeme, terminal_add_op1_lexeme, terminal_right_brace_lexeme };
-            TParsedString inv_str_3 = { terminal_left_brace_lexeme, terminal_lexeme, terminal_add_op1_lexeme, terminal_lexeme, terminal_right_paren_lexeme, terminal_right_brace_lexeme };
-            TParsedString inv_str_4 = { terminal_left_brace_lexeme, terminal_lexeme, terminal_left_paren_lexeme, terminal_add_op1_lexeme, terminal_lexeme, terminal_right_paren_lexeme, terminal_right_brace_lexeme };
-            TParsedString inv_str_5 = { terminal_lexeme, terminal_ass_op1_lexeme, terminal_lexeme };
+            TSyntaxAnalyzerInput inv_str_1 = { terminal_left_brace, terminal_logical_and_op, terminal_right_brace };
+            TSyntaxAnalyzerInput inv_str_2 = { terminal_left_brace, terminal, terminal_add_op1, terminal_right_brace };
+            TSyntaxAnalyzerInput inv_str_3 = { terminal_left_brace, terminal, terminal_add_op1, terminal, terminal_right_paren, terminal_right_brace };
+            TSyntaxAnalyzerInput inv_str_4 = { terminal_left_brace, terminal, terminal_left_paren, terminal_add_op1, terminal, terminal_right_paren, terminal_right_brace };
+            TSyntaxAnalyzerInput inv_str_5 = { terminal, terminal_ass_op1, terminal };
             Assert::IsFalse(sa.Analyze(inv_str_1));
             Assert::IsFalse(sa.Analyze(inv_str_2));
             Assert::IsFalse(sa.Analyze(inv_str_3));
@@ -900,59 +826,58 @@ namespace SyntaxAnalyzerUnitTests
 
         TEST_METHOD(SAShouldGenerateCppGrammar)
         {
-            typedef LexicalAnalysis::TParsedString TParsedString;
-
             auto p_grammar = GenerateGrammarCpp();
 
-            auto terminal_lexeme = LexemeInfo{ 0, "ID", 0 };
-            auto terminal_ass_op1_lexeme = LexemeInfo{ 0, "=", 0 };
-            auto terminal_ass_op2_lexeme = LexemeInfo{ 0, "+=", 0 };
-            auto terminal_or_op_lexeme = LexemeInfo{ 0, "||", 0 };
-            auto terminal_logical_and_op_lexeme = LexemeInfo{ 0, "&&", 0 };
-            auto terminal_inclusive_or_op_lexeme = LexemeInfo{ 0, "|", 0 };
-            auto terminal_exclusive_or_op_lexeme = LexemeInfo{ 0, "^", 0 };
-            auto terminal_bitwise_and_op_lexeme = LexemeInfo{ 0, "&", 0 };
-            auto terminal_equality_op1_lexeme = LexemeInfo{ 0, "==", 0 };
-            auto terminal_equality_op2_lexeme = LexemeInfo{ 0, "!=", 0 };
-            auto terminal_add_op1_lexeme = LexemeInfo{ 0, "+", 0 };
-            auto terminal_add_op2_lexeme = LexemeInfo{ 0, "-", 0 };
-            auto terminal_mult_op1_lexeme = LexemeInfo{ 0, "*", 0 };
-            auto terminal_mult_op2_lexeme = LexemeInfo{ 0, "/", 0 };
-            auto terminal_mult_op3_lexeme = LexemeInfo{ 0, "%", 0 };
-            auto terminal_left_paren_lexeme = LexemeInfo{ 0, "(", 0 };
-            auto terminal_right_paren_lexeme = LexemeInfo{ 0, ")", 0 };
-            auto terminal_left_brace_lexeme = LexemeInfo{ 0, "{", 0 };
-            auto terminal_right_brace_lexeme = LexemeInfo{ 0, "}", 0 };
-            auto terminal_semicolon_lexeme = LexemeInfo{ 0, ";", 0 };
-            auto terminal_if_lexeme = LexemeInfo{ 0, "if", 0 };
-            auto terminal_else_lexeme = LexemeInfo{ 0, "else", 0 };
-            auto terminal_while_lexeme = LexemeInfo{ 0, "while", 0 };
+            auto terminal = Terminal("ID");
+            auto terminal_ass_op1 = Terminal("=");
+            auto terminal_ass_op2 = Terminal("+=");
+            auto terminal_logical_or_op = Terminal("||");
+            auto terminal_logical_and_op = Terminal("&&");
+            auto terminal_inclusive_or_op = Terminal("|");
+            auto terminal_exclusive_or_op = Terminal("^");
+            auto terminal_bitwise_and_op = Terminal("&");
+            auto terminal_equality_op1 = Terminal("==");
+            auto terminal_equality_op2 = Terminal("!=");
+            auto terminal_add_op1 = Terminal("+");
+            auto terminal_add_op2 = Terminal("-");
+            auto terminal_mult_op1 = Terminal("*");
+            auto terminal_mult_op2 = Terminal("/");
+            auto terminal_mult_op3 = Terminal("%");
+            auto terminal_left_paren = Terminal("(");
+            auto terminal_right_paren = Terminal(")");
+            auto terminal_left_brace = Terminal("{");
+            auto terminal_right_brace = Terminal("}");
+            auto terminal_semicolon = Terminal(";");
+            auto terminal_if = Terminal("if");
+            auto terminal_else = Terminal("else");
+            auto terminal_while = Terminal("while");
 
-            TParsedString str2 = { terminal_left_brace_lexeme, terminal_lexeme, terminal_ass_op1_lexeme, terminal_lexeme, terminal_semicolon_lexeme, terminal_right_brace_lexeme };
-            TParsedString str3 = { terminal_left_brace_lexeme, terminal_lexeme, terminal_ass_op2_lexeme, terminal_lexeme, terminal_semicolon_lexeme, terminal_right_brace_lexeme };
-            TParsedString str4 = { terminal_left_brace_lexeme, terminal_lexeme, terminal_ass_op2_lexeme, terminal_lexeme, terminal_or_op_lexeme, terminal_lexeme, terminal_semicolon_lexeme, terminal_right_brace_lexeme };
-            TParsedString str5 = { terminal_left_brace_lexeme, terminal_lexeme, terminal_ass_op2_lexeme, terminal_lexeme, terminal_logical_and_op_lexeme, terminal_lexeme, terminal_semicolon_lexeme, terminal_right_brace_lexeme };
-            TParsedString str6 = { terminal_left_brace_lexeme, terminal_lexeme, terminal_ass_op1_lexeme, terminal_lexeme, terminal_exclusive_or_op_lexeme, terminal_lexeme, terminal_semicolon_lexeme, terminal_right_brace_lexeme };
-            TParsedString str7 = { terminal_left_brace_lexeme, terminal_lexeme, terminal_ass_op1_lexeme, terminal_lexeme, terminal_inclusive_or_op_lexeme, terminal_lexeme, terminal_inclusive_or_op_lexeme, terminal_lexeme, terminal_semicolon_lexeme, terminal_right_brace_lexeme };
-            TParsedString str8 = { terminal_left_brace_lexeme, terminal_lexeme, terminal_ass_op1_lexeme, terminal_lexeme, terminal_mult_op1_lexeme, terminal_lexeme, terminal_semicolon_lexeme, terminal_right_brace_lexeme };
-            TParsedString str9 = { terminal_left_brace_lexeme, terminal_lexeme, terminal_ass_op1_lexeme, terminal_lexeme, terminal_mult_op1_lexeme, terminal_lexeme, terminal_add_op2_lexeme, terminal_lexeme, terminal_semicolon_lexeme, terminal_right_brace_lexeme };
-            TParsedString str10 = { terminal_left_brace_lexeme, terminal_lexeme, terminal_ass_op1_lexeme, terminal_lexeme, terminal_add_op1_lexeme, terminal_lexeme, terminal_mult_op2_lexeme, terminal_lexeme, terminal_semicolon_lexeme, terminal_right_brace_lexeme };
-            TParsedString str11 = { terminal_left_brace_lexeme, terminal_lexeme, terminal_mult_op1_lexeme, terminal_lexeme, terminal_add_op1_lexeme, terminal_lexeme, terminal_semicolon_lexeme, terminal_right_brace_lexeme };
-            TParsedString str12 = { terminal_left_brace_lexeme, terminal_lexeme, terminal_add_op1_lexeme, terminal_lexeme, terminal_mult_op1_lexeme, terminal_lexeme, terminal_semicolon_lexeme, terminal_right_brace_lexeme };
-            TParsedString str13 = { terminal_left_brace_lexeme, terminal_lexeme, terminal_ass_op1_lexeme, terminal_left_paren_lexeme, terminal_lexeme, terminal_add_op1_lexeme, terminal_lexeme, terminal_right_paren_lexeme, terminal_mult_op1_lexeme, terminal_lexeme, terminal_semicolon_lexeme, terminal_right_brace_lexeme };
 
-            TParsedString str14 = { terminal_left_brace_lexeme, terminal_right_brace_lexeme };
-            TParsedString str15 = { terminal_left_brace_lexeme, terminal_semicolon_lexeme, terminal_right_brace_lexeme };
-            TParsedString str16 = { terminal_left_brace_lexeme, terminal_left_brace_lexeme, terminal_right_brace_lexeme, terminal_right_brace_lexeme };
+            TSyntaxAnalyzerInput str2 = { terminal_left_brace, terminal, terminal_ass_op1, terminal, terminal_semicolon, terminal_right_brace };
+            TSyntaxAnalyzerInput str3 = { terminal_left_brace, terminal, terminal_ass_op2, terminal, terminal_semicolon, terminal_right_brace };
+            TSyntaxAnalyzerInput str4 = { terminal_left_brace, terminal, terminal_ass_op2, terminal, terminal_logical_or_op, terminal, terminal_semicolon, terminal_right_brace };
+            TSyntaxAnalyzerInput str5 = { terminal_left_brace, terminal, terminal_ass_op2, terminal, terminal_logical_and_op, terminal, terminal_semicolon, terminal_right_brace };
+            TSyntaxAnalyzerInput str6 = { terminal_left_brace, terminal, terminal_ass_op1, terminal, terminal_exclusive_or_op, terminal, terminal_semicolon, terminal_right_brace };
+            TSyntaxAnalyzerInput str7 = { terminal_left_brace, terminal, terminal_ass_op1, terminal, terminal_inclusive_or_op, terminal, terminal_inclusive_or_op, terminal, terminal_semicolon, terminal_right_brace };
+            TSyntaxAnalyzerInput str8 = { terminal_left_brace, terminal, terminal_ass_op1, terminal, terminal_mult_op1, terminal, terminal_semicolon, terminal_right_brace };
+            TSyntaxAnalyzerInput str9 = { terminal_left_brace, terminal, terminal_ass_op1, terminal, terminal_mult_op1, terminal, terminal_add_op2, terminal, terminal_semicolon, terminal_right_brace };
+            TSyntaxAnalyzerInput str10 = { terminal_left_brace, terminal, terminal_ass_op1, terminal, terminal_add_op1, terminal, terminal_mult_op2, terminal, terminal_semicolon, terminal_right_brace };
+            TSyntaxAnalyzerInput str11 = { terminal_left_brace, terminal, terminal_mult_op1, terminal, terminal_add_op1, terminal, terminal_semicolon, terminal_right_brace };
+            TSyntaxAnalyzerInput str12 = { terminal_left_brace, terminal, terminal_add_op1, terminal, terminal_mult_op1, terminal, terminal_semicolon, terminal_right_brace };
+            TSyntaxAnalyzerInput str13 = { terminal_left_brace, terminal, terminal_ass_op1, terminal_left_paren, terminal, terminal_add_op1, terminal, terminal_right_paren, terminal_mult_op1, terminal, terminal_semicolon, terminal_right_brace };
+
+            TSyntaxAnalyzerInput str14 = { terminal_left_brace, terminal_right_brace };
+            TSyntaxAnalyzerInput str15 = { terminal_left_brace, terminal_semicolon, terminal_right_brace };
+            TSyntaxAnalyzerInput str16 = { terminal_left_brace, terminal_left_brace, terminal_right_brace, terminal_right_brace };
 
             
             // if statement
-            TParsedString str17 = { terminal_if_lexeme, terminal_left_paren_lexeme, terminal_lexeme, terminal_right_paren_lexeme, terminal_lexeme, terminal_semicolon_lexeme };
-            TParsedString str18 = { terminal_if_lexeme, terminal_left_paren_lexeme, terminal_lexeme, terminal_right_paren_lexeme, terminal_lexeme, terminal_semicolon_lexeme, terminal_else_lexeme, terminal_lexeme, terminal_semicolon_lexeme };
+            TSyntaxAnalyzerInput str17 = { terminal_if, terminal_left_paren, terminal, terminal_right_paren, terminal, terminal_semicolon };
+            TSyntaxAnalyzerInput str18 = { terminal_if, terminal_left_paren, terminal, terminal_right_paren, terminal, terminal_semicolon, terminal_else, terminal, terminal_semicolon };
 
             // while statement
-            TParsedString str19 = { terminal_while_lexeme, terminal_left_paren_lexeme, terminal_lexeme, terminal_right_paren_lexeme, terminal_left_brace_lexeme, terminal_lexeme, terminal_semicolon_lexeme, terminal_right_brace_lexeme };
-            TParsedString str20 = { terminal_while_lexeme, terminal_left_paren_lexeme, terminal_lexeme, terminal_right_paren_lexeme, terminal_left_brace_lexeme, terminal_lexeme, terminal_semicolon_lexeme, terminal_lexeme, terminal_semicolon_lexeme, terminal_right_brace_lexeme };
+            TSyntaxAnalyzerInput str19 = { terminal_while, terminal_left_paren, terminal, terminal_right_paren, terminal_left_brace, terminal, terminal_semicolon, terminal_right_brace };
+            TSyntaxAnalyzerInput str20 = { terminal_while, terminal_left_paren, terminal, terminal_right_paren, terminal_left_brace, terminal, terminal_semicolon, terminal, terminal_semicolon, terminal_right_brace };
 
             SyntaxAnalyzer sa(*p_grammar);
             Assert::IsTrue(sa.Analyze(str2));
@@ -974,11 +899,11 @@ namespace SyntaxAnalyzerUnitTests
             Assert::IsTrue(sa.Analyze(str18));
             Assert::IsTrue(sa.Analyze(str19));
 
-            TParsedString inv_str_1 = { terminal_left_brace_lexeme, terminal_logical_and_op_lexeme, terminal_right_brace_lexeme };
-            TParsedString inv_str_2 = { terminal_left_brace_lexeme, terminal_lexeme, terminal_add_op1_lexeme, terminal_right_brace_lexeme };
-            TParsedString inv_str_3 = { terminal_left_brace_lexeme, terminal_lexeme, terminal_add_op1_lexeme, terminal_lexeme, terminal_right_paren_lexeme, terminal_right_brace_lexeme };
-            TParsedString inv_str_4 = { terminal_left_brace_lexeme, terminal_lexeme, terminal_left_paren_lexeme, terminal_add_op1_lexeme, terminal_lexeme, terminal_right_paren_lexeme, terminal_right_brace_lexeme };
-            TParsedString inv_str_5 = { terminal_lexeme, terminal_ass_op1_lexeme, terminal_lexeme };
+            TSyntaxAnalyzerInput inv_str_1 = { terminal_left_brace, terminal_logical_and_op, terminal_right_brace };
+            TSyntaxAnalyzerInput inv_str_2 = { terminal_left_brace, terminal, terminal_add_op1, terminal_right_brace };
+            TSyntaxAnalyzerInput inv_str_3 = { terminal_left_brace, terminal, terminal_add_op1, terminal, terminal_right_paren, terminal_right_brace };
+            TSyntaxAnalyzerInput inv_str_4 = { terminal_left_brace, terminal, terminal_left_paren, terminal_add_op1, terminal, terminal_right_paren, terminal_right_brace };
+            TSyntaxAnalyzerInput inv_str_5 = { terminal, terminal_ass_op1, terminal };
             Assert::IsFalse(sa.Analyze(inv_str_1));
             Assert::IsFalse(sa.Analyze(inv_str_2));
             Assert::IsFalse(sa.Analyze(inv_str_3));
@@ -987,38 +912,36 @@ namespace SyntaxAnalyzerUnitTests
 
         TEST_METHOD(ShouldWorkWithBlockCorrectly)
         {
-            typedef LexicalAnalysis::TParsedString TParsedString;
-
             auto p_grammar = GenerateGrammarCpp();
 
-            auto terminal_lexeme = LexemeInfo{ 0, "ID", 0 };
-            auto terminal_ass_op1_lexeme = LexemeInfo{ 0, "=", 0 };
-            auto terminal_ass_op2_lexeme = LexemeInfo{ 0, "+=", 0 };
-            auto terminal_or_op_lexeme = LexemeInfo{ 0, "||", 0 };
-            auto terminal_logical_and_op_lexeme = LexemeInfo{ 0, "&&", 0 };
-            auto terminal_inclusive_or_op_lexeme = LexemeInfo{ 0, "|", 0 };
-            auto terminal_exclusive_or_op_lexeme = LexemeInfo{ 0, "^", 0 };
-            auto terminal_bitwise_and_op_lexeme = LexemeInfo{ 0, "&", 0 };
-            auto terminal_equality_op1_lexeme = LexemeInfo{ 0, "==", 0 };
-            auto terminal_equality_op2_lexeme = LexemeInfo{ 0, "!=", 0 };
-            auto terminal_add_op1_lexeme = LexemeInfo{ 0, "+", 0 };
-            auto terminal_add_op2_lexeme = LexemeInfo{ 0, "-", 0 };
-            auto terminal_mult_op1_lexeme = LexemeInfo{ 0, "*", 0 };
-            auto terminal_mult_op2_lexeme = LexemeInfo{ 0, "/", 0 };
-            auto terminal_mult_op3_lexeme = LexemeInfo{ 0, "%", 0 };
-            auto terminal_left_paren_lexeme = LexemeInfo{ 0, "(", 0 };
-            auto terminal_right_paren_lexeme = LexemeInfo{ 0, ")", 0 };
-            auto terminal_left_brace_lexeme = LexemeInfo{ 0, "{", 0 };
-            auto terminal_right_brace_lexeme = LexemeInfo{ 0, "}", 0 };
-            auto terminal_semicolon_lexeme = LexemeInfo{ 0, ";", 0 };
-            auto terminal_if_lexeme = LexemeInfo{ 0, "if", 0 };
-            auto terminal_else_lexeme = LexemeInfo{ 0, "else", 0 };
-            auto terminal_while_lexeme = LexemeInfo{ 0, "while", 0 };
+            auto terminal = Terminal("ID");
+            auto terminal_ass_op1 = Terminal("=");
+            auto terminal_ass_op2 = Terminal("+=");
+            auto terminal_logical_or_op = Terminal("||");
+            auto terminal_logical_and_op = Terminal("&&");
+            auto terminal_inclusive_or_op = Terminal("|");
+            auto terminal_exclusive_or_op = Terminal("^");
+            auto terminal_bitwise_and_op = Terminal("&");
+            auto terminal_equality_op1 = Terminal("==");
+            auto terminal_equality_op2 = Terminal("!=");
+            auto terminal_add_op1 = Terminal("+");
+            auto terminal_add_op2 = Terminal("-");
+            auto terminal_mult_op1 = Terminal("*");
+            auto terminal_mult_op2 = Terminal("/");
+            auto terminal_mult_op3 = Terminal("%");
+            auto terminal_left_paren = Terminal("(");
+            auto terminal_right_paren = Terminal(")");
+            auto terminal_left_brace = Terminal("{");
+            auto terminal_right_brace = Terminal("}");
+            auto terminal_semicolon = Terminal(";");
+            auto terminal_if = Terminal("if");
+            auto terminal_else = Terminal("else");
+            auto terminal_while = Terminal("while");
 
             // block test
-            TParsedString str_block_1 = { terminal_left_brace_lexeme, terminal_lexeme, terminal_semicolon_lexeme, terminal_right_brace_lexeme };
-            TParsedString str_block_2 = { terminal_left_brace_lexeme, terminal_lexeme, terminal_semicolon_lexeme, terminal_lexeme, terminal_semicolon_lexeme, terminal_right_brace_lexeme };
-            TParsedString str_block_3 = { terminal_left_brace_lexeme, terminal_lexeme, terminal_semicolon_lexeme, terminal_lexeme, terminal_semicolon_lexeme, terminal_lexeme, terminal_semicolon_lexeme, terminal_right_brace_lexeme };
+            TSyntaxAnalyzerInput str_block_1 = { terminal_left_brace, terminal, terminal_semicolon, terminal_right_brace };
+            TSyntaxAnalyzerInput str_block_2 = { terminal_left_brace, terminal, terminal_semicolon, terminal, terminal_semicolon, terminal_right_brace };
+            TSyntaxAnalyzerInput str_block_3 = { terminal_left_brace, terminal, terminal_semicolon, terminal, terminal_semicolon, terminal, terminal_semicolon, terminal_right_brace };
 
             SyntaxAnalysis::SyntaxAnalyzer sa(*p_grammar);
 
@@ -1029,24 +952,22 @@ namespace SyntaxAnalyzerUnitTests
 
         TEST_METHOD(ShouldReturnCorrectProductionSequence1)
         {
-            typedef LexicalAnalysis::TParsedString TParsedString;
-
-            auto start_symbol = GrammarSymbol("S");
+            auto start_symbol = NonTerminal("S");
             Grammar g(start_symbol);
 
-            auto terminal_1 = LexemeInfo({ 0, "A", 0 });
-            auto terminal_2 = LexemeInfo({ 0, "B", 0 });
-            auto terminal_3 = LexemeInfo({ 0, "C", 0 });
+            auto terminal_1 = Terminal("A");
+            auto terminal_2 = Terminal("B");
+            auto terminal_3 = Terminal("C");
 
-            g(start_symbol, { { GrammarSymbol(terminal_1) }, { GrammarSymbol(terminal_2) }, { GrammarSymbol(terminal_3) } });
+            g(start_symbol, { { terminal_1 }, { terminal_2 }, { terminal_3 } });
 
-            TParsedString str1 = { LexemeInfo{ 0, "A", 0 } };
-            TParsedString str2 = { LexemeInfo{ 0, "B", 0 } };
-            TParsedString str3 = { LexemeInfo{ 0, "C", 0 } };
+            TSyntaxAnalyzerInput str1 = { terminal_1 };
+            TSyntaxAnalyzerInput str2 = { terminal_2 };
+            TSyntaxAnalyzerInput str3 = { terminal_3 };
 
-            TParsedString str4 = { LexemeInfo{ 0, "D", 0 } };
-            TParsedString str5 = { LexemeInfo{ 0, "AB", 0 } };
-            TParsedString str6 = { LexemeInfo{ 0, "A", 0 }, LexemeInfo{ 0, "B", 0 } };
+            TSyntaxAnalyzerInput str4 = { Terminal("D")};
+            TSyntaxAnalyzerInput str5 = { Terminal("AB") };
+            TSyntaxAnalyzerInput str6 = { terminal_1, terminal_2};
 
             std::vector<size_t> v1, v2, v3;
 
