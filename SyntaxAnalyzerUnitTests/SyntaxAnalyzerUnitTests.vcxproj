@@ -86,6 +86,7 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="GrammarDefinitionUnitTests.cpp" />
     <ClCompile Include="GrammarUnitTests.cpp" />
     <ClCompile Include="SA-LA-InteractionUnitTests.cpp" />
     <ClCompile Include="stdafx.cpp">
