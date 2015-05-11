@@ -10,7 +10,7 @@ namespace
 {
     typedef std::vector<GrammarSymbol> TParserState;
 
-    bool _Terminal(size_t& io_next_index, const LexicalAnalysis::TParsedString& i_parsed_string, const GrammarSymbol& i_grammar_symbol)
+    bool _Terminal(size_t& io_next_index, const TSyntaxAnalyzerInput& i_parsed_string, const GrammarSymbol& i_grammar_symbol)
     {
         if (io_next_index >= i_parsed_string.size())
             return false;
@@ -32,16 +32,12 @@ SyntaxAnalyzer::SyntaxAnalyzer(const Grammar& i_grammar)
 //------------------------------------------------------------------------------
 bool SyntaxAnalyzer::Analyze(std::vector<size_t>& o_productions_used, const LexicalAnalysis::TParsedString& i_parsed_string)
 {
-    size_t current_index = 0;
+    TSyntaxAnalyzerInput input;
+    input.reserve(i_parsed_string.size());
+    for (auto lexeme : i_parsed_string)
+        input.push_back(Terminal(lexeme.m_lexeme_value));
 
-    auto start_symbol = m_grammar.GetStartSymbol();
-    auto start_symbol_productions = m_grammar.GetProduction(start_symbol);
-
-    bool res = _TryAllProductions(current_index, o_productions_used, i_parsed_string, start_symbol_productions);
-    if (current_index != i_parsed_string.size())
-        return false;
-    
-    return res;
+    return Analyze(o_productions_used, input);
 }
 
 //------------------------------------------------------------------------------
@@ -52,7 +48,22 @@ bool SyntaxAnalyzer::Analyze(const LexicalAnalysis::TParsedString& i_parsed_stri
 }
 
 //------------------------------------------------------------------------------
-bool SyntaxAnalyzer::_TryProduction(size_t& io_next_index, std::vector<size_t>& o_productions_used, const LexicalAnalysis::TParsedString& i_parsed_string, const TGrammarSymbolSequence& i_symbol_seq)
+bool SyntaxAnalyzer::Analyze(std::vector<size_t>& o_productions_used, const TSyntaxAnalyzerInput& i_input)
+{
+    size_t current_index = 0;
+
+    auto start_symbol = m_grammar.GetStartSymbol();
+    auto start_symbol_productions = m_grammar.GetProduction(start_symbol);
+
+    bool res = _TryAllProductions(current_index, o_productions_used, i_input, start_symbol_productions);
+    if (current_index != i_input.size())
+        return false;
+
+    return res;
+}
+
+//------------------------------------------------------------------------------
+bool SyntaxAnalyzer::_TryProduction(size_t& io_next_index, std::vector<size_t>& o_productions_used, const TSyntaxAnalyzerInput& i_parsed_string, const TGrammarSymbolSequence& i_symbol_seq)
 {
     bool res = true;
     for (auto gs : i_symbol_seq)
@@ -78,7 +89,7 @@ bool SyntaxAnalyzer::_TryProduction(size_t& io_next_index, std::vector<size_t>& 
 }
 
 //------------------------------------------------------------------------------
-bool SyntaxAnalysis::SyntaxAnalyzer::_TryAllProductions(size_t& io_next_index, std::vector<size_t>& o_productions_used, const LexicalAnalysis::TParsedString& i_parsed_string, const TProductionRHS& i_prod_rhs)
+bool SyntaxAnalysis::SyntaxAnalyzer::_TryAllProductions(size_t& io_next_index, std::vector<size_t>& o_productions_used, const TSyntaxAnalyzerInput& i_parsed_string, const TProductionRHS& i_prod_rhs)
 {
     size_t next_index_cached = io_next_index;
     std::vector<size_t> productions_cached = o_productions_used;
@@ -95,4 +106,5 @@ bool SyntaxAnalysis::SyntaxAnalyzer::_TryAllProductions(size_t& io_next_index, s
     }
     return false;
 }
+
 
