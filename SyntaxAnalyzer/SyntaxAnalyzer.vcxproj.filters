@@ -18,6 +18,9 @@
     <ClInclude Include="GrammarGenerators.h">
       <Filter>Sources</Filter>
     </ClInclude>
+    <ClInclude Include="SyntaxAnalysisHelpers.h">
+      <Filter>Sources</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="SyntaxAnalyzer.cpp">
@@ -30,6 +33,9 @@
       <Filter>Sources</Filter>
     </ClCompile>
     <ClCompile Include="GrammarGenerators.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="SyntaxAnalysisHelpers.cpp">
       <Filter>Sources</Filter>
     </ClCompile>
   </ItemGroup>

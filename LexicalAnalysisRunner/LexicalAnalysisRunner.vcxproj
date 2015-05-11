@@ -44,7 +44,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>D:\dev\CompilerCpp;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\ThirdParty\boost_1_57_0;..\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -57,7 +57,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>D:\dev\CompilerCpp;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\ThirdParty\boost_1_57_0;..\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -68,6 +68,9 @@
   <ItemGroup>
     <ProjectReference Include="..\LexicalAnalyzer\LexicalAnalyzer.vcxproj">
       <Project>{6eb762d0-aa39-4597-b4b8-026895dd0bcc}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\SyntaxAnalyzer\SyntaxAnalyzer.vcxproj">
+      <Project>{58aba7e2-18cf-4be5-a9ab-8e73f5139d65}</Project>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

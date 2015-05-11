@@ -7,6 +7,10 @@
 #include <LexicalAnalyzer\LanguageInfoCpp.h>
 #include <LexicalAnalyzer\LexicalAnalyzer.h>
 
+#include <SyntaxAnalyzer\SyntaxAnalyzer.h>
+#include <SyntaxAnalyzer\GrammarGenerators.h>
+#include <SyntaxAnalyzer\SyntaxAnalysisHelpers.h>
+
 namespace
 {
     std::vector<size_t> _GetNewLinePositions(const std::string& i_str)
@@ -50,11 +54,20 @@ int main(int i_argc, const char** i_argv)
     LexicalAnalysis::LexicalAnalyzer analyzer(langinfo);
     auto parsed_file = analyzer.ParseString(input_string);
     
+    auto p_grammar = SyntaxAnalysis::GenerateGrammarCpp();
+    auto syntax_analyzer = SyntaxAnalysis::SyntaxAnalyzer(*p_grammar);
+    
+    auto parsed_file_for_as = SyntaxAnalysis::SyntaxAnalysisHelpers::FixParsedStringForCpp(parsed_file);
+    std::vector<size_t> productions_used;
+    bool syntax_success = syntax_analyzer.Analyze(productions_used, parsed_file_for_as);
+
     size_t col1_width = 30;
     size_t col2_width = 30;
     size_t col3_widht = 20;
 
     auto new_lines = _GetNewLinePositions(input_string);
+    
+    out_stream << "======== LEXICAL ANALYSIS ============" << std::endl;
 
     for (auto lexeme : parsed_file)
     {
@@ -67,6 +80,21 @@ int main(int i_argc, const char** i_argv)
         std::string first_separator(col1_width > lexeme_value.size() ? col1_width - lexeme_value.size() : 1, ' ');
         std::string second_separator(col2_width > lexeme_type.size() ? col2_width - lexeme_type.size()  : 1, ' ');
         out_stream << lexeme_value << first_separator << lexeme_type << second_separator << "l: " << lexeme_file_position.first << ", c: " << lexeme_file_position.second << std::endl;
+    }
+
+    out_stream << "========= SYNTAX ANALYSIS ============" << std::endl;
+    if (syntax_success)
+    {
+        out_stream << "SUCCEED" << std::endl;
+        out_stream << "Productions used: " << std::endl;
+        out_stream << "[";
+        for (size_t i = 0; i + 1 < productions_used.size(); ++i)
+            out_stream << productions_used[i] << "; ";
+        out_stream << *productions_used.rbegin() << "]";
+    }
+    else
+    {
+        out_stream << "FAILED" << std::endl;
     }
 
     if (i_argc > 2)
