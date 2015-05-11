@@ -21,7 +21,7 @@ GrammarSymbol::GrammarSymbol(LexicalAnalysis::LexemeInfo i_term_info)
 //------------------------------------------------------------------------------
 GrammarSymbol::GrammarSymbol(const std::string& i_nonterm_info)
 : m_type(GST_NONTERMINAL)
-, m_nonterminal_info(i_nonterm_info)
+, m_nonterminal_info(NonTerminal(i_nonterm_info))
 {
 
 }
@@ -44,6 +44,14 @@ GrammarSymbol::GrammarSymbol(Terminal i_terminal)
 }
 
 //------------------------------------------------------------------------------
+GrammarSymbol::GrammarSymbol(NonTerminal i_nonterminal)
+: m_nonterminal_info(i_nonterminal)
+, m_type(GST_NONTERMINAL)
+{
+
+}
+
+//------------------------------------------------------------------------------
 GrammarSymbol::EGrammarSymbolType GrammarSymbol::GetType() const
 {
     return m_type;
@@ -57,7 +65,7 @@ Terminal GrammarSymbol::GetTerminalInfo() const
 }
 
 //------------------------------------------------------------------------------
-const std::string& GrammarSymbol::GetNonterminalInfo() const
+NonTerminal GrammarSymbol::GetNonterminalInfo() const
 {
     assert(m_nonterminal_info);
     return *m_nonterminal_info;
@@ -129,4 +137,23 @@ bool SyntaxAnalysis::operator==(const Terminal& i_terminal, const LexicalAnalysi
 bool SyntaxAnalysis::operator==(const LexicalAnalysis::LexemeInfo& i_lexeme_info, const Terminal& i_terminal)
 {
     return i_terminal == i_lexeme_info;
+}
+
+//------------------------------------------------------------------------------
+NonTerminal::NonTerminal(const std::string& i_str)
+: m_str(i_str)
+{
+
+}
+
+//------------------------------------------------------------------------------
+bool NonTerminal::operator==(const NonTerminal& i_other) const
+{
+    return m_str == i_other.m_str;
+}
+
+//------------------------------------------------------------------------------
+bool NonTerminal::operator<(const NonTerminal& i_other) const
+{
+    return m_str < i_other.m_str;
 }

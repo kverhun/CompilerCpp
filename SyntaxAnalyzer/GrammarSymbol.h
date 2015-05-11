@@ -20,6 +20,15 @@ namespace SyntaxAnalysis
     bool operator == (const Terminal& i_terminal, const LexicalAnalysis::LexemeInfo& i_lexeme_info);
     bool operator == (const LexicalAnalysis::LexemeInfo& i_lexeme_info, const Terminal& i_terminal);
 
+    class NonTerminal
+    {
+    public:
+        NonTerminal(const std::string& i_str);
+        bool operator == (const NonTerminal& i_other) const;
+        bool operator < (const NonTerminal& i_other) const;
+    private:
+        std::string m_str;
+    };
 
     class GrammarSymbol
     {
@@ -34,16 +43,17 @@ namespace SyntaxAnalysis
     public:
         GrammarSymbol(EGrammarSymbolType i_type);
         GrammarSymbol(Terminal i_terminal);
-        GrammarSymbol(const std::string& i_nonterm_info);
+        GrammarSymbol(NonTerminal i_nonterminal);
         GrammarSymbol(const GrammarSymbol& i_other);
 
         // deprecated API
         GrammarSymbol(LexicalAnalysis::LexemeInfo i_term_info);
+        GrammarSymbol(const std::string& i_nonterm_info);
 
         EGrammarSymbolType GetType() const;
 
         Terminal GetTerminalInfo() const;
-        const std::string&          GetNonterminalInfo() const;
+        NonTerminal GetNonterminalInfo() const;
         bool IsLambda() const;
         bool IsTerminal() const;
         bool IsNonTerminal() const;
@@ -57,6 +67,6 @@ namespace SyntaxAnalysis
         EGrammarSymbolType m_type;
 
         boost::optional<Terminal>    m_terminal_info;
-        boost::optional<std::string> m_nonterminal_info;
+        boost::optional<NonTerminal> m_nonterminal_info;
     };
 }
