@@ -12,6 +12,7 @@ namespace SyntaxAnalysis
         friend bool operator == (const LexicalAnalysis::LexemeInfo& i_lexeme_info, const Terminal& i_terminal);
     public:
         Terminal(const std::string& i_str);
+        bool operator == (const Terminal& i_other) const;
         bool operator < (const Terminal& i_other) const;
     private:
         std::string m_str;

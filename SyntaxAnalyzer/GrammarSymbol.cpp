@@ -128,6 +128,12 @@ bool Terminal::operator<(const Terminal& i_other) const
 }
 
 //------------------------------------------------------------------------------
+bool Terminal::operator==(const Terminal& i_other) const
+{
+    return m_str == i_other.m_str;
+}
+
+//------------------------------------------------------------------------------
 bool SyntaxAnalysis::operator==(const Terminal& i_terminal, const LexicalAnalysis::LexemeInfo& i_lexeme_info)
 {
     return i_terminal.m_str == i_lexeme_info.m_lexeme_value;
