@@ -15,7 +15,7 @@ namespace
         if (io_next_index >= i_parsed_string.size())
             return false;
 
-        bool res = i_parsed_string[io_next_index].m_lexeme_value == i_grammar_symbol.GetTerminalInfo().m_lexeme_value;
+        bool res = i_parsed_string[io_next_index] == i_grammar_symbol.GetTerminalInfo();
         ++io_next_index;
         return res;
     }

@@ -6,6 +6,21 @@
 
 namespace SyntaxAnalysis
 {
+    class Terminal
+    {
+        friend bool operator == (const Terminal& i_terminal, const LexicalAnalysis::LexemeInfo& i_lexeme_info);
+        friend bool operator == (const LexicalAnalysis::LexemeInfo& i_lexeme_info, const Terminal& i_terminal);
+    public:
+        Terminal(const std::string& i_str);
+        bool operator < (const Terminal& i_other) const;
+    private:
+        std::string m_str;
+    };
+
+    bool operator == (const Terminal& i_terminal, const LexicalAnalysis::LexemeInfo& i_lexeme_info);
+    bool operator == (const LexicalAnalysis::LexemeInfo& i_lexeme_info, const Terminal& i_terminal);
+
+
     class GrammarSymbol
     {
     public:
@@ -25,7 +40,7 @@ namespace SyntaxAnalysis
 
         EGrammarSymbolType GetType() const;
 
-        LexicalAnalysis::LexemeInfo GetTerminalInfo() const;
+        Terminal GetTerminalInfo() const;
         const std::string&          GetNonterminalInfo() const;
         bool IsLambda() const;
         bool IsTerminal() const;
@@ -39,7 +54,7 @@ namespace SyntaxAnalysis
     private:
         EGrammarSymbolType m_type;
 
-        boost::optional<LexicalAnalysis::LexemeInfo> m_terminal_info;
-        boost::optional<std::string>                 m_nonterminal_info;
+        boost::optional<Terminal>    m_terminal_info;
+        boost::optional<std::string> m_nonterminal_info;
     };
 }

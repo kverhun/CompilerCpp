@@ -14,7 +14,7 @@ GrammarSymbol::GrammarSymbol(EGrammarSymbolType i_type)
 //------------------------------------------------------------------------------
 GrammarSymbol::GrammarSymbol(LexicalAnalysis::LexemeInfo i_term_info)
 : m_type(GST_TERMINAL)
-, m_terminal_info(i_term_info)
+, m_terminal_info(i_term_info.m_lexeme_value)
 {
 
 }
@@ -43,7 +43,7 @@ GrammarSymbol::EGrammarSymbolType GrammarSymbol::GetType() const
 }
 
 //------------------------------------------------------------------------------
-LexicalAnalysis::LexemeInfo GrammarSymbol::GetTerminalInfo() const
+Terminal GrammarSymbol::GetTerminalInfo() const
 {
     assert(m_terminal_info);
     return *m_terminal_info;
@@ -71,7 +71,7 @@ bool GrammarSymbol::operator<(const GrammarSymbol& i_other) const
     switch (m_type)
     {
     case GST_TERMINAL:
-        return m_terminal_info->m_lexeme_value < i_other.m_terminal_info->m_lexeme_value;
+        return *m_terminal_info < *(i_other.m_terminal_info);
     case GST_NONTERMINAL:
         return m_nonterminal_info < i_other.m_nonterminal_info;
     case GST_LAMBDA:
@@ -97,4 +97,29 @@ bool GrammarSymbol::IsTerminal() const
 bool GrammarSymbol::IsNonTerminal() const
 {
     return m_type == GrammarSymbol::GST_NONTERMINAL;
+}
+
+//------------------------------------------------------------------------------
+Terminal::Terminal(const std::string& i_str)
+: m_str(i_str)
+{
+
+}
+
+//------------------------------------------------------------------------------
+bool Terminal::operator<(const Terminal& i_other) const
+{
+    return m_str < i_other.m_str;
+}
+
+//------------------------------------------------------------------------------
+bool SyntaxAnalysis::operator==(const Terminal& i_terminal, const LexicalAnalysis::LexemeInfo& i_lexeme_info)
+{
+    return i_terminal.m_str == i_lexeme_info.m_lexeme_value;
+}
+
+//------------------------------------------------------------------------------
+bool SyntaxAnalysis::operator==(const LexicalAnalysis::LexemeInfo& i_lexeme_info, const Terminal& i_terminal)
+{
+    return i_terminal == i_lexeme_info;
 }
