@@ -33,10 +33,12 @@ namespace SyntaxAnalysis
 
     public:
         GrammarSymbol(EGrammarSymbolType i_type);
-        GrammarSymbol(LexicalAnalysis::LexemeInfo i_term_info);
+        GrammarSymbol(Terminal i_terminal);
         GrammarSymbol(const std::string& i_nonterm_info);
-
         GrammarSymbol(const GrammarSymbol& i_other);
+
+        // deprecated API
+        GrammarSymbol(LexicalAnalysis::LexemeInfo i_term_info);
 
         EGrammarSymbolType GetType() const;
 

@@ -13,8 +13,7 @@ GrammarSymbol::GrammarSymbol(EGrammarSymbolType i_type)
 
 //------------------------------------------------------------------------------
 GrammarSymbol::GrammarSymbol(LexicalAnalysis::LexemeInfo i_term_info)
-: m_type(GST_TERMINAL)
-, m_terminal_info(i_term_info.m_lexeme_value)
+: GrammarSymbol(Terminal(i_term_info.m_lexeme_value))
 {
 
 }
@@ -32,6 +31,14 @@ GrammarSymbol::GrammarSymbol(const GrammarSymbol& i_other)
 : m_type(i_other.m_type)
 , m_terminal_info(i_other.m_terminal_info)
 , m_nonterminal_info(i_other.m_nonterminal_info)
+{
+
+}
+
+//------------------------------------------------------------------------------
+GrammarSymbol::GrammarSymbol(Terminal i_terminal)
+: m_terminal_info(i_terminal)
+, m_type(GST_TERMINAL)
 {
 
 }
