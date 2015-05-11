@@ -7,6 +7,9 @@
     <Filter Include="Sources\LexicalAnalyzer">
       <UniqueIdentifier>{fe321040-8baa-440e-aa90-0d329eb478b3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Sources\SyntaxAnalyzer">
+      <UniqueIdentifier>{0f55e66f-514f-473c-bd41-fcba1cd4aa92}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="LexicalAnalyzer\ILanguageInfo.h">
@@ -17,6 +20,9 @@
     </ClInclude>
     <ClInclude Include="LexicalAnalyzer\CppLexemeClasses.h">
       <Filter>Sources\LexicalAnalyzer</Filter>
+    </ClInclude>
+    <ClInclude Include="SyntaxAnalyzer\SyntaxAnalyzerInput.h">
+      <Filter>Sources\SyntaxAnalyzer</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

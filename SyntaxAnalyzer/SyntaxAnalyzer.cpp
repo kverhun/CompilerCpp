@@ -1,7 +1,5 @@
 #include "SyntaxAnalyzer.h"
 
-#include <Interfaces/LexicalAnalyzer/LexemeInfo.h>
-
 #include <functional>
 
 using namespace SyntaxAnalysis;
@@ -27,24 +25,6 @@ SyntaxAnalyzer::SyntaxAnalyzer(const Grammar& i_grammar)
 : m_grammar(i_grammar)
 {
 
-}
-
-//------------------------------------------------------------------------------
-bool SyntaxAnalyzer::Analyze(std::vector<size_t>& o_productions_used, const LexicalAnalysis::TParsedString& i_parsed_string)
-{
-    TSyntaxAnalyzerInput input;
-    input.reserve(i_parsed_string.size());
-    for (auto lexeme : i_parsed_string)
-        input.push_back(Terminal(lexeme.m_lexeme_value));
-
-    return Analyze(o_productions_used, input);
-}
-
-//------------------------------------------------------------------------------
-bool SyntaxAnalyzer::Analyze(const LexicalAnalysis::TParsedString& i_parsed_string)
-{
-    std::vector<size_t> v;
-    return Analyze(v, i_parsed_string);
 }
 
 //------------------------------------------------------------------------------

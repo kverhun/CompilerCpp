@@ -2,7 +2,6 @@
 
 #include "GrammarSymbol.h"
 
-#include <Interfaces\LexicalAnalyzer\LexemeInfo.h>
 #include <boost\optional.hpp>
 
 namespace SyntaxAnalysis

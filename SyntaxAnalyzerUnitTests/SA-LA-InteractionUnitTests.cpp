@@ -8,7 +8,9 @@
 #include <SyntaxAnalyzer\Grammar.h>
 #include <SyntaxAnalyzer\GrammarGenerators.h>
 #include <SyntaxAnalyzer\GrammarSymbol.h>
+#include <SyntaxAnalyzer\SyntaxAnalysisHelpers.h>
 #include <Interfaces\LexicalAnalyzer\LexemeInfo.h>
+#include <Interfaces\SyntaxAnalyzer\SyntaxAnalyzerInput.h>
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
@@ -32,7 +34,7 @@ namespace SyntaxAnalyzerUnitTests
             auto p_grammar = SyntaxAnalysis::GenerateGrammarCpp();
 
             SyntaxAnalysis::SyntaxAnalyzer sa(*p_grammar);
-            Assert::IsTrue(sa.Analyze(res));
+            Assert::IsTrue(sa.Analyze(SyntaxAnalysis::SyntaxAnalysisHelpers::FixParsedStringForCpp(res)));
 
         }
 
@@ -64,7 +66,7 @@ namespace SyntaxAnalyzerUnitTests
             auto p_grammar = SyntaxAnalysis::GenerateGrammarCpp();
 
             SyntaxAnalysis::SyntaxAnalyzer sa(*p_grammar);
-            Assert::IsTrue(sa.Analyze(res));
+            Assert::IsTrue(sa.Analyze(SyntaxAnalysis::SyntaxAnalysisHelpers::FixParsedStringForCpp(res)));
 
         }
 
@@ -188,7 +190,7 @@ namespace SyntaxAnalyzerUnitTests
 
             SyntaxAnalysis::SyntaxAnalyzer sa(*p_grammar);
             std::vector<size_t> v;
-            bool sa_res = sa.Analyze(v, res);
+            bool sa_res = sa.Analyze(v, SyntaxAnalysis::SyntaxAnalysisHelpers::FixParsedStringForCpp(res));
 
             Assert::IsTrue(sa_res);
 
