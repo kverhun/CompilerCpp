@@ -29,7 +29,7 @@ namespace SyntaxAnalyzerUnitTests
             LanguageInfoCpp langinfo;
             LexicalAnalyzer cpp_analyzer(langinfo);
 
-            auto string = "if (ID) {ID = ID + ID;} else ID = ID + ID;";
+            auto string = "ID main () { if (ID) {ID = ID + ID;} else ID = ID + ID;}";
             auto res = cpp_analyzer.ParseString(string);
             auto p_grammar = SyntaxAnalysis::GenerateGrammarCpp();
 
@@ -49,7 +49,7 @@ namespace SyntaxAnalyzerUnitTests
             LexicalAnalyzer cpp_analyzer(langinfo);
 
             auto string = 
-                "while(ID) \
+                "ID main (){ while(ID) \
                  {      \
                     ID = ID + (ID * ID); \
                     if (ID = ID+ID) \
@@ -59,6 +59,7 @@ namespace SyntaxAnalyzerUnitTests
                         ID = ID + ID * ID * (ID + ID); \
                         ID = ID + ID;  \
                     }                  \
+                 }\
                  }";
             
                     

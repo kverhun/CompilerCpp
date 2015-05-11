@@ -49,9 +49,15 @@ std::unique_ptr<Grammar> SyntaxAnalysis::GenerateGrammarCpp()
     auto statement_sequence_optional = NonTerminal("statement-sequence-opt");
     auto compound_statement = NonTerminal("compound-statement");
 
-    auto definition = NonTerminal("definition");
-    auto definition_sequence = NonTerminal("definition-sequence");
-    auto definition_sequence_optional = NonTerminal("definition-sequence-optional");
+    auto parameter_declaration_list = NonTerminal("parameter-declaration-list");
+    auto function_declarator = NonTerminal("function-declarator");
+    auto function_body = NonTerminal("function-body");
+    auto function_definition = NonTerminal("function-definition");
+
+    auto declaration = NonTerminal("declaration");
+    auto declaration_sequence = NonTerminal("declaration-sequence");
+    auto declaration_sequence_optional = NonTerminal("declaration-sequence-optional");
+
     auto translation_unit = NonTerminal("translation-unit");
 
 
@@ -96,10 +102,16 @@ std::unique_ptr<Grammar> SyntaxAnalysis::GenerateGrammarCpp()
     std::unique_ptr<Grammar> p_grammar(new Grammar(translation_unit));
 
     (*p_grammar)
-        (translation_unit, { { definition_sequence_optional } })
-        (definition_sequence_optional, { { definition_sequence }, {lambda_symbol} })
-        (definition_sequence, { { definition, definition_sequence }, {definition} })
-        (definition, { {statement} })
+        (translation_unit, { { declaration_sequence_optional } })
+        (declaration_sequence_optional, { { declaration_sequence }, {lambda_symbol} })
+        (declaration_sequence, { { declaration, declaration_sequence }, {declaration} })
+        (declaration, { {function_definition} })
+
+        (function_definition, { {function_declarator, function_body} })
+        (function_declarator, { {terminal, terminal, terminal_left_paren, parameter_declaration_list, terminal_right_paren} })
+        (function_body, { {compound_statement} })
+
+        (parameter_declaration_list, { {lambda_symbol} })
 
         (statement, { { expression_statement }, { if_statement }, { while_statement }, { compound_statement } })
 

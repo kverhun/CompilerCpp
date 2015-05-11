@@ -853,31 +853,31 @@ namespace SyntaxAnalyzerUnitTests
             auto terminal_while = Terminal("while");
 
 
-            TSyntaxAnalyzerInput str2 = { terminal_left_brace, terminal, terminal_ass_op1, terminal, terminal_semicolon, terminal_right_brace };
-            TSyntaxAnalyzerInput str3 = { terminal_left_brace, terminal, terminal_ass_op2, terminal, terminal_semicolon, terminal_right_brace };
-            TSyntaxAnalyzerInput str4 = { terminal_left_brace, terminal, terminal_ass_op2, terminal, terminal_logical_or_op, terminal, terminal_semicolon, terminal_right_brace };
-            TSyntaxAnalyzerInput str5 = { terminal_left_brace, terminal, terminal_ass_op2, terminal, terminal_logical_and_op, terminal, terminal_semicolon, terminal_right_brace };
-            TSyntaxAnalyzerInput str6 = { terminal_left_brace, terminal, terminal_ass_op1, terminal, terminal_exclusive_or_op, terminal, terminal_semicolon, terminal_right_brace };
-            TSyntaxAnalyzerInput str7 = { terminal_left_brace, terminal, terminal_ass_op1, terminal, terminal_inclusive_or_op, terminal, terminal_inclusive_or_op, terminal, terminal_semicolon, terminal_right_brace };
-            TSyntaxAnalyzerInput str8 = { terminal_left_brace, terminal, terminal_ass_op1, terminal, terminal_mult_op1, terminal, terminal_semicolon, terminal_right_brace };
-            TSyntaxAnalyzerInput str9 = { terminal_left_brace, terminal, terminal_ass_op1, terminal, terminal_mult_op1, terminal, terminal_add_op2, terminal, terminal_semicolon, terminal_right_brace };
-            TSyntaxAnalyzerInput str10 = { terminal_left_brace, terminal, terminal_ass_op1, terminal, terminal_add_op1, terminal, terminal_mult_op2, terminal, terminal_semicolon, terminal_right_brace };
-            TSyntaxAnalyzerInput str11 = { terminal_left_brace, terminal, terminal_mult_op1, terminal, terminal_add_op1, terminal, terminal_semicolon, terminal_right_brace };
-            TSyntaxAnalyzerInput str12 = { terminal_left_brace, terminal, terminal_add_op1, terminal, terminal_mult_op1, terminal, terminal_semicolon, terminal_right_brace };
-            TSyntaxAnalyzerInput str13 = { terminal_left_brace, terminal, terminal_ass_op1, terminal_left_paren, terminal, terminal_add_op1, terminal, terminal_right_paren, terminal_mult_op1, terminal, terminal_semicolon, terminal_right_brace };
+            TSyntaxAnalyzerInput str2 = { terminal, terminal, terminal_left_paren, terminal_right_paren, terminal_left_brace, terminal_left_brace, terminal, terminal_ass_op1, terminal, terminal_semicolon, terminal_right_brace, terminal_right_brace};
+            TSyntaxAnalyzerInput str3 = { terminal, terminal, terminal_left_paren, terminal_right_paren, terminal_left_brace, terminal_left_brace, terminal, terminal_ass_op2, terminal, terminal_semicolon, terminal_right_brace, terminal_right_brace };
+            TSyntaxAnalyzerInput str4 = { terminal, terminal, terminal_left_paren, terminal_right_paren, terminal_left_brace, terminal_left_brace, terminal, terminal_ass_op2, terminal, terminal_logical_or_op, terminal, terminal_semicolon, terminal_right_brace, terminal_right_brace };
+            TSyntaxAnalyzerInput str5 = { terminal, terminal, terminal_left_paren, terminal_right_paren, terminal_left_brace, terminal_left_brace, terminal, terminal_ass_op2, terminal, terminal_logical_and_op, terminal, terminal_semicolon, terminal_right_brace, terminal_right_brace };
+            TSyntaxAnalyzerInput str6 = { terminal, terminal, terminal_left_paren, terminal_right_paren, terminal_left_brace, terminal_left_brace, terminal, terminal_ass_op1, terminal, terminal_exclusive_or_op, terminal, terminal_semicolon, terminal_right_brace, terminal_right_brace };
+            TSyntaxAnalyzerInput str7 = { terminal, terminal, terminal_left_paren, terminal_right_paren, terminal_left_brace, terminal_left_brace, terminal, terminal_ass_op1, terminal, terminal_inclusive_or_op, terminal, terminal_inclusive_or_op, terminal, terminal_semicolon, terminal_right_brace, terminal_right_brace };
+            TSyntaxAnalyzerInput str8 = { terminal, terminal, terminal_left_paren, terminal_right_paren, terminal_left_brace, terminal_left_brace, terminal, terminal_ass_op1, terminal, terminal_mult_op1, terminal, terminal_semicolon, terminal_right_brace, terminal_right_brace };
+            TSyntaxAnalyzerInput str9 = { terminal, terminal, terminal_left_paren, terminal_right_paren, terminal_left_brace, terminal_left_brace, terminal, terminal_ass_op1, terminal, terminal_mult_op1, terminal, terminal_add_op2, terminal, terminal_semicolon, terminal_right_brace, terminal_right_brace };
+            TSyntaxAnalyzerInput str10 = { terminal, terminal, terminal_left_paren, terminal_right_paren, terminal_left_brace, terminal_left_brace, terminal, terminal_ass_op1, terminal, terminal_add_op1, terminal, terminal_mult_op2, terminal, terminal_semicolon, terminal_right_brace, terminal_right_brace };
+            TSyntaxAnalyzerInput str11 = { terminal, terminal, terminal_left_paren, terminal_right_paren, terminal_left_brace, terminal_left_brace, terminal, terminal_mult_op1, terminal, terminal_add_op1, terminal, terminal_semicolon, terminal_right_brace, terminal_right_brace };
+            TSyntaxAnalyzerInput str12 = { terminal, terminal, terminal_left_paren, terminal_right_paren, terminal_left_brace, terminal_left_brace, terminal, terminal_add_op1, terminal, terminal_mult_op1, terminal, terminal_semicolon, terminal_right_brace, terminal_right_brace };
+            TSyntaxAnalyzerInput str13 = { terminal, terminal, terminal_left_paren, terminal_right_paren, terminal_left_brace, terminal_left_brace, terminal, terminal_ass_op1, terminal_left_paren, terminal, terminal_add_op1, terminal, terminal_right_paren, terminal_mult_op1, terminal, terminal_semicolon, terminal_right_brace, terminal_right_brace };
 
-            TSyntaxAnalyzerInput str14 = { terminal_left_brace, terminal_right_brace };
-            TSyntaxAnalyzerInput str15 = { terminal_left_brace, terminal_semicolon, terminal_right_brace };
-            TSyntaxAnalyzerInput str16 = { terminal_left_brace, terminal_left_brace, terminal_right_brace, terminal_right_brace };
+            TSyntaxAnalyzerInput str14 = { terminal, terminal, terminal_left_paren, terminal_right_paren, terminal_left_brace, terminal_left_brace, terminal_right_brace, terminal_right_brace };
+            TSyntaxAnalyzerInput str15 = { terminal, terminal, terminal_left_paren, terminal_right_paren, terminal_left_brace, terminal_left_brace, terminal_semicolon, terminal_right_brace, terminal_right_brace };
+            TSyntaxAnalyzerInput str16 = { terminal, terminal, terminal_left_paren, terminal_right_paren, terminal_left_brace, terminal_left_brace, terminal_left_brace, terminal_right_brace, terminal_right_brace, terminal_right_brace };
 
             
             // if statement
-            TSyntaxAnalyzerInput str17 = { terminal_if, terminal_left_paren, terminal, terminal_right_paren, terminal, terminal_semicolon };
-            TSyntaxAnalyzerInput str18 = { terminal_if, terminal_left_paren, terminal, terminal_right_paren, terminal, terminal_semicolon, terminal_else, terminal, terminal_semicolon };
+            TSyntaxAnalyzerInput str17 = { terminal, terminal, terminal_left_paren, terminal_right_paren, terminal_left_brace, terminal_if, terminal_left_paren, terminal, terminal_right_paren, terminal, terminal_semicolon, terminal_right_brace };
+            TSyntaxAnalyzerInput str18 = { terminal, terminal, terminal_left_paren, terminal_right_paren, terminal_left_brace, terminal_if, terminal_left_paren, terminal, terminal_right_paren, terminal, terminal_semicolon, terminal_else, terminal, terminal_semicolon, terminal_right_brace };
 
             // while statement
-            TSyntaxAnalyzerInput str19 = { terminal_while, terminal_left_paren, terminal, terminal_right_paren, terminal_left_brace, terminal, terminal_semicolon, terminal_right_brace };
-            TSyntaxAnalyzerInput str20 = { terminal_while, terminal_left_paren, terminal, terminal_right_paren, terminal_left_brace, terminal, terminal_semicolon, terminal, terminal_semicolon, terminal_right_brace };
+            TSyntaxAnalyzerInput str19 = { terminal, terminal, terminal_left_paren, terminal_right_paren, terminal_left_brace, terminal_while, terminal_left_paren, terminal, terminal_right_paren, terminal_left_brace, terminal, terminal_semicolon, terminal_right_brace, terminal_right_brace };
+            TSyntaxAnalyzerInput str20 = { terminal, terminal, terminal_left_paren, terminal_right_paren, terminal_left_brace, terminal_while, terminal_left_paren, terminal, terminal_right_paren, terminal_left_brace, terminal, terminal_semicolon, terminal, terminal_semicolon, terminal_right_brace, terminal_right_brace };
 
             SyntaxAnalyzer sa(*p_grammar);
             Assert::IsTrue(sa.Analyze(str2));
@@ -899,11 +899,11 @@ namespace SyntaxAnalyzerUnitTests
             Assert::IsTrue(sa.Analyze(str18));
             Assert::IsTrue(sa.Analyze(str19));
 
-            TSyntaxAnalyzerInput inv_str_1 = { terminal_left_brace, terminal_logical_and_op, terminal_right_brace };
-            TSyntaxAnalyzerInput inv_str_2 = { terminal_left_brace, terminal, terminal_add_op1, terminal_right_brace };
-            TSyntaxAnalyzerInput inv_str_3 = { terminal_left_brace, terminal, terminal_add_op1, terminal, terminal_right_paren, terminal_right_brace };
-            TSyntaxAnalyzerInput inv_str_4 = { terminal_left_brace, terminal, terminal_left_paren, terminal_add_op1, terminal, terminal_right_paren, terminal_right_brace };
-            TSyntaxAnalyzerInput inv_str_5 = { terminal, terminal_ass_op1, terminal };
+            TSyntaxAnalyzerInput inv_str_1 = { terminal, terminal, terminal_left_paren, terminal_right_paren, terminal_left_brace, terminal_left_brace, terminal_logical_and_op, terminal_right_brace, terminal_right_brace };
+            TSyntaxAnalyzerInput inv_str_2 = { terminal, terminal, terminal_left_paren, terminal_right_paren, terminal_left_brace, terminal_left_brace, terminal, terminal_add_op1, terminal_right_brace, terminal_right_brace };
+            TSyntaxAnalyzerInput inv_str_3 = { terminal, terminal, terminal_left_paren, terminal_right_paren, terminal_left_brace, terminal_left_brace, terminal, terminal_add_op1, terminal, terminal_right_paren, terminal_right_brace, terminal_right_brace };
+            TSyntaxAnalyzerInput inv_str_4 = { terminal, terminal, terminal_left_paren, terminal_right_paren, terminal_left_brace, terminal_left_brace, terminal, terminal_left_paren, terminal_add_op1, terminal, terminal_right_paren, terminal_right_brace, terminal_right_brace };
+            TSyntaxAnalyzerInput inv_str_5 = { terminal, terminal, terminal_left_paren, terminal_right_paren, terminal_left_brace, terminal, terminal_ass_op1, terminal, terminal_right_brace };
             Assert::IsFalse(sa.Analyze(inv_str_1));
             Assert::IsFalse(sa.Analyze(inv_str_2));
             Assert::IsFalse(sa.Analyze(inv_str_3));
@@ -939,9 +939,9 @@ namespace SyntaxAnalyzerUnitTests
             auto terminal_while = Terminal("while");
 
             // block test
-            TSyntaxAnalyzerInput str_block_1 = { terminal_left_brace, terminal, terminal_semicolon, terminal_right_brace };
-            TSyntaxAnalyzerInput str_block_2 = { terminal_left_brace, terminal, terminal_semicolon, terminal, terminal_semicolon, terminal_right_brace };
-            TSyntaxAnalyzerInput str_block_3 = { terminal_left_brace, terminal, terminal_semicolon, terminal, terminal_semicolon, terminal, terminal_semicolon, terminal_right_brace };
+            TSyntaxAnalyzerInput str_block_1 = { terminal, terminal, terminal_left_paren, terminal_right_paren, terminal_left_brace, terminal_left_brace, terminal, terminal_semicolon, terminal_right_brace, terminal_right_brace };
+            TSyntaxAnalyzerInput str_block_2 = { terminal, terminal, terminal_left_paren, terminal_right_paren, terminal_left_brace, terminal_left_brace, terminal, terminal_semicolon, terminal, terminal_semicolon, terminal_right_brace, terminal_right_brace };
+            TSyntaxAnalyzerInput str_block_3 = { terminal, terminal, terminal_left_paren, terminal_right_paren, terminal_left_brace, terminal_left_brace, terminal, terminal_semicolon, terminal, terminal_semicolon, terminal, terminal_semicolon, terminal_right_brace, terminal_right_brace };
 
             SyntaxAnalysis::SyntaxAnalyzer sa(*p_grammar);
 
