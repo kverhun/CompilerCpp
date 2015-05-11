@@ -25,10 +25,19 @@ std::unique_ptr<Grammar> SyntaxAnalysis::GenerateGrammarCpp()
     auto and_expression_ex = NonTerminal("and-expression-ex");
     auto equality_expression = NonTerminal("equality-expression");
     auto equality_expression_ex = NonTerminal("equality-expression-ex");
+    auto relational_expression = NonTerminal("relational-expression");
+    auto relational_expression_ex = NonTerminal("relational-expression-ex");
+    auto shift_expression = NonTerminal("shift-expression");
+    auto shift_expression_ex = NonTerminal("shilf-expression-ex");
     auto additive_expression = NonTerminal("additive-expression");
     auto additive_expression_ex = NonTerminal("additive-expression-ex");
     auto multiplicative_expression = NonTerminal("multiplicative-expression");
     auto multiplicative_expression_ex = NonTerminal("multiplicative-expression-ex");
+    auto unary_expression = NonTerminal("unary-expression");
+    auto unary_expression_ex = NonTerminal("unary-expression-ex");
+    auto unary_operator = NonTerminal("unary-operator");
+    auto postfix_expression = NonTerminal("postfix-expression");
+    auto postfix_expression_ex = NonTerminal("postfix-expression-ex");
     auto primary_expression = NonTerminal("primary-expression");
     auto expression = NonTerminal("expression");
     auto expression_optional = NonTerminal("expression-opt");
@@ -40,9 +49,21 @@ std::unique_ptr<Grammar> SyntaxAnalysis::GenerateGrammarCpp()
     auto statement_sequence_optional = NonTerminal("statement-sequence-opt");
     auto compound_statement = NonTerminal("compound-statement");
 
+    auto definition = NonTerminal("definition");
+    auto definition_sequence = NonTerminal("definition-sequence");
+    auto definition_sequence_optional = NonTerminal("definition-sequence-optional");
+    auto translation_unit = NonTerminal("translation-unit");
+
+
     auto terminal = Terminal("ID");
-    auto terminal_ass_op1 = Terminal("=");
-    auto terminal_ass_op2 = Terminal("+=");
+    std::vector<GrammarSymbol> terminal_assignment_ops = {
+        Terminal("="), Terminal("+="), Terminal("-="), Terminal("*="),
+        Terminal("/="), Terminal("%="), Terminal(">>="), Terminal("<<="),
+        Terminal("&="), Terminal("|="), Terminal("^=")
+    };
+    std::vector<GrammarSymbol> terminal_unary_ops = {
+        Terminal("!"), Terminal("+"), Terminal("-"), Terminal("*"), Terminal("&"), Terminal("~")
+    };
     auto terminal_logical_or_op = Terminal("||");
     auto terminal_logical_and_op = Terminal("&&");
     auto terminal_inclusive_or_op = Terminal("|");
@@ -50,6 +71,12 @@ std::unique_ptr<Grammar> SyntaxAnalysis::GenerateGrammarCpp()
     auto terminal_bitwise_and_op = Terminal("&");
     auto terminal_equality_op1 = Terminal("==");
     auto terminal_equality_op2 = Terminal("!=");
+    auto terminal_shift_op1 = Terminal("<<");
+    auto terminal_shift_op2 = Terminal(">>");
+    auto terminal_relation_op1 = Terminal("<");
+    auto terminal_relation_op2 = Terminal(">");
+    auto terminal_relation_op3 = Terminal(">=");
+    auto terminal_relation_op4 = Terminal("<=");
     auto terminal_add_op1 = Terminal("+");
     auto terminal_add_op2 = Terminal("-");
     auto terminal_mult_op1 = Terminal("*");
@@ -66,9 +93,14 @@ std::unique_ptr<Grammar> SyntaxAnalysis::GenerateGrammarCpp()
 
     auto lambda_symbol = GrammarSymbol(GrammarSymbol::GST_LAMBDA);
 
-    std::unique_ptr<Grammar> p_grammar(new Grammar(statement));
+    std::unique_ptr<Grammar> p_grammar(new Grammar(translation_unit));
 
     (*p_grammar)
+        (translation_unit, { { definition_sequence_optional } })
+        (definition_sequence_optional, { { definition_sequence }, {lambda_symbol} })
+        (definition_sequence, { { definition, definition_sequence }, {definition} })
+        (definition, { {statement} })
+
         (statement, { { expression_statement }, { if_statement }, { while_statement }, { compound_statement } })
 
         (compound_statement, { { terminal_left_brace, statement_sequence_optional, terminal_right_brace } })
@@ -85,14 +117,24 @@ std::unique_ptr<Grammar> SyntaxAnalysis::GenerateGrammarCpp()
 
         (primary_expression, { { terminal }, { terminal_left_paren, expression, terminal_right_paren } })
 
-        (multiplicative_expression, { { primary_expression, multiplicative_expression_ex } })
-        (multiplicative_expression_ex, { { terminal_mult_op1, primary_expression, multiplicative_expression_ex }, { terminal_mult_op2, terminal, multiplicative_expression_ex }, { terminal_mult_op3, terminal, multiplicative_expression_ex }, { lambda_symbol } })
+        (unary_expression, { {unary_operator, primary_expression}, { primary_expression } })
+
+        (unary_operator, { { terminal_unary_ops[0] }, { terminal_unary_ops[1] }, { terminal_unary_ops[2] }, { terminal_unary_ops[3] }, { terminal_unary_ops[4] }, {terminal_unary_ops[5]} })
+
+        (multiplicative_expression, { { unary_expression, multiplicative_expression_ex } })
+        (multiplicative_expression_ex, { { terminal_mult_op1, unary_expression, multiplicative_expression_ex }, { terminal_mult_op2, unary_expression, multiplicative_expression_ex }, { terminal_mult_op3, unary_expression, multiplicative_expression_ex }, { lambda_symbol } })
 
         (additive_expression, { { multiplicative_expression, additive_expression_ex } })
         (additive_expression_ex, { { terminal_add_op1, multiplicative_expression, additive_expression_ex }, { terminal_add_op2, terminal, additive_expression_ex }, { lambda_symbol } })
 
-        (equality_expression, { { additive_expression, equality_expression_ex } })
-        (equality_expression_ex, { { terminal_equality_op1, additive_expression, equality_expression_ex }, { terminal_ass_op2, terminal, equality_expression_ex }, { lambda_symbol } })
+        (shift_expression, { { additive_expression, shift_expression_ex } })
+        (shift_expression_ex, { { terminal_shift_op1, additive_expression, shift_expression_ex }, { terminal_shift_op2, additive_expression, shift_expression_ex }, {lambda_symbol} })
+
+        (relational_expression, { {shift_expression, relational_expression_ex} })
+        (relational_expression_ex, { {terminal_relation_op1, shift_expression, relational_expression_ex}, {terminal_relation_op2, shift_expression, relational_expression_ex}, {terminal_relation_op3, shift_expression, relational_expression_ex}, {terminal_relation_op4, shift_expression, relational_expression_ex}, {lambda_symbol} })
+
+        (equality_expression, { { relational_expression, equality_expression_ex } })
+        (equality_expression_ex, { { terminal_equality_op1, relational_expression , equality_expression_ex }, { terminal_equality_op2, relational_expression, equality_expression_ex }, { lambda_symbol } })
 
         (and_expression, { { equality_expression, and_expression_ex } })
         (and_expression_ex, { { terminal_bitwise_and_op, equality_expression, and_expression_ex }, { lambda_symbol } })
@@ -108,7 +150,11 @@ std::unique_ptr<Grammar> SyntaxAnalysis::GenerateGrammarCpp()
         (logical_or_expression, { { logical_and_expression, logical_or_expression_ex } })
         (logical_or_expression_ex, { { terminal_logical_or_op, logical_and_expression, logical_or_expression_ex }, { lambda_symbol } })
         (assingment_expression, { { logical_or_expression, assingment_operator, assingment_expression }, { logical_or_expression } })
-        (assingment_operator, { { terminal_ass_op1 }, { terminal_ass_op2 } })
+        (assingment_operator, { 
+            { terminal_assignment_ops[0] }, { terminal_assignment_ops[1] }, { terminal_assignment_ops[2] },
+            { terminal_assignment_ops[3] }, { terminal_assignment_ops[4] }, { terminal_assignment_ops[5] },
+            { terminal_assignment_ops[6] }, { terminal_assignment_ops[7] }, { terminal_assignment_ops[8] },
+            { terminal_assignment_ops[9] }, { terminal_assignment_ops[10] }, })
         (expression, { { assingment_expression } })
         ;
 
