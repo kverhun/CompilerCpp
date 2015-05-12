@@ -473,6 +473,26 @@ namespace LexicalAnalyzerUnitTests
             Assert::IsTrue(res[0].m_lexeme_class == ECppLexemeClasses::LC_STRING_LITERAL);
         }
 
+        TEST_METHOD(TestParenIssue01)
+        {
+            LanguageInfoCpp langinfo;
+            LexicalAnalyzer cpp_analyzer(langinfo);
+
+            auto res = cpp_analyzer.ParseString("(a");
+            Assert::IsTrue(res.size() == 2);
+            //Assert::IsTrue(res[0].m_lexeme_class == ECppLexemeClasses::LC_STRING_LITERAL);
+        }
+
+        TEST_METHOD(TestParenIssue02)
+        {
+            LanguageInfoCpp langinfo;
+            LexicalAnalyzer cpp_analyzer(langinfo);
+
+            auto res = cpp_analyzer.ParseString("a (a");
+            Assert::IsTrue(res.size() == 3);
+            //Assert::IsTrue(res[0].m_lexeme_class == ECppLexemeClasses::LC_STRING_LITERAL);
+        }
+
         TEST_METHOD(ComplexTest1)
         {
             LanguageInfoCpp langinfo;
