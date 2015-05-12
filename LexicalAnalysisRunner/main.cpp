@@ -99,7 +99,7 @@ int main(int i_argc, const char** i_argv)
         for (auto symbol_sequence : derivation)
         {
             for (auto symbol : symbol_sequence)
-                out_stream << symbol.ToString() << "; ";
+                out_stream << symbol.ToString() << " ";
 
             out_stream << std::endl;
         }
