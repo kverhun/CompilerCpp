@@ -71,6 +71,39 @@ namespace SyntaxAnalyzerUnitTests
 
         }
 
+        TEST_METHOD(SALATestStandardTypes)
+        {
+            typedef LexicalAnalysis::TParsedString TParsedString;
+            using LexicalAnalysis::LexemeInfo;
+            using LexicalAnalysis::LanguageInfoCpp;
+            using LexicalAnalysis::LexicalAnalyzer;
+
+            LanguageInfoCpp langinfo;
+            LexicalAnalyzer cpp_analyzer(langinfo);
+
+            auto string = 
+                "int main (float ID, double ID, char ID){ while(ID) \
+                 {      \
+                    ID = ID + (ID * ID); \
+                    if (ID = ID+ID) \
+                    { ID; } \
+                    else   \
+                    {      \
+                        ID = ID + ID * ID * (ID + ID); \
+                        ID = ID + ID;  \
+                    }                  \
+                 }\
+                 }";
+            
+                    
+            auto res = cpp_analyzer.ParseString(string);
+            auto p_grammar = SyntaxAnalysis::GenerateGrammarCpp();
+
+            SyntaxAnalysis::SyntaxAnalyzer sa(*p_grammar);
+            Assert::IsTrue(sa.Analyze(SyntaxAnalysis::SyntaxAnalysisHelpers::FixParsedStringForCpp(res)));
+
+        }
+
         TEST_METHOD(SALAShouldReturnCorrectProductionSeq1)
         {
             typedef LexicalAnalysis::TParsedString TParsedString;

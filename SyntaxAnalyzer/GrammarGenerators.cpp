@@ -48,8 +48,11 @@ std::unique_ptr<Grammar> SyntaxAnalysis::GenerateGrammarCpp()
     auto statement_sequence = NonTerminal("statement-sequence");
     auto statement_sequence_optional = NonTerminal("statement-sequence-opt");
     auto compound_statement = NonTerminal("compound-statement");
-
+    
+    auto parameter_declaration_list_optional = NonTerminal("parameter-declaration-list-opt");
+    auto parameter_declaration = NonTerminal("parameter-declaration");
     auto parameter_declaration_list = NonTerminal("parameter-declaration-list");
+    auto type_specifier = NonTerminal("type-specifier");
     auto function_declarator = NonTerminal("function-declarator");
     auto function_body = NonTerminal("function-body");
     auto function_definition = NonTerminal("function-definition");
@@ -96,6 +99,11 @@ std::unique_ptr<Grammar> SyntaxAnalysis::GenerateGrammarCpp()
     auto terminal_if = Terminal("if");
     auto terminal_else = Terminal("else");
     auto terminal_while = Terminal("while");
+    auto terminal_comma = Terminal(",");
+    std::vector<GrammarSymbol> terminal_types = {
+        Terminal("int"), Terminal("float"), Terminal("double"), Terminal("char"),
+        Terminal("bool"), Terminal("long"), Terminal("void")
+    };
 
     auto lambda_symbol = GrammarSymbol(GrammarSymbol::GST_LAMBDA);
 
@@ -108,10 +116,14 @@ std::unique_ptr<Grammar> SyntaxAnalysis::GenerateGrammarCpp()
         (declaration, { {function_definition} })
 
         (function_definition, { {function_declarator, function_body} })
-        (function_declarator, { {terminal, terminal, terminal_left_paren, parameter_declaration_list, terminal_right_paren} })
+        (function_declarator, { {type_specifier, terminal, terminal_left_paren, parameter_declaration_list_optional, terminal_right_paren} })
         (function_body, { {compound_statement} })
 
-        (parameter_declaration_list, { {lambda_symbol} })
+        (parameter_declaration_list_optional, { { parameter_declaration_list }, { lambda_symbol } })
+        (parameter_declaration_list, { { parameter_declaration, terminal_comma, parameter_declaration_list }, { parameter_declaration }})
+
+        (parameter_declaration, { { type_specifier, terminal } })
+        (type_specifier, { { terminal }, { terminal_types[0] }, { terminal_types[1] }, { terminal_types[2] }, { terminal_types[3] }, { terminal_types[4] }, { terminal_types[5] }, {terminal_types[6]} })
 
         (statement, { { expression_statement }, { if_statement }, { while_statement }, { compound_statement } })
 
