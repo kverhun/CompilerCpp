@@ -106,7 +106,7 @@ std::unique_ptr<Grammar> SyntaxAnalysis::GenerateGrammarCpp()
     auto terminal_comma = Terminal(",");
     std::vector<GrammarSymbol> terminal_types = {
         Terminal("int"), Terminal("float"), Terminal("double"), Terminal("char"),
-        Terminal("bool"), Terminal("long"), Terminal("void")
+        Terminal("bool"), Terminal("long"), Terminal("short"), Terminal("void"), Terminal("auto")
     };
     auto terminal_return = Terminal("return");
 
