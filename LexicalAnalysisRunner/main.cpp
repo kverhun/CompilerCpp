@@ -82,6 +82,8 @@ int main(int i_argc, const char** i_argv)
         out_stream << lexeme_value << first_separator << lexeme_type << second_separator << "l: " << lexeme_file_position.first << ", c: " << lexeme_file_position.second << std::endl;
     }
 
+    auto derivation = SyntaxAnalysis::SyntaxAnalysisHelpers::GetDerivation(*p_grammar, productions_used);
+
     out_stream << "========= SYNTAX ANALYSIS ============" << std::endl;
     if (syntax_success)
     {
@@ -91,6 +93,14 @@ int main(int i_argc, const char** i_argv)
         for (size_t i = 0; i + 1 < productions_used.size(); ++i)
             out_stream << productions_used[i] << "; ";
         out_stream << *productions_used.rbegin() << "]";
+
+        for (auto symbol_sequence : derivation)
+        {
+            for (auto symbol : symbol_sequence)
+                out_stream << symbol.ToString() << "; ";
+
+            out_stream << std::endl;
+        }
     }
     else
     {

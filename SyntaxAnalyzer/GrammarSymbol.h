@@ -8,6 +8,7 @@ namespace SyntaxAnalysis
 {
     class Terminal
     {
+        friend class GrammarSymbol;
         friend bool operator == (const Terminal& i_terminal, const LexicalAnalysis::LexemeInfo& i_lexeme_info);
         friend bool operator == (const LexicalAnalysis::LexemeInfo& i_lexeme_info, const Terminal& i_terminal);
     public:
@@ -23,6 +24,7 @@ namespace SyntaxAnalysis
 
     class NonTerminal
     {
+        friend class GrammarSymbol;
     public:
         NonTerminal(const std::string& i_str);
         bool operator == (const NonTerminal& i_other) const;
@@ -59,6 +61,8 @@ namespace SyntaxAnalysis
         bool operator < (const GrammarSymbol& i_other) const;
 
         bool operator == (const GrammarSymbol& i_other) const;
+
+        std::string ToString() const;
 
     private:
         EGrammarSymbolType m_type;

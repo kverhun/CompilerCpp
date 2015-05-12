@@ -100,6 +100,17 @@ bool GrammarSymbol::IsNonTerminal() const
 }
 
 //------------------------------------------------------------------------------
+std::string GrammarSymbol::ToString() const
+{
+    if (IsTerminal())
+        return m_terminal_info->m_str;
+    else if (IsNonTerminal())
+        return m_nonterminal_info->m_str;
+    else
+        return std::string("");
+}
+
+//------------------------------------------------------------------------------
 Terminal::Terminal(const std::string& i_str)
 : m_str(i_str)
 {
