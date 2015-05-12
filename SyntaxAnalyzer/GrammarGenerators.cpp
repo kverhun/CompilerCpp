@@ -41,6 +41,8 @@ std::unique_ptr<Grammar> SyntaxAnalysis::GenerateGrammarCpp()
     auto primary_expression = NonTerminal("primary-expression");
     auto expression = NonTerminal("expression");
     auto expression_optional = NonTerminal("expression-opt");
+    auto expression_list = NonTerminal("expression-list");
+    auto expression_list_optional = NonTerminal("expression-list-optional");
     auto expression_statement = NonTerminal("expression-statement");
     auto if_statement = NonTerminal("if-statement");
     auto while_statement = NonTerminal("while-statement");
@@ -140,8 +142,8 @@ std::unique_ptr<Grammar> SyntaxAnalysis::GenerateGrammarCpp()
 
         (while_statement, { { terminal_while, terminal_left_paren, expression, terminal_right_paren, statement } })
 
-        (primary_expression, { { terminal_identifier }, { terminal_literal }, { terminal_left_paren, expression, terminal_right_paren }
-})
+        (primary_expression, { {terminal_identifier, terminal_left_paren, expression_list_optional, terminal_right_paren}, { terminal_identifier },
+        { terminal_literal }, { terminal_left_paren, expression, terminal_right_paren }})
 
         (unary_expression, { {unary_operator, primary_expression}, { primary_expression } })
 
@@ -182,6 +184,8 @@ std::unique_ptr<Grammar> SyntaxAnalysis::GenerateGrammarCpp()
             { terminal_assignment_ops[6] }, { terminal_assignment_ops[7] }, { terminal_assignment_ops[8] },
             { terminal_assignment_ops[9] }, { terminal_assignment_ops[10] }, })
         (expression, { { assingment_expression } })
+        (expression_list, { { expression, terminal_comma, expression_list }, {expression} })
+        (expression_list_optional, { { expression_list }, {lambda_symbol} })
         ;
 
     return std::move(p_grammar);
