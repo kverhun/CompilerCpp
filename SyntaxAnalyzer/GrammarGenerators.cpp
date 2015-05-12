@@ -52,6 +52,8 @@ std::unique_ptr<Grammar> SyntaxAnalysis::GenerateGrammarCpp()
     auto statement_sequence_optional = NonTerminal("statement-sequence-opt");
     auto compound_statement = NonTerminal("compound-statement");
     
+    auto identifier_list = NonTerminal("identifier-list");
+    auto variable_definition = NonTerminal("variable-definition");
     auto parameter_declaration_list_optional = NonTerminal("parameter-declaration-list-opt");
     auto parameter_declaration = NonTerminal("parameter-declaration");
     auto parameter_declaration_list = NonTerminal("parameter-declaration-list");
@@ -116,9 +118,12 @@ std::unique_ptr<Grammar> SyntaxAnalysis::GenerateGrammarCpp()
 
     (*p_grammar)
         (translation_unit, { { declaration_sequence } })
-        (declaration_sequence_optional, { { declaration_sequence }, {lambda_symbol} })
-        (declaration_sequence, { { declaration, declaration_sequence }, {declaration} })
-        (declaration, { {function_definition} })
+        (declaration_sequence_optional, { { declaration_sequence }, { lambda_symbol } })
+        (declaration_sequence, { { declaration, declaration_sequence }, { declaration } })
+        (declaration, { { function_definition }, { variable_definition } })
+
+        (variable_definition, { { type_specifier, identifier_list, terminal_semicolon } })
+        (identifier_list, { { terminal_identifier, terminal_comma, identifier_list }, {terminal_identifier} })
 
         (function_definition, { {function_declarator, function_body} })
         (function_declarator, { {type_specifier, terminal_identifier, terminal_left_paren, parameter_declaration_list_optional, terminal_right_paren} })
@@ -130,7 +135,7 @@ std::unique_ptr<Grammar> SyntaxAnalysis::GenerateGrammarCpp()
         (parameter_declaration, { { type_specifier, terminal_identifier } })
         (type_specifier, { { terminal_identifier }, { terminal_types[0] }, { terminal_types[1] }, { terminal_types[2] }, { terminal_types[3] }, { terminal_types[4] }, { terminal_types[5] }, {terminal_types[6]} })
 
-        (statement, { { expression_statement }, { if_statement }, { while_statement }, {return_statement}, { compound_statement } })
+        (statement, { { expression_statement }, { if_statement }, { while_statement }, { return_statement }, {variable_definition}, { compound_statement } })
 
         (compound_statement, { { terminal_left_brace, statement_sequence_optional, terminal_right_brace } })
 
@@ -146,8 +151,8 @@ std::unique_ptr<Grammar> SyntaxAnalysis::GenerateGrammarCpp()
 
         (return_statement, { { terminal_return, expression, terminal_semicolon }, {terminal_return, terminal_semicolon} })
 
-        (primary_expression, { {terminal_identifier, terminal_left_paren, expression_list_optional, terminal_right_paren}, { terminal_identifier },
-        { terminal_literal }, { terminal_left_paren, expression, terminal_right_paren }})
+        (primary_expression, { { terminal_identifier, terminal_left_paren, expression_list_optional, terminal_right_paren }, { terminal_left_paren, expression, terminal_right_paren }, { terminal_identifier },
+        { terminal_literal }})
 
         (unary_expression, { {unary_operator, primary_expression}, { primary_expression } })
 
