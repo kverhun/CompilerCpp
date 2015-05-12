@@ -94,6 +94,8 @@ int main(int i_argc, const char** i_argv)
             out_stream << productions_used[i] << "; ";
         out_stream << *productions_used.rbegin() << "]";
 
+        out_stream << std::endl << "Derivation:" << std::endl;
+
         for (auto symbol_sequence : derivation)
         {
             for (auto symbol : symbol_sequence)
