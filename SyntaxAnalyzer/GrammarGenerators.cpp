@@ -64,7 +64,8 @@ std::unique_ptr<Grammar> SyntaxAnalysis::GenerateGrammarCpp()
     auto translation_unit = NonTerminal("translation-unit");
 
 
-    auto terminal = Terminal("ID");
+    auto terminal_identifier = Terminal("ID");
+    auto terminal_literal = Terminal("LITERAL");
     std::vector<GrammarSymbol> terminal_assignment_ops = {
         Terminal("="), Terminal("+="), Terminal("-="), Terminal("*="),
         Terminal("/="), Terminal("%="), Terminal(">>="), Terminal("<<="),
@@ -116,14 +117,14 @@ std::unique_ptr<Grammar> SyntaxAnalysis::GenerateGrammarCpp()
         (declaration, { {function_definition} })
 
         (function_definition, { {function_declarator, function_body} })
-        (function_declarator, { {type_specifier, terminal, terminal_left_paren, parameter_declaration_list_optional, terminal_right_paren} })
+        (function_declarator, { {type_specifier, terminal_identifier, terminal_left_paren, parameter_declaration_list_optional, terminal_right_paren} })
         (function_body, { {compound_statement} })
 
         (parameter_declaration_list_optional, { { parameter_declaration_list }, { lambda_symbol } })
         (parameter_declaration_list, { { parameter_declaration, terminal_comma, parameter_declaration_list }, { parameter_declaration }})
 
-        (parameter_declaration, { { type_specifier, terminal } })
-        (type_specifier, { { terminal }, { terminal_types[0] }, { terminal_types[1] }, { terminal_types[2] }, { terminal_types[3] }, { terminal_types[4] }, { terminal_types[5] }, {terminal_types[6]} })
+        (parameter_declaration, { { type_specifier, terminal_identifier } })
+        (type_specifier, { { terminal_identifier }, { terminal_types[0] }, { terminal_types[1] }, { terminal_types[2] }, { terminal_types[3] }, { terminal_types[4] }, { terminal_types[5] }, {terminal_types[6]} })
 
         (statement, { { expression_statement }, { if_statement }, { while_statement }, { compound_statement } })
 
@@ -139,7 +140,8 @@ std::unique_ptr<Grammar> SyntaxAnalysis::GenerateGrammarCpp()
 
         (while_statement, { { terminal_while, terminal_left_paren, expression, terminal_right_paren, statement } })
 
-        (primary_expression, { { terminal }, { terminal_left_paren, expression, terminal_right_paren } })
+        (primary_expression, { { terminal_identifier }, { terminal_literal }, { terminal_left_paren, expression, terminal_right_paren }
+})
 
         (unary_expression, { {unary_operator, primary_expression}, { primary_expression } })
 
@@ -149,7 +151,7 @@ std::unique_ptr<Grammar> SyntaxAnalysis::GenerateGrammarCpp()
         (multiplicative_expression_ex, { { terminal_mult_op1, unary_expression, multiplicative_expression_ex }, { terminal_mult_op2, unary_expression, multiplicative_expression_ex }, { terminal_mult_op3, unary_expression, multiplicative_expression_ex }, { lambda_symbol } })
 
         (additive_expression, { { multiplicative_expression, additive_expression_ex } })
-        (additive_expression_ex, { { terminal_add_op1, multiplicative_expression, additive_expression_ex }, { terminal_add_op2, terminal, additive_expression_ex }, { lambda_symbol } })
+        (additive_expression_ex, { { terminal_add_op1, multiplicative_expression, additive_expression_ex }, { terminal_add_op2, terminal_identifier, additive_expression_ex }, { lambda_symbol } })
 
         (shift_expression, { { additive_expression, shift_expression_ex } })
         (shift_expression_ex, { { terminal_shift_op1, additive_expression, shift_expression_ex }, { terminal_shift_op2, additive_expression, shift_expression_ex }, {lambda_symbol} })
