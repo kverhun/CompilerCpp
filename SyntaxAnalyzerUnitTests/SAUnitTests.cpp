@@ -981,11 +981,11 @@ namespace SyntaxAnalyzerUnitTests
             Assert::IsTrue(res3);
 
             Assert::IsTrue(1 == v1.size());
-            Assert::IsTrue(1 == v1[0]);
+            Assert::IsTrue(0 == v1[0]);
             Assert::IsTrue(1 == v2.size());
-            Assert::IsTrue(2 == v2[0]);
+            Assert::IsTrue(1 == v2[0]);
             Assert::IsTrue(1 == v3.size());
-            Assert::IsTrue(3 == v3[0]);
+            Assert::IsTrue(2 == v3[0]);
 
             Assert::IsFalse(sa.Analyze(str4));
             Assert::IsFalse(sa.Analyze(str5));

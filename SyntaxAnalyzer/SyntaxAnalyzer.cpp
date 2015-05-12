@@ -85,7 +85,7 @@ bool SyntaxAnalysis::SyntaxAnalyzer::_TryAllProductions(size_t& io_next_index, s
     {
         io_next_index = next_index_cached;
         o_productions_used = productions_cached;
-        o_productions_used.push_back(i + 1);
+        o_productions_used.push_back(i);
         if (_TryProduction(io_next_index, o_productions_used, i_parsed_string, i_prod_rhs[i]))
         {
             return true;

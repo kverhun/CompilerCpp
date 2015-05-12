@@ -197,29 +197,28 @@ namespace SyntaxAnalyzerUnitTests
 
             Assert::IsTrue(22 == v.size());
 
-            Assert::IsTrue(1 == v[0]);
-            Assert::IsTrue(1 == v[1]);
-            Assert::IsTrue(1 == v[2]);
-            Assert::IsTrue(1 == v[3]);
-            Assert::IsTrue(2 == v[4]);
-            Assert::IsTrue(1 == v[5]);
-            Assert::IsTrue(1 == v[6]);
-            Assert::IsTrue(1 == v[7]);
-            Assert::IsTrue(1 == v[8]);
-            Assert::IsTrue(1 == v[9]);
-            Assert::IsTrue(1 == v[10]);
-            Assert::IsTrue(1 == v[11]);
-            Assert::IsTrue(1 == v[12]);
-            Assert::IsTrue(1 == v[13]);
-            Assert::IsTrue(4 == v[14]);
-            Assert::IsTrue(3 == v[15]);
-            Assert::IsTrue(3 == v[16]);
-            Assert::IsTrue(2 == v[17]);
-            Assert::IsTrue(2 == v[18]);
-            Assert::IsTrue(2 == v[19]);
-            Assert::IsTrue(2 == v[20]);
-            Assert::IsTrue(2 == v[21]);
-
+            Assert::IsTrue(0 == v[0]);
+            Assert::IsTrue(0 == v[1]);
+            Assert::IsTrue(0 == v[2]);
+            Assert::IsTrue(0 == v[3]);
+            Assert::IsTrue(1 == v[4]);
+            Assert::IsTrue(0 == v[5]);
+            Assert::IsTrue(0 == v[6]);
+            Assert::IsTrue(0 == v[7]);
+            Assert::IsTrue(0 == v[8]);
+            Assert::IsTrue(0 == v[9]);
+            Assert::IsTrue(0 == v[10]);
+            Assert::IsTrue(0 == v[11]);
+            Assert::IsTrue(0 == v[12]);
+            Assert::IsTrue(0 == v[13]);
+            Assert::IsTrue(3 == v[14]);
+            Assert::IsTrue(2 == v[15]);
+            Assert::IsTrue(2 == v[16]);
+            Assert::IsTrue(1 == v[17]);
+            Assert::IsTrue(1 == v[18]);
+            Assert::IsTrue(1 == v[19]);
+            Assert::IsTrue(1 == v[20]);
+            Assert::IsTrue(1 == v[21]);
 
         }
 	};
