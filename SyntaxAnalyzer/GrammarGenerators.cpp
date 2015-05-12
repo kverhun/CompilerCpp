@@ -46,6 +46,7 @@ std::unique_ptr<Grammar> SyntaxAnalysis::GenerateGrammarCpp()
     auto expression_statement = NonTerminal("expression-statement");
     auto if_statement = NonTerminal("if-statement");
     auto while_statement = NonTerminal("while-statement");
+    auto return_statement = NonTerminal("return-statement");
     auto statement = NonTerminal("statement");
     auto statement_sequence = NonTerminal("statement-sequence");
     auto statement_sequence_optional = NonTerminal("statement-sequence-opt");
@@ -107,13 +108,14 @@ std::unique_ptr<Grammar> SyntaxAnalysis::GenerateGrammarCpp()
         Terminal("int"), Terminal("float"), Terminal("double"), Terminal("char"),
         Terminal("bool"), Terminal("long"), Terminal("void")
     };
+    auto terminal_return = Terminal("return");
 
     auto lambda_symbol = GrammarSymbol(GrammarSymbol::GST_LAMBDA);
 
     std::unique_ptr<Grammar> p_grammar(new Grammar(translation_unit));
 
     (*p_grammar)
-        (translation_unit, { { declaration_sequence_optional } })
+        (translation_unit, { { declaration_sequence } })
         (declaration_sequence_optional, { { declaration_sequence }, {lambda_symbol} })
         (declaration_sequence, { { declaration, declaration_sequence }, {declaration} })
         (declaration, { {function_definition} })
@@ -128,7 +130,7 @@ std::unique_ptr<Grammar> SyntaxAnalysis::GenerateGrammarCpp()
         (parameter_declaration, { { type_specifier, terminal_identifier } })
         (type_specifier, { { terminal_identifier }, { terminal_types[0] }, { terminal_types[1] }, { terminal_types[2] }, { terminal_types[3] }, { terminal_types[4] }, { terminal_types[5] }, {terminal_types[6]} })
 
-        (statement, { { expression_statement }, { if_statement }, { while_statement }, { compound_statement } })
+        (statement, { { expression_statement }, { if_statement }, { while_statement }, {return_statement}, { compound_statement } })
 
         (compound_statement, { { terminal_left_brace, statement_sequence_optional, terminal_right_brace } })
 
@@ -141,6 +143,8 @@ std::unique_ptr<Grammar> SyntaxAnalysis::GenerateGrammarCpp()
         (if_statement, { { terminal_if, terminal_left_paren, expression, terminal_right_paren, statement, terminal_else, statement }, { terminal_if, terminal_left_paren, expression, terminal_right_paren, statement } })
 
         (while_statement, { { terminal_while, terminal_left_paren, expression, terminal_right_paren, statement } })
+
+        (return_statement, { { terminal_return, expression, terminal_semicolon }, {terminal_return, terminal_semicolon} })
 
         (primary_expression, { {terminal_identifier, terminal_left_paren, expression_list_optional, terminal_right_paren}, { terminal_identifier },
         { terminal_literal }, { terminal_left_paren, expression, terminal_right_paren }})
