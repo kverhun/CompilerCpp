@@ -105,7 +105,7 @@ int main(int i_argc, const char** i_argv)
         out_stream << "[";
         for (size_t i = 0; i + 1 < productions_used.size(); ++i)
             out_stream << productions_used[i] + 1 << "; ";
-        out_stream << *productions_used.rbegin() << "]";
+        out_stream << (*productions_used.rbegin()) + 1 << "]";
 
         out_stream << std::endl << "Derivation:" << std::endl;
 
