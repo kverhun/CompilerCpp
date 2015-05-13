@@ -217,7 +217,7 @@ void LanguageInfoCpp::_CreateLexemeAutomataPoolMap()
     separator_dfa.AddTransition(0, m_separators, 1);
 
     auto separator_or_op_strings = {
-        "-=", "*=", "/=", "!=", "==", "%=", "|=", "&=", "||",
+        "+=", "-=", "*=", "/=", "!=", "==", "%=", "|=", "&=", "||",
         "&&", "++", "--", ">>", "<<", "<<=", ">>=", "->*", "->", "...", "::", "new", "delete"
     };
 
