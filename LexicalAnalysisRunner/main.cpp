@@ -59,7 +59,17 @@ int main(int i_argc, const char** i_argv)
     
     auto parsed_file_for_as = SyntaxAnalysis::SyntaxAnalysisHelpers::FixParsedStringForCpp(parsed_file);
     std::vector<size_t> productions_used;
-    bool syntax_success = syntax_analyzer.Analyze(productions_used, parsed_file_for_as);
+    bool syntax_success = false;
+    bool syntax_crash = false;
+    try
+    {
+        syntax_success = syntax_analyzer.Analyze(productions_used, parsed_file_for_as);
+    }
+    catch (...)
+    {
+        syntax_crash = true;
+    }
+    
 
     size_t col1_width = 30;
     size_t col2_width = 30;
@@ -82,7 +92,10 @@ int main(int i_argc, const char** i_argv)
         out_stream << lexeme_value << first_separator << lexeme_type << second_separator << "l: " << lexeme_file_position.first << ", c: " << lexeme_file_position.second << std::endl;
     }
 
-    auto derivation = SyntaxAnalysis::SyntaxAnalysisHelpers::GetDerivation(*p_grammar, productions_used);
+    std::vector<SyntaxAnalysis::TGrammarSymbolSequence> derivation;
+    
+    if (syntax_success)
+        derivation = SyntaxAnalysis::SyntaxAnalysisHelpers::GetDerivation(*p_grammar, productions_used);
 
     out_stream << "========= SYNTAX ANALYSIS ============" << std::endl;
     if (syntax_success)
@@ -104,9 +117,13 @@ int main(int i_argc, const char** i_argv)
             out_stream << std::endl;
         }
     }
-    else
+    else if (!syntax_crash)
     {
         out_stream << "FAILED" << std::endl;
+    }
+    else
+    {
+        out_stream << "Out of memory - recursion too deep" << std::endl;
     }
 
     if (i_argc > 2)

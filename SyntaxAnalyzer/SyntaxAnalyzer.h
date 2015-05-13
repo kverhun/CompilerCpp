@@ -25,6 +25,7 @@ namespace SyntaxAnalysis
     private:
 
         const Grammar& m_grammar;
+        size_t m_recursion_level;
 
     };
 }

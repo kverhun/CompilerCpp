@@ -18,6 +18,7 @@ namespace
         return res;
     }
 
+    static const size_t g_max_recursion_level = 200;
 }
 
 //------------------------------------------------------------------------------
@@ -38,6 +39,7 @@ bool SyntaxAnalyzer::Analyze(const TSyntaxAnalyzerInput& i_input)
 bool SyntaxAnalyzer::Analyze(std::vector<size_t>& o_productions_used, const TSyntaxAnalyzerInput& i_input)
 {
     size_t current_index = 0;
+    m_recursion_level = 0;
 
     auto start_symbol = m_grammar.GetStartSymbol();
     auto start_symbol_productions = m_grammar.GetProduction(start_symbol);
@@ -52,6 +54,7 @@ bool SyntaxAnalyzer::Analyze(std::vector<size_t>& o_productions_used, const TSyn
 //------------------------------------------------------------------------------
 bool SyntaxAnalyzer::_TryProduction(size_t& io_next_index, std::vector<size_t>& o_productions_used, const TSyntaxAnalyzerInput& i_parsed_string, const TGrammarSymbolSequence& i_symbol_seq)
 {
+    ++m_recursion_level;
     bool res = true;
     for (auto gs : i_symbol_seq)
     {
@@ -71,13 +74,17 @@ bool SyntaxAnalyzer::_TryProduction(size_t& io_next_index, std::vector<size_t>& 
                 break;
         }
     }
-
+    --m_recursion_level;
     return res;
 }
 
 //------------------------------------------------------------------------------
 bool SyntaxAnalysis::SyntaxAnalyzer::_TryAllProductions(size_t& io_next_index, std::vector<size_t>& o_productions_used, const TSyntaxAnalyzerInput& i_parsed_string, const TProductionRHS& i_prod_rhs)
 {
+    ++m_recursion_level;
+    if (m_recursion_level > g_max_recursion_level)
+        throw std::exception("recursion too deep");
+
     size_t next_index_cached = io_next_index;
     std::vector<size_t> productions_cached = o_productions_used;
 
@@ -88,9 +95,11 @@ bool SyntaxAnalysis::SyntaxAnalyzer::_TryAllProductions(size_t& io_next_index, s
         o_productions_used.push_back(i);
         if (_TryProduction(io_next_index, o_productions_used, i_parsed_string, i_prod_rhs[i]))
         {
+            --m_recursion_level;
             return true;
         }
     }
+    --m_recursion_level;
     return false;
 }
 
