@@ -21,16 +21,16 @@ TSyntaxAnalyzerInput SyntaxAnalysisHelpers::FixParsedStringForCpp(const TParsedS
     {
         auto lexeme = i_parsed_string[i];
         if (lexeme.m_lexeme_class == LexicalAnalysis::ECppLexemeClasses::LC_IDENTIFIER)
-            result.push_back(Terminal("ID", lexeme.m_lexeme_value));
+            result.push_back(Terminal("ID", i));
         else if (lexeme.m_lexeme_class == LexicalAnalysis::ECppLexemeClasses::LC_BOOLEAN_LITERAL ||
             lexeme.m_lexeme_class == LexicalAnalysis::ECppLexemeClasses::LC_CHARACTER_LITERAL ||
             lexeme.m_lexeme_class == LexicalAnalysis::ECppLexemeClasses::LC_FLOATING_LITERAL ||
             lexeme.m_lexeme_class == LexicalAnalysis::ECppLexemeClasses::LC_INTEGER_LITERAL ||
             lexeme.m_lexeme_class == LexicalAnalysis::ECppLexemeClasses::LC_POINTER_LITERAL ||
             lexeme.m_lexeme_class == LexicalAnalysis::ECppLexemeClasses::LC_STRING_LITERAL)
-            result.push_back(Terminal("LITERAL", lexeme.m_lexeme_value));
+            result.push_back(Terminal("LITERAL", i));
         else
-            result.push_back(Terminal(lexeme.m_lexeme_value, lexeme.m_lexeme_value));
+            result.push_back(Terminal(lexeme.m_lexeme_value, i));
     }
 
     return result;

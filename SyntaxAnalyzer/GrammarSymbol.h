@@ -12,13 +12,15 @@ namespace SyntaxAnalysis
         friend bool operator == (const Terminal& i_terminal, const LexicalAnalysis::LexemeInfo& i_lexeme_info);
         friend bool operator == (const LexicalAnalysis::LexemeInfo& i_lexeme_info, const Terminal& i_terminal);
     public:
-        Terminal(const std::string& i_str, const std::string& i_value = "");
+        Terminal(const std::string& i_str, size_t i_idx = size_t(-1));
+        Terminal(const Terminal& i_other);
         bool operator == (const Terminal& i_other) const;
         bool operator < (const Terminal& i_other) const;
-        const std::string& GetValue() const;
+        size_t GetIndex() const;
+        void SetIndex(size_t i_idx);
     private:
         std::string m_str;
-        std::string m_value;
+        size_t m_idx;
     };
 
     bool operator == (const Terminal& i_terminal, const LexicalAnalysis::LexemeInfo& i_lexeme_info);
@@ -53,7 +55,8 @@ namespace SyntaxAnalysis
 
         EGrammarSymbolType GetType() const;
 
-        Terminal GetTerminalInfo() const;
+        const Terminal& GetTerminalInfo() const;
+        Terminal& GetTerminalInfo();
         NonTerminal GetNonterminalInfo() const;
         bool IsLambda() const;
         bool IsTerminal() const;

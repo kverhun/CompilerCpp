@@ -43,7 +43,14 @@ GrammarSymbol::EGrammarSymbolType GrammarSymbol::GetType() const
 }
 
 //------------------------------------------------------------------------------
-Terminal GrammarSymbol::GetTerminalInfo() const
+const Terminal& GrammarSymbol::GetTerminalInfo() const
+{
+    assert(m_terminal_info);
+    return *m_terminal_info;
+}
+
+//------------------------------------------------------------------------------
+Terminal& SyntaxAnalysis::GrammarSymbol::GetTerminalInfo()
 {
     assert(m_terminal_info);
     return *m_terminal_info;
@@ -111,9 +118,9 @@ std::string GrammarSymbol::ToString() const
 }
 
 //------------------------------------------------------------------------------
-Terminal::Terminal(const std::string& i_str, const std::string& i_value)
+Terminal::Terminal(const std::string& i_str, size_t i_idx)
 : m_str(i_str)
-, m_value(i_value)
+, m_idx(i_idx)
 {
 
 }
@@ -131,10 +138,25 @@ bool Terminal::operator==(const Terminal& i_other) const
 }
 
 //------------------------------------------------------------------------------
-const std::string& SyntaxAnalysis::Terminal::GetValue() const
+size_t SyntaxAnalysis::Terminal::GetIndex() const
 {
-    return m_value;
+    return m_idx;
 }
+
+//------------------------------------------------------------------------------
+void Terminal::SetIndex(size_t i_idx)
+{
+    m_idx = i_idx;
+}
+
+//------------------------------------------------------------------------------
+Terminal::Terminal(const Terminal& i_other)
+: m_str(i_other.m_str)
+, m_idx(i_other.m_idx)
+{
+
+}
+
 
 
 //------------------------------------------------------------------------------

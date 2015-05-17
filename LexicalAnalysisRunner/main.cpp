@@ -71,8 +71,9 @@ int main(int i_argc, const char** i_argv)
         syntax_crash = true;
     }
 
-    auto parse_tree = SyntaxAnalysis::ParseTree(*p_grammar, productions_used, parsed_file_for_as);
-    auto symbol_table_str = parse_tree.GetSymbolTableString();
+    auto parse_tree = SyntaxAnalysis::ParseTree(*p_grammar, productions_used);
+
+    auto symbol_table_str = parse_tree.GetSymbolTableString(parsed_file);
     
 
     size_t col1_width = 30;
@@ -144,6 +145,8 @@ int main(int i_argc, const char** i_argv)
     {
         std::cout << out_stream.str();
     }
+
+    
 
     return 0;
 }

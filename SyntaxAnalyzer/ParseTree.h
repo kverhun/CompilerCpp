@@ -4,7 +4,7 @@
 #include <memory>
 #include <ostream>
 
-#include <Interfaces\SyntaxAnalyzer\SyntaxAnalyzerInput.h>
+#include<Interfaces\LexicalAnalyzer\LexemeInfo.h>
 
 namespace SyntaxAnalysis
 {
@@ -13,13 +13,13 @@ namespace SyntaxAnalysis
     class ParseTree
     {
     public:
-        ParseTree(const Grammar& i_grammar, const std::vector<size_t>& i_productions_used, const SyntaxAnalysis::TSyntaxAnalyzerInput& i_parsed_string);
+        ParseTree(const Grammar& i_grammar, const std::vector<size_t>& i_productions_used);
 
-        std::string GetSymbolTableString() const;
+        std::string GetSymbolTableString(const LexicalAnalysis::TParsedString& i_parsed_string) const;
     public:
-        struct _ParseTreeNode;
+        struct _Node;
 
     private:
-        std::shared_ptr<_ParseTreeNode> m_root_node;
+        std::shared_ptr<_Node> m_root_node;
     };
 }
