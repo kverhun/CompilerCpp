@@ -3,6 +3,7 @@
 #include <sstream>
 
 #include <string>
+#include <vector>
 #include <LexicalAnalyzer\FileIO.h>
 #include <LexicalAnalyzer\LanguageInfoCpp.h>
 #include <LexicalAnalyzer\LexicalAnalyzer.h>
@@ -11,6 +12,7 @@
 #include <SyntaxAnalyzer\GrammarGenerators.h>
 #include <SyntaxAnalyzer\SyntaxAnalysisHelpers.h>
 #include <SyntaxAnalyzer\ParseTree.h>
+#include <SyntaxAnalyzer\SymbolTable.h>
 
 namespace
 {
@@ -73,8 +75,22 @@ int main(int i_argc, const char** i_argv)
 
     auto parse_tree = SyntaxAnalysis::ParseTree(*p_grammar, productions_used);
 
-    auto symbol_table_str = parse_tree.GetSymbolTableString(parsed_file);
+    //auto symbol_table_str = parse_tree.GetSymbolTableString(parsed_file);
     
+    bool context_success = false;
+    std::string context_error_str;
+    std::vector<SyntaxAnalysis::SymbolTable> symbol_tables;
+    try
+    {
+        symbol_tables = parse_tree.GetSymbolTables(parsed_file);
+        context_success = true;
+    }
+    catch (const std::logic_error& err)
+    {
+        context_success = false;
+        context_error_str = err.what();
+    }
+
 
     size_t col1_width = 30;
     size_t col2_width = 30;
@@ -107,9 +123,6 @@ int main(int i_argc, const char** i_argv)
     {
         out_stream << "SUCCEED" << std::endl;
 
-        out_stream << "SYMBOL TABLE" << std::endl;
-        out_stream << symbol_table_str << std::endl;
-
         out_stream << "Productions used: " << std::endl;
         out_stream << "[";
         for (size_t i = 0; i + 1 < productions_used.size(); ++i)
@@ -129,11 +142,29 @@ int main(int i_argc, const char** i_argv)
     else if (!syntax_crash)
     {
         out_stream << "FAILED" << std::endl;
+        out_stream << context_error_str << std::endl;
     }
     else
     {
         out_stream << "Out of memory - recursion too deep" << std::endl;
     }
+
+    out_stream << "========= CONTEXT ANALYSIS ===========" << std::endl;
+
+    if (context_success)
+    {
+        out_stream << "SUCCEED" << std::endl;
+
+        for (const auto& st : symbol_tables)
+        {
+            out_stream << st.ToString() << std::endl;
+        }
+    }
+    else
+    {
+        out_stream << "FAILED" << std::endl;
+    }
+
 
     if (i_argc > 2)
     {

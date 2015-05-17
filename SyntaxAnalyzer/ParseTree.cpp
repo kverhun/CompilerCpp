@@ -2,6 +2,7 @@
 
 #include "GrammarSymbol.h"
 #include "Grammar.h"
+#include "SymbolTable.h"
 
 #include <vector>
 #include <boost\optional.hpp>
@@ -67,22 +68,20 @@ namespace
         }
     }
 
-    //------------------------------------------------------------------------------
-    void _AppendSymbolTableInfo(std::string& io_str, const ParseTree::_Node& i_node, const LexicalAnalysis::TParsedString& i_parsed_string, size_t i_indend_level = 0)
+    void _GetSymbolTables(std::vector<SymbolTable>& io_symbol_tables, size_t& io_current_table, const ParseTree::_Node& i_node, const LexicalAnalysis::TParsedString& i_parsed_string, size_t i_parent_table = 0)
     {
         if (!i_node.m_grammar_symbol.IsNonTerminal())
             return;
 
         if (i_node.m_grammar_symbol.GetNonterminalInfo() == NonTerminal("compound-statement"))
         {
-            io_str.append("\n");
-            io_str.append("    ", i_indend_level);
-            io_str.append("BLOCK BEGIN");
+            size_t cur_table_idx = io_symbol_tables.size();
+            io_symbol_tables.push_back(SymbolTable(cur_table_idx, i_parent_table));
+            size_t current_table_cahced = io_current_table;
+            io_current_table = cur_table_idx;
             for (auto child : i_node.m_children)
-                _AppendSymbolTableInfo(io_str, child, i_parsed_string, i_indend_level + 1);
-            io_str.append("\n");
-            io_str.append("    ", i_indend_level);
-            io_str.append("BLOCK END");
+                _GetSymbolTables(io_symbol_tables, io_current_table, child, i_parsed_string, cur_table_idx);
+            io_current_table = current_table_cahced;
             return;
         }
         else if (i_node.m_grammar_symbol.GetNonterminalInfo() == NonTerminal("variable-definition"))
@@ -96,17 +95,14 @@ namespace
 
             for (const auto& param_name : param_names_list)
             {
-                io_str.append("\n");
-                io_str.append("    ", i_indend_level);
-                io_str.append("VAR: ");
-                io_str.append(param_name);
-                io_str.append("; TYPE: ");
-                io_str.append(parameter_type);
+                if (!io_symbol_tables[io_current_table].AddVariable(param_name, parameter_type))
+                    throw std::logic_error("parameter redefinition: " + param_name + " of type " + parameter_type);
             }
         }
-        
-        for (auto gs : i_node.m_children)
-            _AppendSymbolTableInfo(io_str, gs, i_parsed_string, i_indend_level);
+
+        for (auto child : i_node.m_children)
+            _GetSymbolTables(io_symbol_tables, io_current_table, child, i_parsed_string, i_parent_table);
+
     }
 
     void _FixupTerminalIndexes(size_t& io_next_idx, ParseTree::_Node& i_node)
@@ -136,15 +132,13 @@ ParseTree::ParseTree(const Grammar& i_grammar, const std::vector<size_t>& i_prod
 }
 
 //------------------------------------------------------------------------------
-std::string SyntaxAnalysis::ParseTree::GetSymbolTableString(const LexicalAnalysis::TParsedString& i_parsed_string) const
+std::vector<SymbolTable> ParseTree::GetSymbolTables(const LexicalAnalysis::TParsedString& i_parsed_string) const
 {
-    std::string result;
+    std::vector<SymbolTable> res;
+    res.push_back(SymbolTable(0, 0));
+    size_t current_table = 0;
 
-    result.append("GLOBAL BLOCK BEGIN\n");
+    _GetSymbolTables(res, current_table, *m_root_node, i_parsed_string);
 
-    _AppendSymbolTableInfo(result, *m_root_node, i_parsed_string);
-
-    result.append("GLOBAL BLOCK END\n");
-
-    return result;
+    return res;
 }
