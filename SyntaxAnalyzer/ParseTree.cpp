@@ -68,6 +68,7 @@ namespace
         }
     }
 
+    //------------------------------------------------------------------------------
     void _GetSymbolTables(std::vector<SymbolTable>& io_symbol_tables, size_t& io_current_table, const ParseTree::_Node& i_node, const LexicalAnalysis::TParsedString& i_parsed_string, size_t i_parent_table = 0)
     {
         if (!i_node.m_grammar_symbol.IsNonTerminal())
