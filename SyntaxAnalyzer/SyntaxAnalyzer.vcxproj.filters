@@ -24,6 +24,9 @@
     <ClInclude Include="GrammarDefinitionHelpers.h">
       <Filter>Sources</Filter>
     </ClInclude>
+    <ClInclude Include="ParseTree.h">
+      <Filter>Sources</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="SyntaxAnalyzer.cpp">
@@ -42,6 +45,9 @@
       <Filter>Sources</Filter>
     </ClCompile>
     <ClCompile Include="GrammarDefinitionHelpers.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="ParseTree.cpp">
       <Filter>Sources</Filter>
     </ClCompile>
   </ItemGroup>

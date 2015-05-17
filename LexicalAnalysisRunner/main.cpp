@@ -10,6 +10,7 @@
 #include <SyntaxAnalyzer\SyntaxAnalyzer.h>
 #include <SyntaxAnalyzer\GrammarGenerators.h>
 #include <SyntaxAnalyzer\SyntaxAnalysisHelpers.h>
+#include <SyntaxAnalyzer\ParseTree.h>
 
 namespace
 {
@@ -69,6 +70,9 @@ int main(int i_argc, const char** i_argv)
     {
         syntax_crash = true;
     }
+
+    auto parse_tree = SyntaxAnalysis::ParseTree(*p_grammar, productions_used, parsed_file_for_as);
+    auto symbol_table_str = parse_tree.GetSymbolTableString();
     
 
     size_t col1_width = 30;
@@ -101,6 +105,10 @@ int main(int i_argc, const char** i_argv)
     if (syntax_success)
     {
         out_stream << "SUCCEED" << std::endl;
+
+        out_stream << "SYMBOL TABLE" << std::endl;
+        out_stream << symbol_table_str << std::endl;
+
         out_stream << "Productions used: " << std::endl;
         out_stream << "[";
         for (size_t i = 0; i + 1 < productions_used.size(); ++i)

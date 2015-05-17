@@ -111,8 +111,9 @@ std::string GrammarSymbol::ToString() const
 }
 
 //------------------------------------------------------------------------------
-Terminal::Terminal(const std::string& i_str)
+Terminal::Terminal(const std::string& i_str, const std::string& i_value)
 : m_str(i_str)
+, m_value(i_value)
 {
 
 }
@@ -128,6 +129,13 @@ bool Terminal::operator==(const Terminal& i_other) const
 {
     return m_str == i_other.m_str;
 }
+
+//------------------------------------------------------------------------------
+const std::string& SyntaxAnalysis::Terminal::GetValue() const
+{
+    return m_value;
+}
+
 
 //------------------------------------------------------------------------------
 bool SyntaxAnalysis::operator==(const Terminal& i_terminal, const LexicalAnalysis::LexemeInfo& i_lexeme_info)

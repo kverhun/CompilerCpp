@@ -70,6 +70,7 @@
     <ClInclude Include="GrammarGenerators.h" />
     <ClInclude Include="Grammar.h" />
     <ClInclude Include="GrammarSymbol.h" />
+    <ClInclude Include="ParseTree.h" />
     <ClInclude Include="SyntaxAnalysisHelpers.h" />
     <ClInclude Include="SyntaxAnalyzer.h" />
   </ItemGroup>
@@ -78,6 +79,7 @@
     <ClCompile Include="GrammarDefinitionHelpers.cpp" />
     <ClCompile Include="GrammarGenerators.cpp" />
     <ClCompile Include="GrammarSymbol.cpp" />
+    <ClCompile Include="ParseTree.cpp" />
     <ClCompile Include="SyntaxAnalysisHelpers.cpp" />
     <ClCompile Include="SyntaxAnalyzer.cpp" />
   </ItemGroup>

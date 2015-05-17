@@ -17,19 +17,20 @@ TSyntaxAnalyzerInput SyntaxAnalysisHelpers::FixParsedStringForCpp(const TParsedS
     TSyntaxAnalyzerInput result;
     result.reserve(i_parsed_string.size());
 
-    for (auto& lexeme : i_parsed_string)
+    for (size_t i = 0; i < i_parsed_string.size(); ++i)
     {
+        auto lexeme = i_parsed_string[i];
         if (lexeme.m_lexeme_class == LexicalAnalysis::ECppLexemeClasses::LC_IDENTIFIER)
-            result.push_back(Terminal("ID"));
+            result.push_back(Terminal("ID", lexeme.m_lexeme_value));
         else if (lexeme.m_lexeme_class == LexicalAnalysis::ECppLexemeClasses::LC_BOOLEAN_LITERAL ||
             lexeme.m_lexeme_class == LexicalAnalysis::ECppLexemeClasses::LC_CHARACTER_LITERAL ||
             lexeme.m_lexeme_class == LexicalAnalysis::ECppLexemeClasses::LC_FLOATING_LITERAL ||
             lexeme.m_lexeme_class == LexicalAnalysis::ECppLexemeClasses::LC_INTEGER_LITERAL ||
             lexeme.m_lexeme_class == LexicalAnalysis::ECppLexemeClasses::LC_POINTER_LITERAL ||
             lexeme.m_lexeme_class == LexicalAnalysis::ECppLexemeClasses::LC_STRING_LITERAL)
-            result.push_back(Terminal("LITERAL"));
+            result.push_back(Terminal("LITERAL", lexeme.m_lexeme_value));
         else
-            result.push_back(Terminal(lexeme.m_lexeme_value));
+            result.push_back(Terminal(lexeme.m_lexeme_value, lexeme.m_lexeme_value));
     }
 
     return result;
