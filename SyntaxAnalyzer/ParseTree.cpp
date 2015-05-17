@@ -106,6 +106,7 @@ namespace
 
     }
 
+    //------------------------------------------------------------------------------
     void _FixupTerminalIndexes(size_t& io_next_idx, ParseTree::_Node& i_node)
     {
         if (i_node.m_grammar_symbol.IsTerminal())
