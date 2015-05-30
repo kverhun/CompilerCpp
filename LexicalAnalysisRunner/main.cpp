@@ -163,8 +163,8 @@ int main(int i_argc, const char** i_argv)
     else
     {
         out_stream << "FAILED" << std::endl;
+        out_stream << context_error_str;
     }
-
 
     if (i_argc > 2)
     {

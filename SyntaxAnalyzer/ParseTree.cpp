@@ -69,12 +69,67 @@ namespace
     }
 
     //------------------------------------------------------------------------------
+    // name to type map
+    void _GetFunctionParametersIndexesList(std::map<size_t, size_t>& io_params, const ParseTree::_Node& i_node)
+    {
+        if (i_node.m_grammar_symbol.IsNonTerminal())
+        {
+            auto nonterm_info = i_node.m_grammar_symbol.GetNonterminalInfo();
+            if (nonterm_info == NonTerminal("parameter-declaration"))
+            {
+                size_t type_idx = i_node.m_children[0].m_children[0].m_grammar_symbol.GetTerminalInfo().GetIndex();
+                size_t name_idx = i_node.m_children[1].m_grammar_symbol.GetTerminalInfo().GetIndex();
+                io_params[name_idx] = type_idx;
+            }
+            else
+            {
+                for (const auto& ch : i_node.m_children)
+                    _GetFunctionParametersIndexesList(io_params, ch);
+            }
+        }
+    }
+
+    //------------------------------------------------------------------------------
     void _GetSymbolTables(std::vector<SymbolTable>& io_symbol_tables, size_t& io_current_table, const ParseTree::_Node& i_node, const LexicalAnalysis::TParsedString& i_parsed_string, size_t i_parent_table = 0)
     {
         if (!i_node.m_grammar_symbol.IsNonTerminal())
             return;
 
-        if (i_node.m_grammar_symbol.GetNonterminalInfo() == NonTerminal("compound-statement"))
+        if (i_node.m_grammar_symbol.GetNonterminalInfo() == NonTerminal("function-definition"))
+        {
+            auto func_decl = i_node.m_children[0];
+            auto func_param_str = i_parsed_string[func_decl.m_children[0].m_children[0].m_grammar_symbol.GetTerminalInfo().GetIndex()].m_lexeme_value;
+            auto func_name = i_parsed_string[func_decl.m_children[1].m_grammar_symbol.GetTerminalInfo().GetIndex()].m_lexeme_value;
+
+            auto func_params_node = func_decl.m_children[3];
+            std::map<size_t, size_t> params_indexes;
+            _GetFunctionParametersIndexesList(params_indexes, func_params_node);
+            std::vector<std::pair<std::string, std::string>> params_list;
+            for (auto p_idx : params_indexes)
+                params_list.push_back(std::make_pair(i_parsed_string[p_idx.first].m_lexeme_value, i_parsed_string[p_idx.second].m_lexeme_value));
+
+            if (!io_symbol_tables[io_current_table].AddFunction(func_name, func_param_str, params_list))
+                throw std::logic_error("Symbol redefinition: " + func_name);
+
+            auto func_body = i_node.m_children[1];
+            auto body_statement = func_body.m_children[0];
+
+            size_t cur_table_idx = io_symbol_tables.size();
+            io_symbol_tables.push_back(SymbolTable(cur_table_idx, i_parent_table));
+
+            for (auto p : params_list)
+                if (!io_symbol_tables[cur_table_idx].AddVariable(p.first, p.second))
+                    throw std::logic_error("Symbol redefinition: " + p.first);
+
+            size_t current_table_cahced = io_current_table;
+            io_current_table = cur_table_idx;
+            for (auto child : body_statement.m_children)
+                _GetSymbolTables(io_symbol_tables, io_current_table, child, i_parsed_string, cur_table_idx);
+            io_current_table = current_table_cahced;
+            return;
+
+        }
+        else if (i_node.m_grammar_symbol.GetNonterminalInfo() == NonTerminal("compound-statement"))
         {
             size_t cur_table_idx = io_symbol_tables.size();
             io_symbol_tables.push_back(SymbolTable(cur_table_idx, i_parent_table));
@@ -97,7 +152,7 @@ namespace
             for (const auto& param_name : param_names_list)
             {
                 if (!io_symbol_tables[io_current_table].AddVariable(param_name, parameter_type))
-                    throw std::logic_error("parameter redefinition: " + param_name + " of type " + parameter_type);
+                    throw std::logic_error("Symbol redefinition: " + param_name);
             }
         }
 
