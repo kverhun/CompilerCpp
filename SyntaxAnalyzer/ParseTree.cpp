@@ -218,15 +218,18 @@ namespace
     const std::string g_statement_sequence_str = "statement-sequence";
     const std::string g_statement_str = "statement";
     const std::string g_expression_statement = "expression-statement";
+    const std::string g_function_defintion_str = "function-definition";
 
     const std::string g_goto_cmd = "GOTO";
     const std::string g_iffalse_cmd = "IFFALSE";
+    const std::string g_func_decl_cmd = "FUNCDECL";
+    const std::string g_func_call_cmd = "CALL";
 
     std::vector<GrammarSymbol> terminal_unary_ops = {
         Terminal("!"), Terminal("+"), Terminal("-"), Terminal("*"), Terminal("&"), Terminal("~")
     };
 
-    std::map<std::string, std::string> g_unary_rpn_ops = { { "+", "UNPLUS" }, { "!", "NOT" }, { "-", "UNMINUS" }, { "*", "DEREF" }, { "&", "ADDR" }, {"~", "BITNOT"} };
+    std::map<std::string, std::string> g_unary_rpn_ops = { { "+", "UNPLUS" }, { "!", "NOT" }, { "-", "UNMINUS" }, { "*", "DEREF" }, { "&", "ADDR" }, { "~", "BITNOT" } };
 
     void _ExpandNodeBinaryExpression(const ParseTree::_Node& i_node, const LexicalAnalysis::TParsedString& i_parsed_string, TReversePolishNotation& i_rpn, TRpnIterator& i_where);
     void _ExpandPrimaryExpression(const ParseTree::_Node& i_node, const LexicalAnalysis::TParsedString& i_parsed_string, TReversePolishNotation& i_rpn, TRpnIterator& i_where);
@@ -358,6 +361,26 @@ namespace
         }
     }
 
+    size_t _CaclulateExpressionNumber(const ParseTree::_Node& i_node)
+    {
+        if (i_node.m_children.size() == 1)
+            return 1;
+        else
+            return 1 + _CaclulateExpressionNumber(i_node.m_children[2]);
+    }
+
+    //------------------------------------------------------------------------------
+    void _ExpandExpressionList(const ParseTree::_Node& i_node, const LexicalAnalysis::TParsedString& i_parsed_string, TReversePolishNotation& i_rpn, TRpnIterator& i_where)
+    {
+        if (i_node.m_children.size() == 1)
+            _ExpandAssingmentExpression(i_node.m_children[0].m_children[0], i_parsed_string, i_rpn, i_where);
+        else if (i_node.m_children.size() == 3)
+        {
+            _ExpandExpressionList(i_node.m_children[2], i_parsed_string, i_rpn, i_where);
+            _ExpandAssingmentExpression(i_node.m_children[0].m_children[0], i_parsed_string, i_rpn, i_where);
+        }
+    }
+
     //------------------------------------------------------------------------------
     void _ExpandPrimaryExpression(const ParseTree::_Node& i_node, const LexicalAnalysis::TParsedString& i_parsed_string, TReversePolishNotation& i_rpn, TRpnIterator& i_where)
     {
@@ -374,6 +397,22 @@ namespace
         else if (i_node.m_children.size() == 4)
         {
             // function call
+
+            i_where = i_rpn.insert(i_where, g_func_call_cmd);
+
+            size_t arg_num;
+            if (i_node.m_children[2].m_children[0].m_grammar_symbol.IsLambda() == false)
+                arg_num = _CaclulateExpressionNumber(i_node.m_children[2].m_children[0]);
+            else
+                arg_num = 0;
+            
+            i_where = i_rpn.insert(i_where, std::to_string(arg_num));
+
+            if (arg_num)
+                _ExpandExpressionList(i_node.m_children[2].m_children[0], i_parsed_string, i_rpn, i_where);
+
+            // func name
+            i_where = i_rpn.insert(i_where, i_parsed_string[i_node.m_children[0].m_grammar_symbol.GetTerminalInfo().GetIndex()].m_lexeme_value);
         }
     }
 
@@ -396,6 +435,10 @@ namespace
     {
         if (i_node.m_grammar_symbol.IsLambda())
             return;
+        else if (i_node.m_grammar_symbol.GetNonterminalInfo() == g_primary_expression_str)
+            _ExpandPrimaryExpression(i_node, i_parsed_string, i_rpn, i_where);
+        else if (i_node.m_grammar_symbol.GetNonterminalInfo() == g_unary_expression_str)
+            _ExpandNodeUnaryExpression(i_node, i_parsed_string, i_rpn, i_where);
         else if (i_node.m_children.size() == 1)
         {
             if (i_node.m_children[0].m_grammar_symbol.IsTerminal())
@@ -405,10 +448,7 @@ namespace
         }
         else if (i_node.m_children[1].m_children[0].m_grammar_symbol.IsLambda())
             _ExpandNodeBinaryExpression(i_node.m_children[0], i_parsed_string, i_rpn, i_where);
-        else if (i_node.m_grammar_symbol.GetNonterminalInfo() == g_primary_expression_str)
-            _ExpandPrimaryExpression(i_node, i_parsed_string, i_rpn, i_where);
-        else if (i_node.m_grammar_symbol.GetNonterminalInfo() == g_unary_expression_str)
-            _ExpandNodeUnaryExpression(i_node, i_parsed_string, i_rpn, i_where);
+        
         else
         {
             auto operator_str = i_parsed_string[i_node.m_children[1].m_children[0].m_grammar_symbol.GetTerminalInfo().GetIndex()].m_lexeme_value;
