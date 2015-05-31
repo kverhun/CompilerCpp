@@ -213,6 +213,7 @@ namespace
     const std::string g_primary_expression_str = "primary-expression";
     const std::string g_compound_statement_str = "compound-statement";
     const std::string g_if_statement_str = "if-statement";
+    const std::string g_while_statement_str = "while-statement";
     const std::string g_statement_sequence_str = "statement-sequence";
     const std::string g_statement_str = "statement";
     const std::string g_expression_statement = "expression-statement";
@@ -250,6 +251,25 @@ namespace
             _ExpandStatementSequence(i_node.m_children[1].m_children[0], i_parsed_string, i_rpn, i_where);
             i_where = i_rpn.insert(i_where, "begin");
         }
+    }
+
+    //------------------------------------------------------------------------------
+    void _ExpandWhileStatement(const ParseTree::_Node& i_node, const LexicalAnalysis::TParsedString& i_parsed_string, TReversePolishNotation& i_rpn, TRpnIterator& i_where)
+    {
+        auto label1 = _GenerateLabel();
+        auto label2 = _GenerateLabel();
+
+        i_where = i_rpn.insert(i_where, label2 + ":");
+        i_where = i_rpn.insert(i_where, g_goto_cmd);
+        i_where = i_rpn.insert(i_where, label1);
+
+        i_where = i_rpn.insert(i_where, g_iffalse_cmd);
+        i_where = i_rpn.insert(i_where, label2);
+        _ExpandAssingmentExpression(i_node.m_children[2].m_children[0], i_parsed_string, i_rpn, i_where);
+
+        _ExpandStatement(i_node.m_children[4], i_parsed_string, i_rpn, i_where);
+        
+        i_where = i_rpn.insert(i_where, label1 + ":");
     }
 
     //------------------------------------------------------------------------------
@@ -307,6 +327,10 @@ namespace
         else if (i_node.m_children[0].m_grammar_symbol.GetNonterminalInfo() == NonTerminal(g_if_statement_str))
         {
             _ExpandIfStatement(i_node.m_children[0], i_parsed_string, i_rpn, i_where);
+        }
+        else if (i_node.m_children[0].m_grammar_symbol.GetNonterminalInfo() == NonTerminal(g_while_statement_str))
+        {
+            _ExpandWhileStatement(i_node.m_children[0], i_parsed_string, i_rpn, i_where);
         }
         else
         {

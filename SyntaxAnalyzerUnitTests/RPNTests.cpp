@@ -322,5 +322,50 @@ namespace SyntaxAnalyzerUnitTests
             Assert::IsTrue(*it++ == "end");
         }
 
+        TEST_METHOD(WhileTest1)
+        {
+            typedef LexicalAnalysis::TParsedString TParsedString;
+            using LexicalAnalysis::LexemeInfo;
+            using LexicalAnalysis::LanguageInfoCpp;
+            using LexicalAnalysis::LexicalAnalyzer;
+
+            LanguageInfoCpp langinfo;
+            LexicalAnalyzer cpp_analyzer(langinfo);
+
+            auto string =
+                "int main (){ \
+                 while (a > b) a = a + 1; \
+                 }";
+
+
+            auto res = cpp_analyzer.ParseString(string);
+            auto p_grammar = SyntaxAnalysis::GenerateGrammarCpp();
+
+            SyntaxAnalysis::SyntaxAnalyzer sa(*p_grammar);
+            std::vector<size_t> v;
+            bool sa_res = sa.Analyze(v, SyntaxAnalysis::SyntaxAnalysisHelpers::FixParsedStringForCpp(res));
+
+            ParseTree pt(*p_grammar, v);
+            auto rpn = pt.GetReversePolishNotation(res);
+
+            auto it = rpn.begin();
+            Assert::IsTrue(*it++ == "begin");
+            Assert::IsTrue(*it++ == "m1:");
+            Assert::IsTrue(*it++ == "1");
+            Assert::IsTrue(*it++ == "a");
+            Assert::IsTrue(*it++ == "+");
+            Assert::IsTrue(*it++ == "a");
+            Assert::IsTrue(*it++ == "=");
+            Assert::IsTrue(*it++ == "b");
+            Assert::IsTrue(*it++ == "a");
+            Assert::IsTrue(*it++ == ">");
+            Assert::IsTrue(*it++ == "m2");
+            Assert::IsTrue(*it++ == "IFFALSE");
+            Assert::IsTrue(*it++ == "m1");
+            Assert::IsTrue(*it++ == "GOTO");
+            Assert::IsTrue(*it++ == "m2:");
+            Assert::IsTrue(*it++ == "end");
+        }
+
 	};
 }
