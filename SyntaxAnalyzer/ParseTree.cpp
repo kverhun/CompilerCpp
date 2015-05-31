@@ -22,6 +22,8 @@ struct ParseTree::_Node
 
 namespace
 {
+    static size_t g_current_label_index = 1;
+
     //------------------------------------------------------------------------------
     boost::optional<ParseTree::_Node&> _GetLeftmostNonterminalNode(ParseTree::_Node& i_root_node)
     {
@@ -182,6 +184,8 @@ namespace
 ParseTree::ParseTree(const Grammar& i_grammar, const std::vector<size_t>& i_productions_used)
 : m_root_node(new _Node{ i_grammar.GetStartSymbol(), {} })
 {
+    g_current_label_index = 1;
+
     for (auto i_idx : i_productions_used)
         _ExpandLeftmostNonterminal(*m_root_node, i_grammar, i_idx);
 
@@ -208,9 +212,13 @@ namespace
     const std::string g_assingnment_expression_str = "assingment-expression";
     const std::string g_primary_expression_str = "primary-expression";
     const std::string g_compound_statement_str = "compound-statement";
+    const std::string g_if_statement_str = "if-statement";
     const std::string g_statement_sequence_str = "statement-sequence";
     const std::string g_statement_str = "statement";
     const std::string g_expression_statement = "expression-statement";
+
+    const std::string g_goto_cmd = "GOTO";
+    const std::string g_iffalse_cmd = "IFFALSE";
 
     void _ExpandNodeBinaryExpression(const ParseTree::_Node& i_node, const LexicalAnalysis::TParsedString& i_parsed_string, TReversePolishNotation& i_rpn, TRpnIterator& i_where);
     void _ExpandPrimaryExpression(const ParseTree::_Node& i_node, const LexicalAnalysis::TParsedString& i_parsed_string, TReversePolishNotation& i_rpn, TRpnIterator& i_where);
@@ -218,6 +226,14 @@ namespace
     void _ExpandNodeDirectly(const ParseTree::_Node& i_node, const LexicalAnalysis::TParsedString& i_parsed_string, TReversePolishNotation& i_rpn, TRpnIterator& i_where);
     void _ExpandStatement(const ParseTree::_Node& i_node, const LexicalAnalysis::TParsedString& i_parsed_string, TReversePolishNotation& i_rpn, TRpnIterator& i_where);
     void _ExpandStatementSequence(const ParseTree::_Node& i_node, const LexicalAnalysis::TParsedString& i_parsed_string, TReversePolishNotation& i_rpn, TRpnIterator& i_where);
+
+
+    //------------------------------------------------------------------------------
+    std::string _GenerateLabel()
+    {
+        return "m" + std::to_string(g_current_label_index++);
+    }
+
     //------------------------------------------------------------------------------
     void _ExpandNodeDirectly(const ParseTree::_Node& i_node, const LexicalAnalysis::TParsedString& i_parsed_string, TReversePolishNotation& i_rpn, TRpnIterator& i_where)
     {
@@ -233,6 +249,36 @@ namespace
             i_where = i_rpn.insert(i_where, "end");
             _ExpandStatementSequence(i_node.m_children[1].m_children[0], i_parsed_string, i_rpn, i_where);
             i_where = i_rpn.insert(i_where, "begin");
+        }
+    }
+
+    //------------------------------------------------------------------------------
+    void _ExpandIfStatement(const ParseTree::_Node& i_node, const LexicalAnalysis::TParsedString& i_parsed_string, TReversePolishNotation& i_rpn, TRpnIterator& i_where)
+    {
+        if (i_node.m_children.size() == 7)
+        {
+            auto label1 = _GenerateLabel();
+            auto label2 = _GenerateLabel();
+            
+            i_where = i_rpn.insert(i_where, label2 + ":");
+            _ExpandStatement(i_node.m_children[6], i_parsed_string, i_rpn, i_where);
+            i_where = i_rpn.insert(i_where, label1 + ":");
+            i_where = i_rpn.insert(i_where, g_goto_cmd);
+            i_where = i_rpn.insert(i_where, label2);
+            _ExpandStatement(i_node.m_children[4], i_parsed_string, i_rpn, i_where);
+            i_where = i_rpn.insert(i_where, g_iffalse_cmd);
+            i_where = i_rpn.insert(i_where, label1);
+            _ExpandAssingmentExpression(i_node.m_children[2].m_children[0], i_parsed_string, i_rpn, i_where);
+        }
+        else if (i_node.m_children.size() == 5)
+        {
+            auto label1 = _GenerateLabel();
+
+            i_where = i_rpn.insert(i_where, label1 + ":");
+            _ExpandStatement(i_node.m_children[4], i_parsed_string, i_rpn, i_where);
+            i_where = i_rpn.insert(i_where, g_iffalse_cmd);
+            i_where = i_rpn.insert(i_where, label1);
+            _ExpandAssingmentExpression(i_node.m_children[2].m_children[0], i_parsed_string, i_rpn, i_where);
         }
     }
 
@@ -257,6 +303,10 @@ namespace
         else if (i_node.m_children[0].m_grammar_symbol.GetNonterminalInfo() == NonTerminal(g_compound_statement_str))
         {
             _ExpandCompoundStatement(i_node.m_children[0], i_parsed_string, i_rpn, i_where);
+        }
+        else if (i_node.m_children[0].m_grammar_symbol.GetNonterminalInfo() == NonTerminal(g_if_statement_str))
+        {
+            _ExpandIfStatement(i_node.m_children[0], i_parsed_string, i_rpn, i_where);
         }
         else
         {
