@@ -367,5 +367,81 @@ namespace SyntaxAnalyzerUnitTests
             Assert::IsTrue(*it++ == "end");
         }
 
+
+        TEST_METHOD(UnaryTest1)
+		{
+            typedef LexicalAnalysis::TParsedString TParsedString;
+            using LexicalAnalysis::LexemeInfo;
+            using LexicalAnalysis::LanguageInfoCpp;
+            using LexicalAnalysis::LexicalAnalyzer;
+
+            LanguageInfoCpp langinfo;
+            LexicalAnalyzer cpp_analyzer(langinfo);
+
+            auto string =
+                "int main (){ \
+                 a = -b; \
+                 }";
+            
+                    
+            auto res = cpp_analyzer.ParseString(string);
+            auto p_grammar = SyntaxAnalysis::GenerateGrammarCpp();
+
+            SyntaxAnalysis::SyntaxAnalyzer sa(*p_grammar);
+            std::vector<size_t> v;
+            bool sa_res = sa.Analyze(v, SyntaxAnalysis::SyntaxAnalysisHelpers::FixParsedStringForCpp(res));
+
+            ParseTree pt(*p_grammar, v);
+            auto rpn = pt.GetReversePolishNotation(res);
+
+            auto it = rpn.begin();
+            Assert::IsTrue(*it++ == "begin");
+            Assert::IsTrue(*it++ == "b");
+            Assert::IsTrue(*it++ == "UNMINUS");
+            Assert::IsTrue(*it++ == "a");
+            Assert::IsTrue(*it++ == "=");
+            Assert::IsTrue(*it++ == "end");
+
+		}
+
+        TEST_METHOD(UnaryTest2)
+		{
+            typedef LexicalAnalysis::TParsedString TParsedString;
+            using LexicalAnalysis::LexemeInfo;
+            using LexicalAnalysis::LanguageInfoCpp;
+            using LexicalAnalysis::LexicalAnalyzer;
+
+            LanguageInfoCpp langinfo;
+            LexicalAnalyzer cpp_analyzer(langinfo);
+
+            auto string =
+                "int main (){ \
+                 a = -(~(+(-b))); \
+                 }";
+            
+                    
+            auto res = cpp_analyzer.ParseString(string);
+            auto p_grammar = SyntaxAnalysis::GenerateGrammarCpp();
+
+            SyntaxAnalysis::SyntaxAnalyzer sa(*p_grammar);
+            std::vector<size_t> v;
+            bool sa_res = sa.Analyze(v, SyntaxAnalysis::SyntaxAnalysisHelpers::FixParsedStringForCpp(res));
+
+            ParseTree pt(*p_grammar, v);
+            auto rpn = pt.GetReversePolishNotation(res);
+
+            auto it = rpn.begin();
+            Assert::IsTrue(*it++ == "begin");
+            Assert::IsTrue(*it++ == "b");
+            Assert::IsTrue(*it++ == "UNMINUS");
+            Assert::IsTrue(*it++ == "UNPLUS");
+            Assert::IsTrue(*it++ == "BITNOT");
+            Assert::IsTrue(*it++ == "UNMINUS");
+            Assert::IsTrue(*it++ == "a");
+            Assert::IsTrue(*it++ == "=");
+            Assert::IsTrue(*it++ == "end");
+
+		}
+
 	};
 }
