@@ -204,14 +204,55 @@ std::vector<SymbolTable> ParseTree::GetSymbolTables(const LexicalAnalysis::TPars
 namespace
 {
     using TRpnIterator = std::list<std::string>::iterator;
-
     const std::string g_binary_expression_str = "expression";
+    const std::string g_assingnment_expression_str = "assingment-expression";
+    const std::string g_primary_expression_str = "primary-expression";
 
-    auto addtive_expression_to_rpn = [](const ParseTree::_Node& i_node, const LexicalAnalysis::TParsedString& i_parsed_string, TReversePolishNotation& i_rpn, TRpnIterator i_where)
+    void _ExpandNodeBinaryExpression(const ParseTree::_Node& i_node, const LexicalAnalysis::TParsedString& i_parsed_string, TReversePolishNotation& i_rpn, TRpnIterator& i_where);
+    void _ExpandPrimaryExpression(const ParseTree::_Node& i_node, const LexicalAnalysis::TParsedString& i_parsed_string, TReversePolishNotation& i_rpn, TRpnIterator& i_where);
+    void _ExpandAssingmentExpression(const ParseTree::_Node& i_node, const LexicalAnalysis::TParsedString& i_parsed_string, TReversePolishNotation& i_rpn, TRpnIterator& i_where);
+    void _ExpandNodeDirectly(const ParseTree::_Node& i_node, const LexicalAnalysis::TParsedString& i_parsed_string, TReversePolishNotation& i_rpn, TRpnIterator& i_where);
+
+    //------------------------------------------------------------------------------
+    void _ExpandNodeDirectly(const ParseTree::_Node& i_node, const LexicalAnalysis::TParsedString& i_parsed_string, TReversePolishNotation& i_rpn, TRpnIterator& i_where)
     {
+        auto id_str = i_parsed_string[i_node.m_grammar_symbol.GetTerminalInfo().GetIndex()].m_lexeme_value;
+        i_where = i_rpn.insert(i_where, id_str);
+    }
 
-    };
+    //------------------------------------------------------------------------------
+    void _ExpandAssingmentExpression(const ParseTree::_Node& i_node, const LexicalAnalysis::TParsedString& i_parsed_string, TReversePolishNotation& i_rpn, TRpnIterator& i_where)
+    {
+        if (i_node.m_children.size() == 1)
+            _ExpandNodeBinaryExpression(i_node, i_parsed_string, i_rpn, i_where);
+        else if (i_node.m_children.size() == 3)
+        {
+            _ExpandNodeDirectly(i_node.m_children[1].m_children[0], i_parsed_string, i_rpn, i_where);
+            _ExpandNodeBinaryExpression(i_node.m_children[0], i_parsed_string, i_rpn, i_where);
+            _ExpandAssingmentExpression(i_node.m_children[2], i_parsed_string, i_rpn, i_where);
+        }
+    }
 
+    //------------------------------------------------------------------------------
+    void _ExpandPrimaryExpression(const ParseTree::_Node& i_node, const LexicalAnalysis::TParsedString& i_parsed_string, TReversePolishNotation& i_rpn, TRpnIterator& i_where)
+    {
+        if (i_node.m_children.size() == 1)
+        {
+            // literal or identifier
+            _ExpandNodeDirectly(i_node.m_children[0], i_parsed_string, i_rpn, i_where);
+        }
+        else if (i_node.m_children.size() == 3)
+        {
+            // ( expr )
+            _ExpandNodeBinaryExpression(i_node.m_children[1], i_parsed_string, i_rpn, i_where);
+        }
+        else if (i_node.m_children.size() == 4)
+        {
+            // function call
+        }
+    }
+
+    //------------------------------------------------------------------------------
     void _ExpandNodeBinaryExpression(const ParseTree::_Node& i_node, const LexicalAnalysis::TParsedString& i_parsed_string, TReversePolishNotation& i_rpn, TRpnIterator& i_where)
     {
         if (i_node.m_grammar_symbol.IsLambda())
@@ -219,18 +260,14 @@ namespace
         else if (i_node.m_children.size() == 1)
         {
             if (i_node.m_children[0].m_grammar_symbol.IsTerminal())
-            {
-                auto id_str = i_parsed_string[i_node.m_children[0].m_grammar_symbol.GetTerminalInfo().GetIndex()].m_lexeme_value;
-                i_where = i_rpn.insert(i_where, id_str);
-                
-            }
+                _ExpandNodeDirectly(i_node.m_children[0], i_parsed_string, i_rpn, i_where);
             else
                 _ExpandNodeBinaryExpression(i_node.m_children[0], i_parsed_string, i_rpn, i_where);
         }
         else if (i_node.m_children[1].m_children[0].m_grammar_symbol.IsLambda())
-        {
             _ExpandNodeBinaryExpression(i_node.m_children[0], i_parsed_string, i_rpn, i_where);
-        }
+        else if (i_node.m_grammar_symbol.GetNonterminalInfo() == g_primary_expression_str)
+            _ExpandPrimaryExpression(i_node, i_parsed_string, i_rpn, i_where);
         else
         {
             auto operator_str = i_parsed_string[i_node.m_children[1].m_children[0].m_grammar_symbol.GetTerminalInfo().GetIndex()].m_lexeme_value;
@@ -241,11 +278,14 @@ namespace
         }
     }
 
+    //------------------------------------------------------------------------------
     void _ExpandNode(const ParseTree::_Node& i_node, const LexicalAnalysis::TParsedString& i_parsed_string, TReversePolishNotation& i_rpn, TRpnIterator& i_where)
     {
         if (i_node.m_grammar_symbol.IsTerminal())
         {
-//            i_rpn.insert(i_where, i_parsed_string[i_node.m_grammar_symbol.GetTerminalInfo().GetIndex()].m_lexeme_value);
+            // not to happen
+            // i_rpn.insert(i_where, i_parsed_string[i_node.m_grammar_symbol.GetTerminalInfo().GetIndex()].m_lexeme_value);
+            //throw(std::logic_error("terminal reached"));
         }
 
         else if (i_node.m_grammar_symbol.IsNonTerminal())
