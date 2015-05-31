@@ -3,6 +3,8 @@
 #include <vector>
 #include <memory>
 #include <ostream>
+#include <string>
+#include <list>
 
 #include<Interfaces\LexicalAnalyzer\LexemeInfo.h>
 
@@ -11,6 +13,8 @@ namespace SyntaxAnalysis
     class Grammar;
     class SymbolTable;
 
+    typedef std::list<std::string> TReversePolishNotation;
+
     class ParseTree
     {
     public:
@@ -18,6 +22,7 @@ namespace SyntaxAnalysis
 
         std::vector<SymbolTable> GetSymbolTables(const LexicalAnalysis::TParsedString& i_parsed_string) const;
 
+        TReversePolishNotation GetReversePolishNotation(const LexicalAnalysis::TParsedString& i_parsed_string) const;
     public:
         struct _Node;
 

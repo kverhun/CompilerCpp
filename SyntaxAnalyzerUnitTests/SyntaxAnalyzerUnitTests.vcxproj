@@ -89,6 +89,7 @@
     <ClCompile Include="DerivationGenerationUnitTests.cpp" />
     <ClCompile Include="GrammarDefinitionUnitTests.cpp" />
     <ClCompile Include="GrammarUnitTests.cpp" />
+    <ClCompile Include="RPNTests.cpp" />
     <ClCompile Include="SA-LA-InteractionUnitTests.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
