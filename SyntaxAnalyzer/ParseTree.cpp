@@ -207,17 +207,61 @@ namespace
     const std::string g_expression_str = "expression";
     const std::string g_assingnment_expression_str = "assingment-expression";
     const std::string g_primary_expression_str = "primary-expression";
+    const std::string g_compound_statement_str = "compound-statement";
+    const std::string g_statement_sequence_str = "statement-sequence";
+    const std::string g_statement_str = "statement";
+    const std::string g_expression_statement = "expression-statement";
 
     void _ExpandNodeBinaryExpression(const ParseTree::_Node& i_node, const LexicalAnalysis::TParsedString& i_parsed_string, TReversePolishNotation& i_rpn, TRpnIterator& i_where);
     void _ExpandPrimaryExpression(const ParseTree::_Node& i_node, const LexicalAnalysis::TParsedString& i_parsed_string, TReversePolishNotation& i_rpn, TRpnIterator& i_where);
     void _ExpandAssingmentExpression(const ParseTree::_Node& i_node, const LexicalAnalysis::TParsedString& i_parsed_string, TReversePolishNotation& i_rpn, TRpnIterator& i_where);
     void _ExpandNodeDirectly(const ParseTree::_Node& i_node, const LexicalAnalysis::TParsedString& i_parsed_string, TReversePolishNotation& i_rpn, TRpnIterator& i_where);
-
+    void _ExpandStatement(const ParseTree::_Node& i_node, const LexicalAnalysis::TParsedString& i_parsed_string, TReversePolishNotation& i_rpn, TRpnIterator& i_where);
+    void _ExpandStatementSequence(const ParseTree::_Node& i_node, const LexicalAnalysis::TParsedString& i_parsed_string, TReversePolishNotation& i_rpn, TRpnIterator& i_where);
     //------------------------------------------------------------------------------
     void _ExpandNodeDirectly(const ParseTree::_Node& i_node, const LexicalAnalysis::TParsedString& i_parsed_string, TReversePolishNotation& i_rpn, TRpnIterator& i_where)
     {
         auto id_str = i_parsed_string[i_node.m_grammar_symbol.GetTerminalInfo().GetIndex()].m_lexeme_value;
         i_where = i_rpn.insert(i_where, id_str);
+    }
+
+    //------------------------------------------------------------------------------
+    void _ExpandCompoundStatement(const ParseTree::_Node& i_node, const LexicalAnalysis::TParsedString& i_parsed_string, TReversePolishNotation& i_rpn, TRpnIterator& i_where)
+    {
+        if (i_node.m_children[1].m_children[0].m_grammar_symbol.IsLambda() == false)
+        {
+            i_where = i_rpn.insert(i_where, "end");
+            _ExpandStatementSequence(i_node.m_children[1].m_children[0], i_parsed_string, i_rpn, i_where);
+            i_where = i_rpn.insert(i_where, "begin");
+        }
+    }
+
+    //------------------------------------------------------------------------------
+    void _ExpandStatementSequence(const ParseTree::_Node& i_node, const LexicalAnalysis::TParsedString& i_parsed_string, TReversePolishNotation& i_rpn, TRpnIterator& i_where)
+    {
+        if (i_node.m_children.size() == 2)
+            _ExpandStatementSequence(i_node.m_children[1], i_parsed_string, i_rpn, i_where);
+        _ExpandStatement(i_node.m_children[0], i_parsed_string, i_rpn, i_where);
+    }
+
+    //------------------------------------------------------------------------------
+    void _ExpandStatement(const ParseTree::_Node& i_node, const LexicalAnalysis::TParsedString& i_parsed_string, TReversePolishNotation& i_rpn, TRpnIterator& i_where)
+    {
+        if (i_node.m_children[0].m_grammar_symbol.GetNonterminalInfo() == NonTerminal(g_expression_statement))
+        {
+            if (i_node.m_children[0].m_children[0].m_grammar_symbol.IsLambda() == false)
+                _ExpandAssingmentExpression(i_node.m_children[0].m_children[0].m_children[0].m_children[0], i_parsed_string, i_rpn, i_where);
+            else
+                return;
+        }
+        else if (i_node.m_children[0].m_grammar_symbol.GetNonterminalInfo() == NonTerminal(g_compound_statement_str))
+        {
+            _ExpandCompoundStatement(i_node.m_children[0], i_parsed_string, i_rpn, i_where);
+        }
+        else
+        {
+            // other statements
+        }
     }
 
     //------------------------------------------------------------------------------
@@ -290,8 +334,8 @@ namespace
 
         else if (i_node.m_grammar_symbol.IsNonTerminal())
         {
-            if (i_node.m_grammar_symbol.GetNonterminalInfo() == NonTerminal(g_expression_str))
-                _ExpandAssingmentExpression(i_node.m_children[0], i_parsed_string, i_rpn, i_where);
+            if (i_node.m_grammar_symbol.GetNonterminalInfo() == NonTerminal(g_compound_statement_str))
+                _ExpandCompoundStatement(i_node, i_parsed_string, i_rpn, i_where);
             else
             {
                 for (auto it = i_node.m_children.rbegin(); it != i_node.m_children.rend(); ++it)
