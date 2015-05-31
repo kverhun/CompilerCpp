@@ -127,5 +127,42 @@ namespace SyntaxAnalyzerUnitTests
 
         }
 
+        TEST_METHOD(AssingmentTest2)
+        {
+            typedef LexicalAnalysis::TParsedString TParsedString;
+            using LexicalAnalysis::LexemeInfo;
+            using LexicalAnalysis::LanguageInfoCpp;
+            using LexicalAnalysis::LexicalAnalyzer;
+
+            LanguageInfoCpp langinfo;
+            LexicalAnalyzer cpp_analyzer(langinfo);
+
+            auto string =
+                "int main (){ \
+                a = b + c; \
+            }";
+
+
+            auto res = cpp_analyzer.ParseString(string);
+            auto p_grammar = SyntaxAnalysis::GenerateGrammarCpp();
+
+            SyntaxAnalysis::SyntaxAnalyzer sa(*p_grammar);
+            std::vector<size_t> v;
+            bool sa_res = sa.Analyze(v, SyntaxAnalysis::SyntaxAnalysisHelpers::FixParsedStringForCpp(res));
+
+            ParseTree pt(*p_grammar, v);
+            auto rpn = pt.GetReversePolishNotation(res);
+            
+            Assert::AreEqual(size_t{ 5 }, rpn.size());
+
+            auto it = rpn.begin();
+            Assert::IsTrue(*it++ == "c");
+            Assert::IsTrue(*it++ == "b");
+            Assert::IsTrue(*it++ == "+");
+            Assert::IsTrue(*it++ == "a");
+            Assert::IsTrue(*it++ == "=");
+
+        }
+
 	};
 }

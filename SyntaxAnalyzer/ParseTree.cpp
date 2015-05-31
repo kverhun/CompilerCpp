@@ -204,7 +204,7 @@ std::vector<SymbolTable> ParseTree::GetSymbolTables(const LexicalAnalysis::TPars
 namespace
 {
     using TRpnIterator = std::list<std::string>::iterator;
-    const std::string g_binary_expression_str = "expression";
+    const std::string g_expression_str = "expression";
     const std::string g_assingnment_expression_str = "assingment-expression";
     const std::string g_primary_expression_str = "primary-expression";
 
@@ -290,8 +290,8 @@ namespace
 
         else if (i_node.m_grammar_symbol.IsNonTerminal())
         {
-            if (i_node.m_grammar_symbol.GetNonterminalInfo() == NonTerminal(g_binary_expression_str))
-                _ExpandNodeBinaryExpression(i_node, i_parsed_string, i_rpn, i_where);
+            if (i_node.m_grammar_symbol.GetNonterminalInfo() == NonTerminal(g_expression_str))
+                _ExpandAssingmentExpression(i_node.m_children[0], i_parsed_string, i_rpn, i_where);
             else
             {
                 for (auto it = i_node.m_children.rbegin(); it != i_node.m_children.rend(); ++it)
